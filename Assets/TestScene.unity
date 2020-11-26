@@ -163,11 +163,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 171893466}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a5e16fc3835d344691f717a6d9d3f4b, type: 3}
+  m_Script: {fileID: 11500000, guid: b4c7fff4de16eef4a994ceb4dc43bfb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ChunkMaterial: {fileID: 2100000, guid: e518f365d3ad0754ea478494cbe72355, type: 2}
-  ChunksToRender: 15
+  ChunkMaterial: {fileID: 2100000, guid: 8f3b76d51038e9a4887373a6872ceee0, type: 2}
+  ChunksToRender: 5
 --- !u!1 &323206058
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,7 +323,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 449189411}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ebff37c983835e43a6393877360e512, type: 3}
+  m_Script: {fileID: 11500000, guid: 8296d703027615b469d8dc6b4ac0bf78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &629722247
@@ -444,7 +444,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1206429752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a999bad8a09108245a5e0fd5ba754e53, type: 3}
+  m_Script: {fileID: 11500000, guid: a65f2db5e77a9a64bb976237a626e0cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 323206059}
@@ -503,7 +503,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: 10fc4df2da32a41aaa32d77bc913491c, type: 2}
+  sharedProfile: {fileID: 0}
 --- !u!4 &1936340182
 Transform:
   m_ObjectHideFlags: 0
