@@ -56,14 +56,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\StrategyCamera\MoveCommand.cs" />
-    <Compile Include="Assets\ServiceLocator\ServiceLocator.cs" />
+    <Compile Include="Assets\ServiceLocator\Locator.cs" />
     <Compile Include="Assets\Map\Pathing\PathRequest.cs" />
     <Compile Include="Assets\Map\Pathing\InvalidPathException.cs" />
     <Compile Include="Assets\ServiceLocator\Bootstrapper.cs" />
     <Compile Include="Assets\Map\ChunkManager.cs" />
     <Compile Include="Assets\Map\Pathing\Direction.cs" />
     <Compile Include="Assets\Map\Pathing\DirectionExtensions.cs" />
-    <Compile Include="Assets\ServiceLocator\IGameService.cs" />
     <Compile Include="Assets\Map\Pathing\PathableCell.cs" />
     <Compile Include="Assets\Map\CellEventManager.cs" />
     <Compile Include="Assets\StrategyCamera\CameraController.cs" />
@@ -77,7 +76,7 @@
     <Compile Include="Assets\StrategyCamera\CameraCommand.cs" />
     <Compile Include="Assets\Map\Cell.cs" />
     <Compile Include="Assets\Map\Pathing\CellPriorityQueue.cs" />
-    <Compile Include="Assets\ServiceLocator\IGameService1.cs" />
+    <Compile Include="Assets\ServiceLocator\IGameService.cs" />
     <Compile Include="Assets\Helpers\FastNoiseLite.cs" />
     <Compile Include="Assets\StrategyCamera\ZoomCommand.cs" />
     <Compile Include="Assets\Map\Pathing\IPathFindableCell.cs" />
@@ -87,6 +86,16 @@
     <Compile Include="Assets\Helpers\FastNoiseExtension.cs" />
     <Compile Include="Assets\MapGenerator.cs" />
     <Compile Include="Assets\Map\Terrain.cs" />
+    <Compile Include="Assets\Map\ITerrain.cs" />
+    <Compile Include="Assets\Map\ICell.cs" />
+    <Compile Include="Assets\Actors\IStructure.cs" />
+    <Compile Include="Assets\Actors\IActor.cs" />
+    <Compile Include="Assets\ServiceLocator\GameServiceBase.cs" />
+    <Compile Include="Assets\ServiceLocator\LocatableMonoBehaviorBase.cs" />
+    <Compile Include="Assets\Factions\IFactionManager.cs" />
+    <Compile Include="Assets\Factions\FactionManager.cs" />
+    <Compile Include="Assets\Factions\Faction.cs" />
+    <Compile Include="Assets\Factions\IFaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

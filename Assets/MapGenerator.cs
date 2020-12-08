@@ -1,4 +1,5 @@
-﻿using Assets.Helpers;
+﻿using Assets.Factions;
+using Assets.Helpers;
 using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
@@ -8,7 +9,7 @@ using System.Linq;
 using UnityEngine;
 using Terrain = Assets.Map.Terrain;
 
-public class MapGenerator : LocatableMonoBehavior
+public class MapGenerator : LocatableMonoBehaviorBase
 {
     public Material ChunkMaterial;
 
@@ -69,9 +70,23 @@ public class MapGenerator : LocatableMonoBehavior
 
     private void GenerateMap()
     {
+        RegisterChunkManager();
+
+        RegenerateMap();
+
+        RegisterFactionManager();
+    }
+
+    private void RegisterFactionManager()
+    {
+        GetLocator().Unregister<FactionManager>();
+        GetLocator().Register(new FactionManager());
+    }
+
+    private void RegisterChunkManager()
+    {
         GetLocator().Unregister<ChunkManager>();
         GetLocator().Register(ChunkManager.CreateChunkManager(ChunkMaterial));
-        RegenerateMap();
     }
 
     private float GetAdjustedCellHeight(float height)
@@ -121,6 +136,7 @@ public class MapGenerator : LocatableMonoBehavior
 
         return _terrainLookup[terrainKey];
     }
+
     private void InitializeTerrainLookup()
     {
         var terrains = new[]

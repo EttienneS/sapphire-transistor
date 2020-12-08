@@ -2,7 +2,7 @@
 
 namespace Assets.Map
 {
-    public class Terrain
+    public class Terrain : ITerrain
     {
         private string _name;
         private Color _color;

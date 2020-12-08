@@ -1,4 +1,6 @@
-﻿using Assets.StrategyCamera;
+﻿using Assets.Actors;
+using Assets.Factions;
+using Assets.StrategyCamera;
 using UnityEngine;
 
 namespace Assets.ServiceLocator
@@ -9,7 +11,7 @@ namespace Assets.ServiceLocator
     /// </summary>
     public class Bootstrapper : MonoBehaviour
     {
-        private ServiceLocator _serviceLocator;
+        private Locator _serviceLocator;
 
         /// <summary>
         /// Creates the ServiceLocator and registers MonoBehaviors that already exist in the scene.
@@ -17,7 +19,7 @@ namespace Assets.ServiceLocator
         /// </summary>
         public void Awake()
         {
-            var locator = new ServiceLocator();
+            var locator = new Locator();
 
             locator.Register(FindObjectOfType<CameraController>());
             locator.Register(FindObjectOfType<MapGenerator>());
@@ -32,7 +34,7 @@ namespace Assets.ServiceLocator
         /// <returns>
         ///   The current ServiceLocator
         /// </returns>
-        public ServiceLocator GetServiceLocator()
+        public Locator GetServiceLocator()
         {
             return _serviceLocator;
         }

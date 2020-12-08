@@ -1,34 +1,25 @@
 ﻿using Assets.Map.Pathing;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Assets.Map
 {
-    public class Cell : PathableCell
+    public class Cell : PathableCell, ICell
     {
-        private List<Cell> _nonNullNeighbours;
+        private readonly ITerrain _terrain;
+        private List<ICell> _nonNullNeighbours;
 
-        private Terrain _terrain;
+        public List<ICell> GetNonNullNeighbors()
+        {
+            return _nonNullNeighbours ?? (_nonNullNeighbours = Neighbors.Where(n => n != null).ToList().ConvertAll(c => c as ICell).ToList());
+        }
 
-        public Cell(int x, int z, float height, Terrain terain)
+        public Cell(int x, int z, float height, ITerrain terain)
         {
             X = x;
             Z = z;
             Y = height;
             _terrain = terain;
-        }
-
-        public new List<Cell> NonNullNeighbors
-        {
-            get
-            {
-                if (_nonNullNeighbours == null)
-                {
-                    _nonNullNeighbours = base.NonNullNeighbors.ConvertAll(c => c as Cell).ToList();
-                }
-                return _nonNullNeighbours;
-            }
         }
 
         public override float TravelCost
@@ -39,7 +30,7 @@ namespace Assets.Map
             }
         }
 
-        public Terrain GetTerrain()
+        public ITerrain GetTerrain()
         {
             return _terrain;
         }

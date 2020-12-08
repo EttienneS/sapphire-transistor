@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.StrategyCamera
 {
-    public class CameraController : LocatableMonoBehavior
+    public class CameraController : LocatableMonoBehaviorBase
     {
         public Camera Camera;
         public float maxZoom;

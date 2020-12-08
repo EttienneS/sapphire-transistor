@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.Map
 {
-    public class ChunkManager : LocatableMonoBehavior
+    public class ChunkManager : LocatableMonoBehaviorBase
     {
         public Material ChunkMaterial;
 
