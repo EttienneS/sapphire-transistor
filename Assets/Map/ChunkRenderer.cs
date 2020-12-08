@@ -195,7 +195,7 @@ namespace Assets.Map
                     if (x != width && z != width)
                     {
                         var cell = _cells[x, z];
-                        color = cell.Color;
+                        color = cell.GetTerrain().GetColor();
                         lastColor = color;
                     }
 
@@ -218,10 +218,12 @@ namespace Assets.Map
                     var cell = _cells[x, z];
                     var height = cell.Y;
 
-                    AddVert(x - 0.5f, height, z - 0.5f, cell.Color);
-                    AddVert(x + 0.5f, height, z - 0.5f, cell.Color);
-                    AddVert(x + 0.5f, height, z + 0.5f, cell.Color);
-                    AddVert(x - 0.5f, height, z + 0.5f, cell.Color);
+                    var color = cell.GetTerrain().GetColor();
+
+                    AddVert(x - 0.5f, height, z - 0.5f, color);
+                    AddVert(x + 0.5f, height, z - 0.5f, color);
+                    AddVert(x + 0.5f, height, z + 0.5f, color);
+                    AddVert(x - 0.5f, height, z + 0.5f, color);
 
                     var c = i * _vertsPerCell;
                     AddTriangle(c + 3, c + 2, c + 1);

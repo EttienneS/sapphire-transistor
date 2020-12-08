@@ -20,7 +20,7 @@ namespace Assets.ServiceLocator
             var locator = new ServiceLocator();
 
             locator.Register(FindObjectOfType<CameraController>());
-            locator.Register(FindObjectOfType<SimpleMapGen>());
+            locator.Register(FindObjectOfType<MapGenerator>());
 
             locator.ProcessInitializationQueue();
             locator.LogServices();

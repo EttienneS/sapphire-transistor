@@ -9,15 +9,15 @@ namespace Assets.Map
     {
         private List<Cell> _nonNullNeighbours;
 
-        public Cell(int x, int z, float height, Color color)
+        private Terrain _terrain;
+
+        public Cell(int x, int z, float height, Terrain terain)
         {
             X = x;
             Z = z;
             Y = height;
-            Color = color;
+            _terrain = terain;
         }
-
-        public Color Color { get; set; }
 
         public new List<Cell> NonNullNeighbors
         {
@@ -37,6 +37,11 @@ namespace Assets.Map
             {
                 return Y;
             }
+        }
+
+        public Terrain GetTerrain()
+        {
+            return _terrain;
         }
     }
 }
