@@ -109,6 +109,33 @@ namespace Assets.Map
             }
         }
 
+        private void OnDrawGizmos()
+        {
+            foreach (var cell in _cells)
+            {
+                var resources = cell.GetTerrain().ResourceValue;
+                var off = 0.4f;
+                foreach (var res in resources)
+                {
+                    if (res.Key.Name == "Wood")
+                    {
+                        Gizmos.color = Color.green;
+                    }
+                    else if (res.Key.Name == "Stone")
+                    {
+                        Gizmos.color = Color.blue;
+                    }
+                    else if (res.Key.Name == "Food")
+                    {
+                        Gizmos.color = Color.red;
+                    }
+
+                    Gizmos.DrawCube(new Vector3(cell.X + off, cell.Y + 0.1f * res.Value, cell.Z + 0.5f), new Vector3(0.1f, 0.1f * res.Value, 0.1f));
+                    off += 0.1f;
+                }
+            }
+        }
+
         private void AddFrontWall(int width, int lastVert, int z, int x)
         {
             if (z == 0 && x < width)
@@ -195,7 +222,7 @@ namespace Assets.Map
                     if (x != width && z != width)
                     {
                         var cell = _cells[x, z];
-                        color = cell.GetTerrain().GetColor();
+                        color = cell.GetTerrain().Color;
                         lastColor = color;
                     }
 
@@ -218,7 +245,7 @@ namespace Assets.Map
                     var cell = _cells[x, z];
                     var height = cell.Y;
 
-                    var color = cell.GetTerrain().GetColor();
+                    var color = cell.GetTerrain().Color;
 
                     AddVert(x - 0.5f, height, z - 0.5f, color);
                     AddVert(x + 0.5f, height, z - 0.5f, color);

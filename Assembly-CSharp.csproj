@@ -84,7 +84,6 @@
     <Compile Include="Assets\StrategyCamera\TouchScreenHandler.cs" />
     <Compile Include="Assets\Helpers\Instrumenter.cs" />
     <Compile Include="Assets\Helpers\FastNoiseExtension.cs" />
-    <Compile Include="Assets\MapGenerator.cs" />
     <Compile Include="Assets\Map\Terrain.cs" />
     <Compile Include="Assets\Map\ITerrain.cs" />
     <Compile Include="Assets\Map\ICell.cs" />
@@ -98,6 +97,11 @@
     <Compile Include="Assets\Factions\IFaction.cs" />
     <Compile Include="Assets\Factions\AIFaction.cs" />
     <Compile Include="Assets\Factions\PlayerFaction.cs" />
+    <Compile Include="Assets\MapGenerator.cs" />
+    <Compile Include="Assets\Resources\IResourceManager.cs" />
+    <Compile Include="Assets\Resources\Resource.cs" />
+    <Compile Include="Assets\Resources\IResource.cs" />
+    <Compile Include="Assets\Resources\ResourceManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

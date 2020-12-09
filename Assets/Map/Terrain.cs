@@ -1,26 +1,24 @@
-﻿using UnityEngine;
+﻿using Assets.Resources;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Assets.Map
 {
     public class Terrain : ITerrain
     {
-        private string _name;
-        private Color _color;
-
-        public Terrain(string name, Color color)
+        public Terrain(string name, Color color, params (IResource resource, int amount)[] resourceValue)
         {
-            _name = name;
-            _color = color;
+            Name = name;
+            Color = color;
+
+            ResourceValue = resourceValue.ToDictionary(r => r.resource, r => r.amount);
         }
 
-        public Color GetColor()
-        {
-            return _color;
-        }
+        public string Name { get; }
 
-        public string GetName()
-        {
-            return _name;
-        }
+        public Dictionary<IResource, int> ResourceValue { get; }
+
+        public Color Color { get; }
     }
 }
