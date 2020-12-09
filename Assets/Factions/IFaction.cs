@@ -16,5 +16,7 @@ namespace Assets.Factions
         void SetFactionHead(IActor actor);
 
         List<IStructure> GetStructures();
+
+        void TakeTurn();
     }
 }

@@ -23,8 +23,8 @@ namespace Assets.Factions
         {
             _factionQueue = new Queue<IFaction>();
 
-            AddFaction(new Faction("Player"));
-            AddFaction(new Faction("World"));
+            AddFaction(new PlayerFaction("Player"));
+            AddFaction(new AIFaction("Enemy"));
 
             _activeFaction = _factionQueue.Dequeue();
         }

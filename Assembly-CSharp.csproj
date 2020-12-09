@@ -94,8 +94,10 @@
     <Compile Include="Assets\ServiceLocator\LocatableMonoBehaviorBase.cs" />
     <Compile Include="Assets\Factions\IFactionManager.cs" />
     <Compile Include="Assets\Factions\FactionManager.cs" />
-    <Compile Include="Assets\Factions\Faction.cs" />
+    <Compile Include="Assets\Factions\FactionBase.cs" />
     <Compile Include="Assets\Factions\IFaction.cs" />
+    <Compile Include="Assets\Factions\AIFaction.cs" />
+    <Compile Include="Assets\Factions\PlayerFaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

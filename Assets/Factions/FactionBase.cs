@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 namespace Assets.Factions
 {
-    public class Faction : IFaction
+
+    public abstract class FactionBase : IFaction
     {
         private string _name;
 
-        public Faction(string name)
+        public FactionBase(string name)
         {
             _name = name;
         }
@@ -42,5 +43,6 @@ namespace Assets.Factions
             throw new System.NotImplementedException();
         }
 
+        public abstract void TakeTurn();
     }
 }
