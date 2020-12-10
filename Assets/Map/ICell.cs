@@ -4,8 +4,7 @@ namespace Assets.Map
 {
     public interface ICell
     {
-        ITerrain GetTerrain();
-
-        List<ICell> GetNonNullNeighbors();
+        List<ICell> NonNullNeighbors { get; }
+        ITerrain Terrain { get; }
     }
 }

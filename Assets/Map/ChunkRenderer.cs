@@ -113,7 +113,7 @@ namespace Assets.Map
         {
             foreach (var cell in _cells)
             {
-                var resources = cell.GetTerrain().ResourceValue;
+                var resources = cell.Terrain.ResourceValue;
                 var off = 0.4f;
                 foreach (var res in resources)
                 {
@@ -222,7 +222,7 @@ namespace Assets.Map
                     if (x != width && z != width)
                     {
                         var cell = _cells[x, z];
-                        color = cell.GetTerrain().Color;
+                        color = cell.Terrain.Color;
                         lastColor = color;
                     }
 
@@ -245,7 +245,7 @@ namespace Assets.Map
                     var cell = _cells[x, z];
                     var height = cell.Y;
 
-                    var color = cell.GetTerrain().Color;
+                    var color = cell.Terrain.Color;
 
                     AddVert(x - 0.5f, height, z - 0.5f, color);
                     AddVert(x + 0.5f, height, z - 0.5f, color);
