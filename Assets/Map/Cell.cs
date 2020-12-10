@@ -1,35 +1,30 @@
 ﻿using Assets.Map.Pathing;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Assets.Map
 {
-    public class Cell : PathableCell
+    public class Cell : PathableCell, ICell
     {
-        private List<Cell> _nonNullNeighbours;
+        private List<ICell> _nonNullNeighbours;
 
-        public Cell(int x, int z, float height, Color color)
+        public Cell(int x, int z, float height, ITerrain terain)
         {
             X = x;
             Z = z;
             Y = height;
-            Color = color;
+            Terrain = terain;
         }
 
-        public Color Color { get; set; }
-
-        public new List<Cell> NonNullNeighbors
+        public List<ICell> NonNullNeighbors
         {
             get
             {
-                if (_nonNullNeighbours == null)
-                {
-                    _nonNullNeighbours = base.NonNullNeighbors.ConvertAll(c => c as Cell).ToList();
-                }
-                return _nonNullNeighbours;
+                return _nonNullNeighbours ?? (_nonNullNeighbours = Neighbors.Where(n => n != null).ToList().ConvertAll(c => c as ICell).ToList());
             }
         }
+
+        public ITerrain Terrain { get; }
 
         public override float TravelCost
         {

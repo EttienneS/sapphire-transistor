@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 171893467}
   - component: {fileID: 171893468}
   m_Layer: 0
-  m_Name: SimpleMapGen
+  m_Name: MapGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -163,11 +163,53 @@ MonoBehaviour:
   m_GameObject: {fileID: 171893466}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4c7fff4de16eef4a994ceb4dc43bfb8, type: 3}
+  m_Script: {fileID: 11500000, guid: fdb43c578bd366e4094df3685e7d0eb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ChunkMaterial: {fileID: 2100000, guid: 8f3b76d51038e9a4887373a6872ceee0, type: 2}
   ChunksToRender: 5
+  HeightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.12286968
+      value: 0.10083049
+      inSlope: 0.2901707
+      outSlope: 0.2901707
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.11535712
+    - serializedVersion: 3
+      time: 0.59607375
+      value: 0.1318594
+      inSlope: 0.1162322
+      outSlope: 0.1162322
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.36076835
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &323206058
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,8 +253,8 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  far clip plane: 500
+  field of view: 30
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -253,10 +295,10 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
-  m_Dithering: 0
+  m_Dithering: 1
   m_ClearDepth: 1
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
@@ -411,13 +453,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629722247}
-  m_LocalRotation: {x: 0.37565243, y: -0.07301941, z: 0.17628446, w: 0.9069053}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 22}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!1 &1206429752
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,8 +490,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 323206059}
-  maxZoom: 250
-  minZoom: 20
+  maxZoom: 100
+  minZoom: 15
   movementSpeed: 1
   movementTime: 5
   normalSpeed: 0.5
@@ -503,7 +545,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 0}
+  sharedProfile: {fileID: 11400000, guid: 89419b4db1e066f40aaa8bd4c2e0d77d, type: 2}
 --- !u!4 &1936340182
 Transform:
   m_ObjectHideFlags: 0

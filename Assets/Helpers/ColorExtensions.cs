@@ -38,6 +38,5 @@ namespace Assets.Helpers
         {
             return "#" + ColorUtility.ToHtmlStringRGBA(color).Trim('#');
         }
-
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.StrategyCamera
 {
-    public class CameraController : LocatableMonoBehavior
+    public class CameraController : LocatableMonoBehaviorBase
     {
         public Camera Camera;
         public float maxZoom;
@@ -53,7 +53,6 @@ namespace Assets.StrategyCamera
 #else
             _cameraInputHandler = new MouseAndKeyboardInputHandler(this);
 #endif
-
         }
 
         public void Update()
@@ -97,7 +96,7 @@ namespace Assets.StrategyCamera
         private void OnDrawGizmos()
         {
             Gizmos.color = new Color(1, 0, 0, 0.75f);
-            Gizmos.DrawCube(transform.position, new Vector3(1f, 5f, 1f));
+            Gizmos.DrawCube(transform.position, new Vector3(0.1f, 2f, 0.1f));
         }
 
         private void ResetDeltas()

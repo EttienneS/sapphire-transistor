@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Assets.Map.Pathing
@@ -10,7 +9,6 @@ namespace Assets.Map.Pathing
 
         public float Y;
         private readonly int _hash;
-        private List<PathableCell> _nonNullNeighbours;
 
         internal PathableCell()
         {
@@ -20,17 +18,6 @@ namespace Assets.Map.Pathing
 
         public IPathFindableCell NextWithSamePriority { get; set; }
 
-        public List<PathableCell> NonNullNeighbors
-        {
-            get
-            {
-                if (_nonNullNeighbours == null)
-                {
-                    _nonNullNeighbours = Neighbors.Where(n => n != null).ToList();
-                }
-                return _nonNullNeighbours;
-            }
-        }
         public IPathFindableCell PathFrom { get; set; }
         public float SearchDistance { get; set; }
         public int SearchHeuristic { get; set; }
@@ -96,6 +83,7 @@ namespace Assets.Map.Pathing
 
             return this == other;
         }
+
         public override int GetHashCode()
         {
             // pre-calculated hash to improve search speed;

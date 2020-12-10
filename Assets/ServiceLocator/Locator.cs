@@ -6,17 +6,16 @@ using UnityEngine;
 
 namespace Assets.ServiceLocator
 {
-    public sealed class ServiceLocator
+    public sealed class Locator
     {
         private readonly Queue<IGameService> _initializationQueue;
         private readonly Dictionary<string, IGameService> _services;
 
-        public ServiceLocator()
+        public Locator()
         {
             _services = new Dictionary<string, IGameService>();
             _initializationQueue = new Queue<IGameService>();
         }
-
 
         public T Get<T>() where T : IGameService
         {

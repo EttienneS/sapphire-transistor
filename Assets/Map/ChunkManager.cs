@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.Map
 {
-    public class ChunkManager : LocatableMonoBehavior
+    public class ChunkManager : LocatableMonoBehaviorBase
     {
         public Material ChunkMaterial;
 
@@ -42,6 +42,7 @@ namespace Assets.Map
 
             return _chunkRenderers[x, z];
         }
+
         public override void Initialize()
         {
             _chunkRendererFactory = new ChunkRendererFactory(Locate<CameraController>().Camera);

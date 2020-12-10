@@ -206,7 +206,7 @@ namespace Assets.Helpers
         public void SetFractalType(FractalType fractalType) { mFractalType = fractalType; }
 
         /// <summary>
-        /// Sets octave count for all fractal noise types 
+        /// Sets octave count for all fractal noise types
         /// </summary>
         /// <remarks>
         /// Default: 3
@@ -254,7 +254,6 @@ namespace Assets.Helpers
         /// </remarks>
         public void SetFractalPingPongStrength(float pingPongStrength) { mPingPongStength = pingPongStrength; }
 
-
         /// <summary>
         /// Sets distance function used in cellular noise calculations
         /// </summary>
@@ -277,9 +276,8 @@ namespace Assets.Helpers
         /// <remarks>
         /// Default: 1.0
         /// Note: Setting this higher than 1 will cause artifacts
-        /// </remarks> 
+        /// </remarks>
         public void SetCellularJitter(float cellularJitter) { mCellularJitterModifier = cellularJitter; }
-
 
         /// <summary>
         /// Sets the warp algorithm when using DomainWarp(...)
@@ -293,7 +291,6 @@ namespace Assets.Helpers
             UpdateWarpTransformType3D();
         }
 
-
         /// <summary>
         /// Sets the maximum warp distance from original position when using DomainWarp(...)
         /// </summary>
@@ -301,7 +298,6 @@ namespace Assets.Helpers
         /// Default: 1.0
         /// </remarks>
         public void SetDomainWarpAmp(float domainWarpAmp) { mDomainWarpAmp = domainWarpAmp; }
-
 
         /// <summary>
         /// 2D noise at given position using current settings
@@ -318,10 +314,13 @@ namespace Assets.Helpers
             {
                 default:
                     return GenNoiseSingle(mSeed, x, y);
+
                 case FractalType.FBm:
                     return GenFractalFBm(x, y);
+
                 case FractalType.Ridged:
                     return GenFractalRidged(x, y);
+
                 case FractalType.PingPong:
                     return GenFractalPingPong(x, y);
             }
@@ -342,15 +341,17 @@ namespace Assets.Helpers
             {
                 default:
                     return GenNoiseSingle(mSeed, x, y, z);
+
                 case FractalType.FBm:
                     return GenFractalFBm(x, y, z);
+
                 case FractalType.Ridged:
                     return GenFractalRidged(x, y, z);
+
                 case FractalType.PingPong:
                     return GenFractalPingPong(x, y, z);
             }
         }
-
 
         /// <summary>
         /// 2D warps the input position using current domain warp settings
@@ -368,9 +369,11 @@ namespace Assets.Helpers
                 default:
                     DomainWarpSingle(ref x, ref y);
                     break;
+
                 case FractalType.DomainWarpProgressive:
                     DomainWarpFractalProgressive(ref x, ref y);
                     break;
+
                 case FractalType.DomainWarpIndependent:
                     DomainWarpFractalIndependent(ref x, ref y);
                     break;
@@ -393,15 +396,16 @@ namespace Assets.Helpers
                 default:
                     DomainWarpSingle(ref x, ref y, ref z);
                     break;
+
                 case FractalType.DomainWarpProgressive:
                     DomainWarpFractalProgressive(ref x, ref y, ref z);
                     break;
+
                 case FractalType.DomainWarpIndependent:
                     DomainWarpFractalIndependent(ref x, ref y, ref z);
                     break;
             }
         }
-
 
         private static readonly float[] Gradients2D =
         {
@@ -531,7 +535,6 @@ namespace Assets.Helpers
         -0.7870349638f, 0.03447489231f, 0.6159443543f, 0, -0.2015596421f, 0.6859872284f, 0.6991389226f, 0, -0.08581082512f, -0.10920836f, -0.9903080513f, 0, 0.5532693395f, 0.7325250401f, -0.396610771f, 0, -0.1842489331f, -0.9777375055f, -0.1004076743f, 0, 0.0775473789f, -0.9111505856f, 0.4047110257f, 0, 0.1399838409f, 0.7601631212f, -0.6344734459f, 0, 0.4484419361f, -0.845289248f, 0.2904925424f, 0
     };
 
-
         [MethodImpl(INLINE)]
         private static float FastMin(float a, float b) { return a < b ? a : b; }
 
@@ -588,6 +591,7 @@ namespace Assets.Helpers
 
         // Hashing
         private const int PrimeX = 501125321;
+
         private const int PrimeY = 1136930381;
         private const int PrimeZ = 1720413743;
 
@@ -714,7 +718,6 @@ namespace Assets.Helpers
             zo = value * zgo;
         }
 
-
         // Generic noise gen
 
         private float GenNoiseSingle(int seed, FNLfloat x, FNLfloat y)
@@ -723,16 +726,22 @@ namespace Assets.Helpers
             {
                 case NoiseType.OpenSimplex2:
                     return SingleSimplex(seed, x, y);
+
                 case NoiseType.OpenSimplex2S:
                     return SingleOpenSimplex2S(seed, x, y);
+
                 case NoiseType.Cellular:
                     return SingleCellular(seed, x, y);
+
                 case NoiseType.Perlin:
                     return SinglePerlin(seed, x, y);
+
                 case NoiseType.ValueCubic:
                     return SingleValueCubic(seed, x, y);
+
                 case NoiseType.Value:
                     return SingleValue(seed, x, y);
+
                 default:
                     return 0;
             }
@@ -744,21 +753,26 @@ namespace Assets.Helpers
             {
                 case NoiseType.OpenSimplex2:
                     return SingleOpenSimplex2(seed, x, y, z);
+
                 case NoiseType.OpenSimplex2S:
                     return SingleOpenSimplex2S(seed, x, y, z);
+
                 case NoiseType.Cellular:
                     return SingleCellular(seed, x, y, z);
+
                 case NoiseType.Perlin:
                     return SinglePerlin(seed, x, y, z);
+
                 case NoiseType.ValueCubic:
                     return SingleValueCubic(seed, x, y, z);
+
                 case NoiseType.Value:
                     return SingleValue(seed, x, y, z);
+
                 default:
                     return 0;
             }
         }
-
 
         // Noise Coordinate Transforms (frequency, and possible skew or rotation)
 
@@ -780,6 +794,7 @@ namespace Assets.Helpers
                         y += t;
                     }
                     break;
+
                 default:
                     break;
             }
@@ -804,6 +819,7 @@ namespace Assets.Helpers
                         z += xy * (FNLfloat)0.577350269189626;
                     }
                     break;
+
                 case TransformType3D.ImproveXZPlanes:
                     {
                         FNLfloat xz = x + z;
@@ -814,6 +830,7 @@ namespace Assets.Helpers
                         y += xz * (FNLfloat)0.577350269189626;
                     }
                     break;
+
                 case TransformType3D.DefaultOpenSimplex2:
                     {
                         const FNLfloat R3 = (FNLfloat)(2.0 / 3.0);
@@ -823,6 +840,7 @@ namespace Assets.Helpers
                         z = r - z;
                     }
                     break;
+
                 default:
                     break;
             }
@@ -835,9 +853,11 @@ namespace Assets.Helpers
                 case RotationType3D.ImproveXYPlanes:
                     mTransformType3D = TransformType3D.ImproveXYPlanes;
                     break;
+
                 case RotationType3D.ImproveXZPlanes:
                     mTransformType3D = TransformType3D.ImproveXZPlanes;
                     break;
+
                 default:
                     switch (mNoiseType)
                     {
@@ -845,6 +865,7 @@ namespace Assets.Helpers
                         case NoiseType.OpenSimplex2S:
                             mTransformType3D = TransformType3D.DefaultOpenSimplex2;
                             break;
+
                         default:
                             mTransformType3D = TransformType3D.None;
                             break;
@@ -852,7 +873,6 @@ namespace Assets.Helpers
                     break;
             }
         }
-
 
         // Domain Warp Coordinate Transforms
 
@@ -870,6 +890,7 @@ namespace Assets.Helpers
                         x += t; y += t;
                     }
                     break;
+
                 default:
                     break;
             }
@@ -890,6 +911,7 @@ namespace Assets.Helpers
                         z += xy * (FNLfloat)0.577350269189626;
                     }
                     break;
+
                 case TransformType3D.ImproveXZPlanes:
                     {
                         FNLfloat xz = x + z;
@@ -899,6 +921,7 @@ namespace Assets.Helpers
                         y += xz * (FNLfloat)0.577350269189626;
                     }
                     break;
+
                 case TransformType3D.DefaultOpenSimplex2:
                     {
                         const FNLfloat R3 = (FNLfloat)(2.0 / 3.0);
@@ -908,6 +931,7 @@ namespace Assets.Helpers
                         z = r - z;
                     }
                     break;
+
                 default:
                     break;
             }
@@ -920,9 +944,11 @@ namespace Assets.Helpers
                 case RotationType3D.ImproveXYPlanes:
                     mWarpTransformType3D = TransformType3D.ImproveXYPlanes;
                     break;
+
                 case RotationType3D.ImproveXZPlanes:
                     mWarpTransformType3D = TransformType3D.ImproveXZPlanes;
                     break;
+
                 default:
                     switch (mDomainWarpType)
                     {
@@ -930,6 +956,7 @@ namespace Assets.Helpers
                         case DomainWarpType.OpenSimplex2Reduced:
                             mWarpTransformType3D = TransformType3D.DefaultOpenSimplex2;
                             break;
+
                         default:
                             mWarpTransformType3D = TransformType3D.None;
                             break;
@@ -937,7 +964,6 @@ namespace Assets.Helpers
                     break;
             }
         }
-
 
         // Fractal FBm
 
@@ -982,7 +1008,6 @@ namespace Assets.Helpers
             return sum;
         }
 
-
         // Fractal Ridged
 
         private float GenFractalRidged(FNLfloat x, FNLfloat y)
@@ -1026,8 +1051,7 @@ namespace Assets.Helpers
             return sum;
         }
 
-
-        // Fractal PingPong 
+        // Fractal PingPong
 
         private float GenFractalPingPong(FNLfloat x, FNLfloat y)
         {
@@ -1069,7 +1093,6 @@ namespace Assets.Helpers
 
             return sum;
         }
-
 
         // Simplex/OpenSimplex2 Noise
 
@@ -1236,7 +1259,6 @@ namespace Assets.Helpers
 
             return value * 32.69428253173828125f;
         }
-
 
         // OpenSimplex2S Noise
 
@@ -1562,7 +1584,6 @@ namespace Assets.Helpers
             return value * 9.046026385208288f;
         }
 
-
         // Cellular Noise
 
         private float SingleCellular(int seed, FNLfloat x, FNLfloat y)
@@ -1609,6 +1630,7 @@ namespace Assets.Helpers
                         xPrimed += PrimeX;
                     }
                     break;
+
                 case CellularDistanceFunction.Manhattan:
                     for (int xi = xr - 1; xi <= xr + 1; xi++)
                     {
@@ -1635,6 +1657,7 @@ namespace Assets.Helpers
                         xPrimed += PrimeX;
                     }
                     break;
+
                 case CellularDistanceFunction.Hybrid:
                     for (int xi = xr - 1; xi <= xr + 1; xi++)
                     {
@@ -1677,18 +1700,25 @@ namespace Assets.Helpers
             {
                 case CellularReturnType.CellValue:
                     return closestHash * (1 / 2147483648.0f);
+
                 case CellularReturnType.Distance:
                     return distance0 - 1;
+
                 case CellularReturnType.Distance2:
                     return distance1 - 1;
+
                 case CellularReturnType.Distance2Add:
                     return (distance1 + distance0) * 0.5f - 1;
+
                 case CellularReturnType.Distance2Sub:
                     return distance1 - distance0 - 1;
+
                 case CellularReturnType.Distance2Mul:
                     return distance1 * distance0 * 0.5f - 1;
+
                 case CellularReturnType.Distance2Div:
                     return distance0 / distance1 - 1;
+
                 default:
                     return 0;
             }
@@ -1746,6 +1776,7 @@ namespace Assets.Helpers
                         xPrimed += PrimeX;
                     }
                     break;
+
                 case CellularDistanceFunction.Manhattan:
                     for (int xi = xr - 1; xi <= xr + 1; xi++)
                     {
@@ -1779,6 +1810,7 @@ namespace Assets.Helpers
                         xPrimed += PrimeX;
                     }
                     break;
+
                 case CellularDistanceFunction.Hybrid:
                     for (int xi = xr - 1; xi <= xr + 1; xi++)
                     {
@@ -1812,6 +1844,7 @@ namespace Assets.Helpers
                         xPrimed += PrimeX;
                     }
                     break;
+
                 default:
                     break;
             }
@@ -1830,23 +1863,29 @@ namespace Assets.Helpers
             {
                 case CellularReturnType.CellValue:
                     return closestHash * (1 / 2147483648.0f);
+
                 case CellularReturnType.Distance:
                     return distance0 - 1;
+
                 case CellularReturnType.Distance2:
                     return distance1 - 1;
+
                 case CellularReturnType.Distance2Add:
                     return (distance1 + distance0) * 0.5f - 1;
+
                 case CellularReturnType.Distance2Sub:
                     return distance1 - distance0 - 1;
+
                 case CellularReturnType.Distance2Mul:
                     return distance1 * distance0 * 0.5f - 1;
+
                 case CellularReturnType.Distance2Div:
                     return distance0 / distance1 - 1;
+
                 default:
                     return 0;
             }
         }
-
 
         // Perlin Noise
 
@@ -1909,7 +1948,6 @@ namespace Assets.Helpers
             return Lerp(yf0, yf1, zs) * 0.964921414852142333984375f;
         }
 
-
         // Value Cubic Noise
 
         private float SingleValueCubic(int seed, FNLfloat x, FNLfloat y)
@@ -1965,7 +2003,6 @@ namespace Assets.Helpers
             int y3 = y1 + unchecked(PrimeY * 2);
             int z3 = z1 + unchecked(PrimeZ * 2);
 
-
             return CubicLerp(
                 CubicLerp(
                 CubicLerp(ValCoord(seed, x0, y0, z0), ValCoord(seed, x1, y0, z0), ValCoord(seed, x2, y0, z0), ValCoord(seed, x3, y0, z0), xs),
@@ -1993,7 +2030,6 @@ namespace Assets.Helpers
                 ys),
                 zs) * (1 / (1.5f * 1.5f * 1.5f));
         }
-
 
         // Value Noise
 
@@ -2044,7 +2080,6 @@ namespace Assets.Helpers
             return Lerp(yf0, yf1, zs);
         }
 
-
         // Domain Warp
 
         private void DoSingleDomainWarp(int seed, float amp, float freq, FNLfloat x, FNLfloat y, ref FNLfloat xr, ref FNLfloat yr)
@@ -2054,9 +2089,11 @@ namespace Assets.Helpers
                 case DomainWarpType.OpenSimplex2:
                     SingleDomainWarpSimplexGradient(seed, amp * 38.283687591552734375f, freq, x, y, ref xr, ref yr, false);
                     break;
+
                 case DomainWarpType.OpenSimplex2Reduced:
                     SingleDomainWarpSimplexGradient(seed, amp * 16.0f, freq, x, y, ref xr, ref yr, true);
                     break;
+
                 case DomainWarpType.BasicGrid:
                     SingleDomainWarpBasicGrid(seed, amp, freq, x, y, ref xr, ref yr);
                     break;
@@ -2070,15 +2107,16 @@ namespace Assets.Helpers
                 case DomainWarpType.OpenSimplex2:
                     SingleDomainWarpOpenSimplex2Gradient(seed, amp * 32.69428253173828125f, freq, x, y, z, ref xr, ref yr, ref zr, false);
                     break;
+
                 case DomainWarpType.OpenSimplex2Reduced:
                     SingleDomainWarpOpenSimplex2Gradient(seed, amp * 7.71604938271605f, freq, x, y, z, ref xr, ref yr, ref zr, true);
                     break;
+
                 case DomainWarpType.BasicGrid:
                     SingleDomainWarpBasicGrid(seed, amp, freq, x, y, z, ref xr, ref yr, ref zr);
                     break;
             }
         }
-
 
         // Domain Warp Single Wrapper
 
@@ -2108,7 +2146,6 @@ namespace Assets.Helpers
 
             DoSingleDomainWarp(seed, amp, freq, xs, ys, zs, ref x, ref y, ref z);
         }
-
 
         // Domain Warp Fractal Progressive
 
@@ -2153,7 +2190,6 @@ namespace Assets.Helpers
             }
         }
 
-
         // Domain Warp Fractal Independant
         private void DomainWarpFractalIndependent(ref FNLfloat x, ref FNLfloat y)
         {
@@ -2195,7 +2231,6 @@ namespace Assets.Helpers
                 freq *= mLacunarity;
             }
         }
-
 
         // Domain Warp Basic Grid
 
@@ -2288,7 +2323,6 @@ namespace Assets.Helpers
             yr += Lerp(ly0y, Lerp(ly0x, ly1x, ys), zs) * warpAmp;
             zr += Lerp(lz0y, Lerp(lz0x, lz1x, ys), zs) * warpAmp;
         }
-
 
         // Domain Warp Simplex/OpenSimplex2
         private void SingleDomainWarpSimplexGradient(int seed, float warpAmp, float frequency, FNLfloat x, FNLfloat y, ref FNLfloat xr, ref FNLfloat yr, bool outGradOnly)

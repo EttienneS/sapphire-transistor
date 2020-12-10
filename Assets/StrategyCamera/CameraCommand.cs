@@ -1,8 +1,4 @@
-﻿using Assets.ServiceLocator;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Assets.StrategyCamera
+﻿namespace Assets.StrategyCamera
 {
     public abstract class CameraCommand
     {
