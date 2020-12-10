@@ -7,14 +7,7 @@ namespace Assets.Map.Pathing
     {
         public PathableCell[] Neighbors = new PathableCell[8];
 
-        public float Y;
-        private readonly int _hash;
-
-        internal PathableCell()
-        {
-            // pre-calculate the hash as it will not change over time
-            _hash = $"{X}:{Z}".GetHashCode();
-        }
+        private int _hash;
 
         public IPathFindableCell NextWithSamePriority { get; set; }
 
@@ -28,8 +21,7 @@ namespace Assets.Map.Pathing
 
         public abstract float TravelCost { get; }
 
-        public int X { get; set; }
-        public int Z { get; set; }
+        public ICoord Coord { get; set; }
 
         public static bool operator !=(PathableCell obj1, PathableCell obj2)
         {
@@ -59,8 +51,8 @@ namespace Assets.Map.Pathing
                 return 1;
             }
 
-            return (X < other.X ? other.X - X : X - other.X) +
-                   (Z < other.Z ? other.Z - Z : Z - other.Z);
+            return (Coord.X < other.Coord.X ? other.Coord.X - Coord.X : Coord.X - other.Coord.X) +
+                   (Coord.Z < other.Coord.Z ? other.Coord.Z - Coord.Z : Coord.Z - other.Coord.Z);
         }
 
         public bool Equals(PathableCell other)
@@ -70,7 +62,7 @@ namespace Assets.Map.Pathing
                 return false;
             }
 
-            return X == other.X && Z == other.Z;
+            return Coord.X == other.Coord.X && Coord.Z == other.Coord.Z;
         }
 
         public override bool Equals(object obj)
@@ -87,6 +79,12 @@ namespace Assets.Map.Pathing
         public override int GetHashCode()
         {
             // pre-calculated hash to improve search speed;
+            if (_hash == 0)
+            {
+                // pre-calculate the hash as it will not change over time
+                _hash = $"{Coord.X}:{Coord.Z}".GetHashCode();
+            }
+
             return _hash;
         }
 

@@ -60,7 +60,7 @@
     <Compile Include="Assets\Map\Pathing\PathRequest.cs" />
     <Compile Include="Assets\Map\Pathing\InvalidPathException.cs" />
     <Compile Include="Assets\ServiceLocator\Bootstrapper.cs" />
-    <Compile Include="Assets\Map\ChunkManager.cs" />
+    <Compile Include="Assets\Map\MapManager.cs" />
     <Compile Include="Assets\Map\Pathing\Direction.cs" />
     <Compile Include="Assets\Map\Pathing\DirectionExtensions.cs" />
     <Compile Include="Assets\Map\Pathing\PathableCell.cs" />
@@ -87,7 +87,7 @@
     <Compile Include="Assets\Map\Terrain.cs" />
     <Compile Include="Assets\Map\ITerrain.cs" />
     <Compile Include="Assets\Map\ICell.cs" />
-    <Compile Include="Assets\Actors\IStructure.cs" />
+    <Compile Include="Assets\Structures\IStructure.cs" />
     <Compile Include="Assets\Actors\IActor.cs" />
     <Compile Include="Assets\ServiceLocator\GameServiceBase.cs" />
     <Compile Include="Assets\ServiceLocator\LocatableMonoBehaviorBase.cs" />
@@ -102,6 +102,14 @@
     <Compile Include="Assets\Resources\Resource.cs" />
     <Compile Include="Assets\Resources\IResource.cs" />
     <Compile Include="Assets\Resources\ResourceManager.cs" />
+    <Compile Include="Assets\Map\ICoord.cs" />
+    <Compile Include="Assets\Map\Coord.cs" />
+    <Compile Include="Assets\Structures\StructureBehaviorBase.cs" />
+    <Compile Include="Assets\Structures\IStructureBehaviour.cs" />
+    <Compile Include="Assets\Structures\IStructureFactory.cs" />
+    <Compile Include="Assets\Structures\StructureFactory.cs" />
+    <Compile Include="Assets\Structures\Structure.cs" />
+    <Compile Include="Assets\Structures\Behaviors\FarmBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

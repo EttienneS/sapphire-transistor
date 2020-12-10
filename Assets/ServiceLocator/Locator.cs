@@ -19,8 +19,6 @@ namespace Assets.ServiceLocator
 
         public T Get<T>() where T : IGameService
         {
-            ProcessInitializationQueue();
-
             string key = typeof(T).Name;
             if (!_services.ContainsKey(key))
             {

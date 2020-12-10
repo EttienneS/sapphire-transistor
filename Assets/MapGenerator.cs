@@ -1,5 +1,4 @@
-﻿using Assets.Factions;
-using Assets.Helpers;
+﻿using Assets.Helpers;
 using Assets.Map;
 using Assets.Resources;
 using Assets.ServiceLocator;
@@ -24,14 +23,16 @@ namespace Assets
         private Dictionary<string, Terrain> _terrainLookup;
         private Cell[,] map;
         private IResourceManager _resourceManager;
+        private MapManager _mapManager;
 
         public override void Initialize()
         {
             _resourceManager = Locate<ResourceManager>();
+            _mapManager = Locate<MapManager>();
 
             InitializeTerrainLookup();
 
-            GenerateMap();
+            RegenerateMap();
 
             MakeCellMagentaOnClick();
 
@@ -62,7 +63,7 @@ namespace Assets
                     }
                 }
 
-                Locate<ChunkManager>().RenderCells(map);
+                _mapManager.RenderCells(map);
             }
         }
 
@@ -72,27 +73,6 @@ namespace Assets
             var camera = Locate<CameraController>();
             camera.ConfigureBounds(0, max, 0, max + 50);
             camera.MoveToWorldCenter();
-        }
-
-        private void GenerateMap()
-        {
-            RegisterChunkManager();
-
-            RegenerateMap();
-
-            RegisterFactionManager();
-        }
-
-        private void RegisterFactionManager()
-        {
-            GetLocator().Unregister<FactionManager>();
-            GetLocator().Register(new FactionManager());
-        }
-
-        private void RegisterChunkManager()
-        {
-            GetLocator().Unregister<ChunkManager>();
-            GetLocator().Register(ChunkManager.CreateChunkManager(ChunkMaterial));
         }
 
         private float GetAdjustedCellHeight(float height)
@@ -166,7 +146,7 @@ namespace Assets
         {
             CellEventManager.OnCellClicked += (cell) =>
             {
-                Locate<ChunkManager>().GetRendererForCell(cell).GenerateMesh();
+                _mapManager.GetRendererForCell(cell).GenerateMesh();
             };
         }
     }

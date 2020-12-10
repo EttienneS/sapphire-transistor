@@ -1,11 +1,12 @@
 ﻿using Assets.Actors;
+using Assets.Structures;
 using System.Collections.Generic;
 
 namespace Assets.Factions
 {
     public abstract class FactionBase : IFaction
     {
-        private string _name;
+        private readonly string _name;
 
         public FactionBase(string name)
         {

@@ -1,4 +1,5 @@
 ﻿using Assets.Actors;
+using Assets.Structures;
 using System.Collections.Generic;
 
 namespace Assets.Factions

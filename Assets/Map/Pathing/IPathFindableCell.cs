@@ -2,6 +2,7 @@
 {
     public interface IPathFindableCell
     {
+        ICoord Coord { get; }
         IPathFindableCell NextWithSamePriority { get; set; }
         IPathFindableCell PathFrom { get; set; }
         float SearchDistance { get; set; }
@@ -10,10 +11,6 @@
 
         int SearchPriority { get; }
         float TravelCost { get; }
-
-        int X { get; set; }
-
-        int Z { get; set; }
 
         int DistanceTo(IPathFindableCell other);
 

@@ -10,9 +10,7 @@ namespace Assets.Map
 
         public Cell(int x, int z, float height, ITerrain terain)
         {
-            X = x;
-            Z = z;
-            Y = height;
+            Coord = new Coord(x, height, z);
             Terrain = terain;
         }
 
@@ -30,7 +28,7 @@ namespace Assets.Map
         {
             get
             {
-                return Y;
+                return Coord.Y;
             }
         }
     }

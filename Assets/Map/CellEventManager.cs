@@ -10,7 +10,7 @@ namespace Assets.Map
 
         public static void CellClicked(Cell cell)
         {
-            Debug.Log($"Clicked {cell.X}-{cell.Z}");
+            Debug.Log($"Clicked {cell.Coord.X}-{cell.Coord.Z}");
             OnCellClicked.Invoke(cell);
         }
     }
