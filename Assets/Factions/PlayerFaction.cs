@@ -1,7 +1,4 @@
-﻿using Assets.Actors;
-using System.Collections.Generic;
-
-namespace Assets.Factions
+﻿namespace Assets.Factions
 {
     public class PlayerFaction : FactionBase
     {
@@ -11,7 +8,6 @@ namespace Assets.Factions
 
         public override void TakeTurn()
         {
-            
         }
     }
 }

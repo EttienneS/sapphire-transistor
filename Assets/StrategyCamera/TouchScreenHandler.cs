@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Assets.StrategyCamera
 {
-
     public class TouchScreenHandler : CameraInputHandler
     {
         private Vector3 _dragCurrentPosition;
@@ -32,7 +31,5 @@ namespace Assets.StrategyCamera
                 _cameraController.AddCameraCommand(new ZoomCommand(_cameraController.zoomAmount * distance));
             }
         }
-
     }
-
 }

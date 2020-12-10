@@ -1,6 +1,5 @@
 ﻿namespace Assets.ServiceLocator
 {
-
     public abstract class GameServiceBase : IGameService
     {
         private Locator _locator;

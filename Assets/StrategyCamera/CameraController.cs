@@ -53,7 +53,6 @@ namespace Assets.StrategyCamera
 #else
             _cameraInputHandler = new MouseAndKeyboardInputHandler(this);
 #endif
-
         }
 
         public void Update()

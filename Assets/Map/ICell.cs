@@ -1,5 +1,4 @@
-﻿using Assets.Factions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Assets.Map
 {
@@ -8,6 +7,5 @@ namespace Assets.Map
         ITerrain GetTerrain();
 
         List<ICell> GetNonNullNeighbors();
-
     }
 }

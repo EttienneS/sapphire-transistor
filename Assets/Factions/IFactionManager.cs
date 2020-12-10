@@ -1,6 +1,4 @@
-﻿using Assets.ServiceLocator;
-
-namespace Assets.Factions
+﻿namespace Assets.Factions
 {
     public interface IFactionManager
     {

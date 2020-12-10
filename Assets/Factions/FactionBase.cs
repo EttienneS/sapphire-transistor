@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Assets.Factions
 {
-
     public abstract class FactionBase : IFaction
     {
         private string _name;

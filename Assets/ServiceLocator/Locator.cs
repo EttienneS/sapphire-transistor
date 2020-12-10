@@ -17,7 +17,6 @@ namespace Assets.ServiceLocator
             _initializationQueue = new Queue<IGameService>();
         }
 
-
         public T Get<T>() where T : IGameService
         {
             ProcessInitializationQueue();
