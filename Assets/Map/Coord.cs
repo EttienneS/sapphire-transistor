@@ -15,5 +15,10 @@ namespace Assets.Map
         public float Y { get; }
         public int X { get; }
         public int Z { get; }
+
+        public override string ToString()
+        {
+            return $"{X}:{Y}:{Z}";
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace Assets.ServiceLocator
 
             var locator = Locator.Instance;
 
+            locator.Register(FindObjectOfType<SpawnManager>());
             locator.Register(FindObjectOfType<CameraController>());
             locator.Register(FindObjectOfType<MapManager>());
             locator.Register(new StructureFactory());

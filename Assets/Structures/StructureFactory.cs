@@ -1,6 +1,4 @@
-﻿using Assets.Factions;
-using Assets.Map;
-using Assets.Resources;
+﻿using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures.Behaviors;
 using System.Collections.Generic;
