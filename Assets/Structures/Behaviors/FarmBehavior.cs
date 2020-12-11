@@ -5,17 +5,18 @@ namespace Assets.Structures.Behaviors
 {
     public class FarmBehavior : StructureBehaviorBase
     {
-        private readonly (IResource, int)[] _baseYield;
+        private readonly (ResourceType, int)[] _baseYield;
 
-        public FarmBehavior(MapManager map, IResourceManager resourceManager) : base(map, resourceManager)
+
+        public FarmBehavior(MapManager map) : base(map)
         {
             _baseYield = new[]
             {
-                (resourceManager.GetResouceByName("Food"), 1)
+                (ResourceType.Food, 1)
             };
         }
 
-        public override (IResource, int)[] GetYield(IStructure structure)
+        public override (ResourceType, int)[] GetYield(IStructure structure)
         {
             return _baseYield;
         }

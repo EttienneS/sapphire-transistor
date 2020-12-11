@@ -22,12 +22,10 @@ namespace Assets
 
         private Dictionary<string, Terrain> _terrainLookup;
         private Cell[,] map;
-        private IResourceManager _resourceManager;
         private MapManager _mapManager;
 
         public override void Initialize()
         {
-            _resourceManager = Locate<ResourceManager>();
             _mapManager = Locate<MapManager>();
 
             InitializeTerrainLookup();
@@ -125,18 +123,15 @@ namespace Assets
 
         private void InitializeTerrainLookup()
         {
-            var stone = _resourceManager.GetResouceByName("Stone");
-            var food = _resourceManager.GetResouceByName("Food");
-            var wood = _resourceManager.GetResouceByName("wood");
 
             var terrains = new[]
             {
                 new Terrain("Snow", Color.white),
-                new Terrain("Stone", Color.grey, (stone, 1)),
-                new Terrain("Forrest", ColorExtensions.GetColorFromHex("2d6a4f"), (wood, 2), (food, 1)),
-                new Terrain("Grass", ColorExtensions.GetColorFromHex("52b788"), (food, 1)),
+                new Terrain("Stone", Color.grey, (ResourceType.Stone, 1)),
+                new Terrain("Forrest", ColorExtensions.GetColorFromHex("2d6a4f"), (ResourceType.Wood, 2), (ResourceType.Food, 1)),
+                new Terrain("Grass", ColorExtensions.GetColorFromHex("52b788"), (ResourceType.Food, 1)),
                 new Terrain("Sand", Color.yellow),
-                new Terrain("Water", Color.blue, (food, 1)),
+                new Terrain("Water", Color.blue, (ResourceType.Food, 1)),
             };
 
             _terrainLookup = terrains.ToDictionary(t => t.Name, t => t);

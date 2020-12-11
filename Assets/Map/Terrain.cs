@@ -7,7 +7,7 @@ namespace Assets.Map
 {
     public class Terrain : ITerrain
     {
-        public Terrain(string name, Color color, params (IResource resource, int amount)[] resourceValue)
+        public Terrain(string name, Color color, params (ResourceType resource, int amount)[] resourceValue)
         {
             Name = name;
             Color = color;
@@ -17,7 +17,7 @@ namespace Assets.Map
 
         public string Name { get; }
 
-        public Dictionary<IResource, int> ResourceValue { get; }
+        public Dictionary<ResourceType, int> ResourceValue { get; }
 
         public Color Color { get; }
     }

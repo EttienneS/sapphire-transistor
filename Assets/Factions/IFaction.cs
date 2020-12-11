@@ -6,7 +6,9 @@ namespace Assets.Factions
 {
     public interface IFaction
     {
-        string GetName();
+        string Name { get; }
+
+        List<IStructureFacade> GetBuildableStructures();
 
         IActor GetFactionHead();
 

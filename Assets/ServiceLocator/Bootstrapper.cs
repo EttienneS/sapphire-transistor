@@ -1,6 +1,5 @@
 ﻿using Assets.Factions;
 using Assets.Map;
-using Assets.Resources;
 using Assets.StrategyCamera;
 using Assets.Structures;
 using UnityEngine;
@@ -21,28 +20,20 @@ namespace Assets.ServiceLocator
         /// </summary>
         public void Awake()
         {
-            var locator = new Locator();
+            Locator.Instaniate();
+
+            var locator = Locator.Instance;
 
             locator.Register(FindObjectOfType<CameraController>());
             locator.Register(FindObjectOfType<MapManager>());
-            locator.Register(new ResourceManager());
-            locator.Register(new FactionManager());
             locator.Register(new StructureFactory());
+            locator.Register(new FactionManager());
             locator.Register(FindObjectOfType<MapGenerator>());
 
             locator.ProcessInitializationQueue();
             locator.LogServices();
-
-            _serviceLocator = locator;
+           
         }
 
-        /// <summary>Gets the service locator.</summary>
-        /// <returns>
-        ///   The current ServiceLocator
-        /// </returns>
-        public Locator GetServiceLocator()
-        {
-            return _serviceLocator;
-        }
     }
 }

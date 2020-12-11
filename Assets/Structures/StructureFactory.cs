@@ -1,4 +1,5 @@
-﻿using Assets.Map;
+﻿using Assets.Factions;
+using Assets.Map;
 using Assets.Resources;
 using Assets.ServiceLocator;
 using Assets.Structures.Behaviors;
@@ -12,15 +13,14 @@ namespace Assets.Structures
 
         public IStructureBehaviour GetBehaviour<T>() where T : IStructureBehaviour
         {
-            return _behaviorLookup[nameof(T)];
+            return _behaviorLookup[typeof(T).Name];
         }
 
         public override void Initialize()
         {
             var map = Locate<MapManager>();
-            var resource = Locate<ResourceManager>();
 
-            AddBehavior(new FarmBehavior(map, resource));
+            AddBehavior(new FarmBehavior(map));
         }
 
         public IStructure MakeStructure<T>(string name, ICoord coord) where T : IStructureBehaviour
@@ -30,7 +30,7 @@ namespace Assets.Structures
 
         private void AddBehavior(IStructureBehaviour behavior)
         {
-            _behaviorLookup.Add(nameof(behavior), behavior);
+            _behaviorLookup.Add(behavior.GetType().Name, behavior);
         }
     }
 }

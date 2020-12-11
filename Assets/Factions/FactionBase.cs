@@ -1,23 +1,21 @@
 ﻿using Assets.Actors;
 using Assets.Structures;
+using Assets.Structures.Behaviors;
 using System.Collections.Generic;
 
 namespace Assets.Factions
 {
     public abstract class FactionBase : IFaction
     {
-        private readonly string _name;
-
-        public FactionBase(string name)
+        private IStructureFactory _structureFactory;
+        public FactionBase(string name, IStructureFactory structureFactory)
         {
-            _name = name;
+            Name = name;
+
+            _structureFactory = structureFactory;
         }
 
-        public string GetName()
-        {
-            return _name;
-        }
-
+        public string Name { get; }
         public void AddActor(IActor actor)
         {
             throw new System.NotImplementedException();
@@ -28,6 +26,12 @@ namespace Assets.Factions
             throw new System.NotImplementedException();
         }
 
+        public List<IStructureFacade> GetBuildableStructures()
+        {
+            var facades = new List<IStructureFacade>();
+            facades.Add(new StructureFacade("Farm", "", _structureFactory.GetBehaviour<FarmBehavior>()));
+            return facades;
+        }
         public IActor GetFactionHead()
         {
             throw new System.NotImplementedException();
