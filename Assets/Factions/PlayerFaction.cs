@@ -11,7 +11,5 @@ namespace Assets.Factions
         public override void TakeTurn()
         {
         }
-
-        
     }
 }

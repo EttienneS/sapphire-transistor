@@ -9,5 +9,6 @@
         void MoveToNextTurn();
 
         IFaction GetPlayerFaction();
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Assets.Structures;
+using UnityEngine;
 
 namespace Assets.Factions
 {
@@ -10,6 +11,9 @@ namespace Assets.Factions
 
         public override void TakeTurn()
         {
+            Debug.Log($"Turn over: {Name}");
+
+            EndTurn();
         }
     }
 }

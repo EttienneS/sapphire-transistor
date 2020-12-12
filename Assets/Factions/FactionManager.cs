@@ -15,6 +15,14 @@ namespace Assets.Factions
         public void AddFaction(IFaction faction)
         {
             _factionQueue.Enqueue(faction);
+
+            faction.TurnEnded += Faction_TurnEnded;
+        }
+
+        private void Faction_TurnEnded(IFaction faction)
+        {
+            faction.DoTurnEndActions();
+            MoveToNextTurn();
         }
 
         public IFaction GetPlayerFaction()
@@ -36,7 +44,6 @@ namespace Assets.Factions
 
             _playerFaction = new PlayerFaction("Player", structureFactory, spawnManager);
             AddFaction(_playerFaction);
-
             AddFaction(new AIFaction("Enemy", structureFactory, spawnManager));
 
             _activeFaction = _factionQueue.Dequeue();
@@ -46,6 +53,8 @@ namespace Assets.Factions
         {
             _factionQueue.Enqueue(_activeFaction);
             _activeFaction = _factionQueue.Dequeue();
+            _activeFaction.DoTurnStartActions();
+            _activeFaction.TakeTurn();
         }
     }
 }

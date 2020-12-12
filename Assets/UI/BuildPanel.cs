@@ -13,8 +13,6 @@ namespace Assets.UI
         private IFaction _playerFaction;
         private SpawnManager _spawnManager;
 
-        public Button StructureButtonPrefab;
-
         private void Start()
         {
             CellEventManager.OnCellClicked += CellClicked;
@@ -24,9 +22,12 @@ namespace Assets.UI
 
             foreach (var structure in _playerFaction.GetBuildableStructures())
             {
-                var btn = Instantiate(StructureButtonPrefab, transform);
-                btn.GetComponentInChildren<Text>().text = structure.Name;
-                btn.onClick.AddListener(() => _selectedFacade = structure);
+                _spawnManager.SpawnUIElement("StructureButtonPrefab", transform, (obj) =>
+                {
+                    var btn = obj.GetComponent<Button>();
+                    obj.GetComponentInChildren<Text>().text = structure.Name;
+                    btn.onClick.AddListener(() => _selectedFacade = structure);
+                });
             }
         }
 
