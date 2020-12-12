@@ -117,20 +117,21 @@ namespace Assets.Map
                 var off = 0.4f;
                 foreach (var res in resources)
                 {
-                    if (res.Key.Name == "Wood")
+                    switch (res.Key)
                     {
-                        Gizmos.color = Color.green;
+                        case Resources.ResourceType.Food:
+                            Gizmos.color = Color.red;
+                            break;
+                        case Resources.ResourceType.Wood:
+                            Gizmos.color = Color.green;
+                            break;
+                        case Resources.ResourceType.Stone:
+                            Gizmos.color = Color.gray;
+                            break;
                     }
-                    else if (res.Key.Name == "Stone")
-                    {
-                        Gizmos.color = Color.blue;
-                    }
-                    else if (res.Key.Name == "Food")
-                    {
-                        Gizmos.color = Color.red;
-                    }
+                  
 
-                    Gizmos.DrawCube(new Vector3(cell.X + off, cell.Y + 0.1f * res.Value, cell.Z + 0.5f), new Vector3(0.1f, 0.1f * res.Value, 0.1f));
+                    Gizmos.DrawCube(new Vector3(cell.Coord.X + off, cell.Coord.Y + (0.1f * res.Value), cell.Coord.Z + 0.5f), new Vector3(0.1f, 0.1f * res.Value, 0.1f));
                     off += 0.1f;
                 }
             }
@@ -243,7 +244,7 @@ namespace Assets.Map
                 for (var x = 0; x < width; x++)
                 {
                     var cell = _cells[x, z];
-                    var height = cell.Y;
+                    var height = cell.Coord.Y;
 
                     var color = cell.Terrain.Color;
 

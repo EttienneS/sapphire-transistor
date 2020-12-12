@@ -1,11 +1,15 @@
 ﻿using Assets.Actors;
+using Assets.Map;
+using Assets.Structures;
 using System.Collections.Generic;
 
 namespace Assets.Factions
 {
     public interface IFaction
     {
-        string GetName();
+        string Name { get; }
+
+        List<IStructureFacade> GetBuildableStructures();
 
         IActor GetFactionHead();
 
@@ -18,5 +22,7 @@ namespace Assets.Factions
         List<IStructure> GetStructures();
 
         void TakeTurn();
+
+        void AddStructure(IStructureFacade selectedFacade, ICoord coord);
     }
 }

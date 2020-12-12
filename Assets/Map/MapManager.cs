@@ -1,31 +1,18 @@
 ﻿using Assets.Map.Pathing;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Map
 {
-    public class ChunkManager : LocatableMonoBehaviorBase
+    public class MapManager : LocatableMonoBehaviorBase
     {
         public Material ChunkMaterial;
 
         private Cell[,] _cells;
         private ChunkRendererFactory _chunkRendererFactory;
         private ChunkRenderer[,] _chunkRenderers;
-
-        public static ChunkManager CreateChunkManager(Material chunkMaterial, Transform parent = null)
-        {
-            var manager = new GameObject(nameof(ChunkManager))
-                                     .AddComponent<ChunkManager>();
-            manager.ChunkMaterial = chunkMaterial;
-
-            if (parent != null)
-            {
-                manager.transform.SetParent(parent);
-            }
-
-            return manager;
-        }
 
         public void DestroyChunks()
         {
@@ -37,8 +24,8 @@ namespace Assets.Map
 
         public ChunkRenderer GetRendererForCell(Cell cell)
         {
-            var x = Mathf.FloorToInt(cell.X / Constants.ChunkSize);
-            var z = Mathf.FloorToInt(cell.Z / Constants.ChunkSize);
+            var x = Mathf.FloorToInt(cell.Coord.X / Constants.ChunkSize);
+            var z = Mathf.FloorToInt(cell.Coord.Z / Constants.ChunkSize);
 
             return _chunkRenderers[x, z];
         }
@@ -53,6 +40,8 @@ namespace Assets.Map
             DestroyChunks();
             _cells = cellsToRender;
 
+            IndexCells(_cells);
+
             var width = Mathf.FloorToInt(cellsToRender.GetLength(0) / Constants.ChunkSize);
             var height = Mathf.FloorToInt(cellsToRender.GetLength(1) / Constants.ChunkSize);
 
@@ -65,6 +54,17 @@ namespace Assets.Map
                 }
             }
             CreatePathfinder();
+        }
+
+        private Dictionary<ICoord, Cell> _cellLookup;
+
+        private void IndexCells(Cell[,] cells)
+        {
+            _cellLookup = new Dictionary<ICoord, Cell>();
+            foreach (var cell in cells)
+            {
+                _cellLookup.Add(cell.Coord, cell);
+            }
         }
 
         internal Cell[,] GetCells(int offsetX, int offsetY)
@@ -82,6 +82,11 @@ namespace Assets.Map
             }
 
             return cells;
+        }
+
+        public Cell GetCellAtCoord(ICoord coord)
+        {
+            return _cellLookup[coord];
         }
 
         private void CreatePathfinder()

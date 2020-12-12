@@ -10,6 +10,6 @@ namespace Assets.Map
 
         string Name { get; }
 
-        Dictionary<IResource, int> ResourceValue { get; }
+        Dictionary<ResourceType, int> ResourceValue { get; }
     }
 }

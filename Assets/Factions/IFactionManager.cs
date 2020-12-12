@@ -7,5 +7,7 @@
         IFaction GetActiveFaction();
 
         void MoveToNextTurn();
+
+        IFaction GetPlayerFaction();
     }
 }

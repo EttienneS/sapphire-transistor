@@ -58,50 +58,59 @@
     <Compile Include="Assets\StrategyCamera\MoveCommand.cs" />
     <Compile Include="Assets\ServiceLocator\Locator.cs" />
     <Compile Include="Assets\Map\Pathing\PathRequest.cs" />
+    <Compile Include="Assets\Map\Terrain.cs" />
     <Compile Include="Assets\Map\Pathing\InvalidPathException.cs" />
     <Compile Include="Assets\ServiceLocator\Bootstrapper.cs" />
-    <Compile Include="Assets\Map\ChunkManager.cs" />
+    <Compile Include="Assets\Map\ICoord.cs" />
+    <Compile Include="Assets\Structures\IStructureBehaviour.cs" />
+    <Compile Include="Assets\Map\MapManager.cs" />
     <Compile Include="Assets\Map\Pathing\Direction.cs" />
     <Compile Include="Assets\Map\Pathing\DirectionExtensions.cs" />
     <Compile Include="Assets\Map\Pathing\PathableCell.cs" />
+    <Compile Include="Assets\Structures\IStructure.cs" />
+    <Compile Include="Assets\Map\Coord.cs" />
     <Compile Include="Assets\Map\CellEventManager.cs" />
+    <Compile Include="Assets\Map\ITerrain.cs" />
     <Compile Include="Assets\StrategyCamera\CameraController.cs" />
+    <Compile Include="Assets\ServiceLocator\LocatableMonoBehaviorBase.cs" />
+    <Compile Include="Assets\Factions\IFactionManager.cs" />
+    <Compile Include="Assets\Structures\Structure.cs" />
     <Compile Include="Assets\StrategyCamera\RotationCommand.cs" />
     <Compile Include="Assets\Map\Constants.cs" />
+    <Compile Include="Assets\Factions\FactionManager.cs" />
     <Compile Include="Assets\StrategyCamera\MouseAndKeyboardInputHandler.cs" />
+    <Compile Include="Assets\MapGenerator.cs" />
+    <Compile Include="Assets\Structures\StructureFacade.cs" />
     <Compile Include="Assets\Map\Pathing\Pathfinder.cs" />
     <Compile Include="Assets\Map\ChunkRendererFactory.cs" />
+    <Compile Include="Assets\Factions\PlayerFaction.cs" />
+    <Compile Include="Assets\Structures\IStructureFactory.cs" />
     <Compile Include="Assets\Map\ChunkRenderer.cs" />
     <Compile Include="Assets\StrategyCamera\CameraInputHandler.cs" />
     <Compile Include="Assets\StrategyCamera\CameraCommand.cs" />
+    <Compile Include="Assets\Factions\AIFaction.cs" />
+    <Compile Include="Assets\Structures\IStructureFacade.cs" />
+    <Compile Include="Assets\Resources\ResourceType.cs" />
     <Compile Include="Assets\Map\Cell.cs" />
     <Compile Include="Assets\Map\Pathing\CellPriorityQueue.cs" />
     <Compile Include="Assets\ServiceLocator\IGameService.cs" />
     <Compile Include="Assets\Helpers\FastNoiseLite.cs" />
     <Compile Include="Assets\StrategyCamera\ZoomCommand.cs" />
+    <Compile Include="Assets\Structures\StructureBehaviorBase.cs" />
+    <Compile Include="Assets\Structures\Behaviors\FarmBehavior.cs" />
     <Compile Include="Assets\Map\Pathing\IPathFindableCell.cs" />
+    <Compile Include="Assets\Factions\FactionBase.cs" />
+    <Compile Include="Assets\Actors\IActor.cs" />
     <Compile Include="Assets\Helpers\ColorExtensions.cs" />
+    <Compile Include="Assets\Structures\StructureFactory.cs" />
+    <Compile Include="Assets\Factions\IFaction.cs" />
     <Compile Include="Assets\StrategyCamera\TouchScreenHandler.cs" />
     <Compile Include="Assets\Helpers\Instrumenter.cs" />
-    <Compile Include="Assets\Helpers\FastNoiseExtension.cs" />
-    <Compile Include="Assets\Map\Terrain.cs" />
-    <Compile Include="Assets\Map\ITerrain.cs" />
-    <Compile Include="Assets\Map\ICell.cs" />
-    <Compile Include="Assets\Actors\IStructure.cs" />
-    <Compile Include="Assets\Actors\IActor.cs" />
     <Compile Include="Assets\ServiceLocator\GameServiceBase.cs" />
-    <Compile Include="Assets\ServiceLocator\LocatableMonoBehaviorBase.cs" />
-    <Compile Include="Assets\Factions\IFactionManager.cs" />
-    <Compile Include="Assets\Factions\FactionManager.cs" />
-    <Compile Include="Assets\Factions\FactionBase.cs" />
-    <Compile Include="Assets\Factions\IFaction.cs" />
-    <Compile Include="Assets\Factions\AIFaction.cs" />
-    <Compile Include="Assets\Factions\PlayerFaction.cs" />
-    <Compile Include="Assets\MapGenerator.cs" />
-    <Compile Include="Assets\Resources\IResourceManager.cs" />
-    <Compile Include="Assets\Resources\Resource.cs" />
-    <Compile Include="Assets\Resources\IResource.cs" />
-    <Compile Include="Assets\Resources\ResourceManager.cs" />
+    <Compile Include="Assets\Helpers\FastNoiseExtension.cs" />
+    <Compile Include="Assets\Map\ICell.cs" />
+    <Compile Include="Assets\UI\BuildPanel.cs" />
+    <Compile Include="Assets\SpawnManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -685,6 +694,24 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.CacheServer">
+      <HintPath>Library\ScriptAssemblies\UnityEditor.CacheServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.ScriptableBuildPipeline.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ResourceManager">
+      <HintPath>Library\ScriptAssemblies\Unity.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Addressables.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Addressables.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Addressables">
+      <HintPath>Library\ScriptAssemblies\Unity.Addressables.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline">
+      <HintPath>Library\ScriptAssemblies\Unity.ScriptableBuildPipeline.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

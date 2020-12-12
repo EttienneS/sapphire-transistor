@@ -1,5 +1,4 @@
-﻿using Assets.Factions;
-using Assets.Helpers;
+﻿using Assets.Helpers;
 using Assets.Map;
 using Assets.Resources;
 using Assets.ServiceLocator;
@@ -23,15 +22,15 @@ namespace Assets
 
         private Dictionary<string, Terrain> _terrainLookup;
         private Cell[,] map;
-        private IResourceManager _resourceManager;
+        private MapManager _mapManager;
 
         public override void Initialize()
         {
-            _resourceManager = Locate<ResourceManager>();
+            _mapManager = Locate<MapManager>();
 
             InitializeTerrainLookup();
 
-            GenerateMap();
+            RegenerateMap();
 
             MakeCellMagentaOnClick();
 
@@ -62,7 +61,7 @@ namespace Assets
                     }
                 }
 
-                Locate<ChunkManager>().RenderCells(map);
+                _mapManager.RenderCells(map);
             }
         }
 
@@ -72,27 +71,6 @@ namespace Assets
             var camera = Locate<CameraController>();
             camera.ConfigureBounds(0, max, 0, max + 50);
             camera.MoveToWorldCenter();
-        }
-
-        private void GenerateMap()
-        {
-            RegisterChunkManager();
-
-            RegenerateMap();
-
-            RegisterFactionManager();
-        }
-
-        private void RegisterFactionManager()
-        {
-            GetLocator().Unregister<FactionManager>();
-            GetLocator().Register(new FactionManager());
-        }
-
-        private void RegisterChunkManager()
-        {
-            GetLocator().Unregister<ChunkManager>();
-            GetLocator().Register(ChunkManager.CreateChunkManager(ChunkMaterial));
         }
 
         private float GetAdjustedCellHeight(float height)
@@ -145,18 +123,15 @@ namespace Assets
 
         private void InitializeTerrainLookup()
         {
-            var stone = _resourceManager.GetResouceByName("Stone");
-            var food = _resourceManager.GetResouceByName("Food");
-            var wood = _resourceManager.GetResouceByName("wood");
 
             var terrains = new[]
             {
                 new Terrain("Snow", Color.white),
-                new Terrain("Stone", Color.grey, (stone, 1)),
-                new Terrain("Forrest", ColorExtensions.GetColorFromHex("2d6a4f"), (wood, 2), (food, 1)),
-                new Terrain("Grass", ColorExtensions.GetColorFromHex("52b788"), (food, 1)),
+                new Terrain("Stone", Color.grey, (ResourceType.Stone, 1)),
+                new Terrain("Forrest", ColorExtensions.GetColorFromHex("2d6a4f"), (ResourceType.Wood, 2), (ResourceType.Food, 1)),
+                new Terrain("Grass", ColorExtensions.GetColorFromHex("52b788"), (ResourceType.Food, 1)),
                 new Terrain("Sand", Color.yellow),
-                new Terrain("Water", Color.blue, (food, 1)),
+                new Terrain("Water", Color.blue, (ResourceType.Food, 1)),
             };
 
             _terrainLookup = terrains.ToDictionary(t => t.Name, t => t);
@@ -166,7 +141,7 @@ namespace Assets
         {
             CellEventManager.OnCellClicked += (cell) =>
             {
-                Locate<ChunkManager>().GetRendererForCell(cell).GenerateMesh();
+                _mapManager.GetRendererForCell(cell).GenerateMesh();
             };
         }
     }

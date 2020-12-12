@@ -8,10 +8,17 @@ namespace Assets.ServiceLocator
 {
     public sealed class Locator
     {
+        public static void Instaniate()
+        {
+            Instance = new Locator();
+        }
+
+        public static Locator Instance { get; set; }
+
         private readonly Queue<IGameService> _initializationQueue;
         private readonly Dictionary<string, IGameService> _services;
 
-        public Locator()
+        private Locator()
         {
             _services = new Dictionary<string, IGameService>();
             _initializationQueue = new Queue<IGameService>();
@@ -19,8 +26,6 @@ namespace Assets.ServiceLocator
 
         public T Get<T>() where T : IGameService
         {
-            ProcessInitializationQueue();
-
             string key = typeof(T).Name;
             if (!_services.ContainsKey(key))
             {
