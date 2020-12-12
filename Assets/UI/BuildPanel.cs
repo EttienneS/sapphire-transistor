@@ -49,8 +49,7 @@ namespace Assets.UI
 
             if (_selectedFacade != null)
             {
-                var barn = _spawnManager.SpawnStructure("Barn");
-                barn.transform.position = cell.Coord.ToAdjustedVector3();
+                _playerFaction.AddStructure(_selectedFacade, cell.Coord);
             }
         }
 

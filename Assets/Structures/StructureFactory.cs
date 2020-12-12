@@ -21,9 +21,10 @@ namespace Assets.Structures
             AddBehavior(new FarmBehavior(map));
         }
 
-        public IStructure MakeStructure<T>(string name, ICoord coord) where T : IStructureBehaviour
+
+        public IStructure MakeStructure(IStructureFacade facade, ICoord coord)
         {
-            return new Structure(name, GetBehaviour<T>(), coord);
+            return new Structure(facade.Name, facade.StructurePrototype, coord);
         }
 
         private void AddBehavior(IStructureBehaviour behavior)

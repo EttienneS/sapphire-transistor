@@ -1,6 +1,5 @@
 ﻿using Assets.ServiceLocator;
 using Assets.Structures;
-using System;
 using System.Collections.Generic;
 
 namespace Assets.Factions
@@ -31,11 +30,14 @@ namespace Assets.Factions
         public override void Initialize()
         {
             _factionQueue = new Queue<IFaction>();
-            var structureFactory = Locate<StructureFactory>();
-            _playerFaction = new PlayerFaction("Player", structureFactory);
 
+            var structureFactory = Locate<StructureFactory>();
+            var spawnManager = Locate<SpawnManager>();
+
+            _playerFaction = new PlayerFaction("Player", structureFactory, spawnManager);
             AddFaction(_playerFaction);
-            AddFaction(new AIFaction("Enemy", structureFactory));
+
+            AddFaction(new AIFaction("Enemy", structureFactory, spawnManager));
 
             _activeFaction = _factionQueue.Dequeue();
         }

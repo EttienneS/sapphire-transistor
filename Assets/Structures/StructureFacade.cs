@@ -12,9 +12,12 @@ namespace Assets.Structures
 
         public IStructureBehaviour StructurePrototype { get; }
 
-        public StructureFacade(string name, string description, IStructureBehaviour structurePrototype, params (ResourceType, int)[] cost)
+        public string AssetName { get; }
+
+        public StructureFacade(string name, string assetName, string description, IStructureBehaviour structurePrototype, params (ResourceType, int)[] cost)
         {
             Name = name;
+            AssetName = assetName;
             Description = description;
             Cost = cost;
             StructurePrototype = structurePrototype;

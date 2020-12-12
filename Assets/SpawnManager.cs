@@ -1,6 +1,5 @@
 ﻿using Assets.ServiceLocator;
-using System.Collections.Generic;
-using System.Threading;
+using Assets.Structures;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -9,34 +8,16 @@ namespace Assets
 {
     public class SpawnManager : LocatableMonoBehaviorBase
     {
-        private const string StructureGroup = "Structures";
+        public delegate void SpawnCallback(GameObject spawnedObject);
 
         public override void Initialize()
         {
-            LoadStructures();
         }
 
-        private Dictionary<string, GameObject> _structures;
-
-        private bool _structuresLoaded;
-
-        private void LoadStructures()
+        public void SpawnStructure(IStructureFacade structureFacade, Vector3 position, SpawnCallback callback)
         {
-            _structures = new Dictionary<string, GameObject>();
-
-            var load = Addressables.LoadAssetsAsync<GameObject>(StructureGroup, op => _structures.Add(op.name, op));
-            load.Completed += (_) => _structuresLoaded = true;
-        }
-
-
-        public GameObject SpawnStructure(string name)
-        {
-            while (!_structuresLoaded)
-            {
-                Thread.Sleep(1);
-            }
-
-            return Instantiate(_structures[name], transform);
+            var op = Addressables.InstantiateAsync(structureFacade.AssetName, position, Quaternion.identity, transform);
+            op.Completed += (AsyncOperationHandle<GameObject> obj) => callback.Invoke(obj.Result);
         }
     }
 }

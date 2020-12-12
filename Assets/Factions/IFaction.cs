@@ -1,4 +1,5 @@
 ﻿using Assets.Actors;
+using Assets.Map;
 using Assets.Structures;
 using System.Collections.Generic;
 
@@ -21,5 +22,7 @@ namespace Assets.Factions
         List<IStructure> GetStructures();
 
         void TakeTurn();
+
+        void AddStructure(IStructureFacade selectedFacade, ICoord coord);
     }
 }

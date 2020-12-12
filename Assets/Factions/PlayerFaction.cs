@@ -4,7 +4,7 @@ namespace Assets.Factions
 {
     public class PlayerFaction : FactionBase
     {
-        public PlayerFaction(string name, IStructureFactory structureFactory) : base(name, structureFactory)
+        public PlayerFaction(string name, IStructureFactory structureFactory, SpawnManager spawnManager) : base(name, structureFactory, spawnManager)
         {
         }
 

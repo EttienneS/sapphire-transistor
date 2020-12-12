@@ -4,12 +4,10 @@ namespace Assets.Structures
 {
     public interface IStructureFacade
     {
-        string Name { get; }
-
-        string Description { get; }
-
+        string AssetName { get; }
         (ResourceType, int)[] Cost { get; }
-
+        string Description { get; }
+        string Name { get; }
         IStructureBehaviour StructurePrototype { get; }
     }
 }
