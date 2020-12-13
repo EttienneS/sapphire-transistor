@@ -19,10 +19,5 @@ namespace Assets.UI
         {
             _playerFaction.EndTurn();
         }
-
-        private void Update()
-        {
-            enabled = _factionManager.GetActiveFaction() == _playerFaction;
-        }
     }
 }

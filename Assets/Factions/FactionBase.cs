@@ -3,7 +3,6 @@ using Assets.Map;
 using Assets.Resources;
 using Assets.Structures;
 using Assets.Structures.Behaviors;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,19 +12,9 @@ namespace Assets.Factions
     public abstract class FactionBase : IFaction
     {
         private readonly Dictionary<IStructure, GameObject> _gameobjectLookup;
-        private SpawnManager _spawnManager;
-
-        public void EndTurn()
-        {
-            TurnEnded?.Invoke(this);
-        }
-
-        private IStructureFactory _structureFactory;
-
         private readonly Dictionary<ResourceType, int> _resources;
-
-        public event FactionDelegates.OnResourceChanged OnResourcesUpdated;
-        public event FactionDelegates.OnTurnEnded TurnEnded;
+        private readonly SpawnManager _spawnManager;
+        private readonly IStructureFactory _structureFactory;
 
         public FactionBase(string name, IStructureFactory structureFactory, SpawnManager spawnManager)
         {
@@ -38,22 +27,17 @@ namespace Assets.Factions
             _spawnManager = spawnManager;
         }
 
+        public event FactionDelegates.OnResourceChanged OnResourcesUpdated;
+
+        public event FactionDelegates.OnTurnEnded TurnEnded;
+
+        public event FactionDelegates.OnTurnStarted TurnStarted;
+
         public string Name { get; }
 
         public void AddActor(IActor actor)
         {
             throw new System.NotImplementedException();
-        }
-
-        public void ModifyResource(ResourceType resource, int amount)
-        {
-            if (!_resources.ContainsKey(resource))
-            {
-                _resources.Add(resource, 0);
-            }
-            _resources[resource] += amount;
-
-            OnResourcesUpdated?.Invoke(resource, _resources[resource]);
         }
 
         public void AddStructure(IStructureFacade selectedFacade, ICoord coord)
@@ -62,6 +46,31 @@ namespace Assets.Factions
             _gameobjectLookup.Add(structure, null);
 
             _spawnManager.SpawnStructure(selectedFacade, coord.ToAdjustedVector3(), (obj) => _gameobjectLookup[structure] = obj);
+        }
+
+        public void DoTurnEndActions()
+        {
+            foreach (var structure in GetStructures())
+            {
+                structure.Behaviour.TurnEnd(structure);
+            }
+        }
+
+        public void DoTurnStartActions()
+        {
+            foreach (var structure in GetStructures())
+            {
+                structure.Behaviour.TurnStart(structure);
+
+                AddResources(structure.Behaviour.GetYield(structure));
+            }
+
+            TurnStarted?.Invoke(this);
+        }
+
+        public void EndTurn()
+        {
+            TurnEnded?.Invoke(this);
         }
 
         public List<IActor> GetActors()
@@ -93,22 +102,23 @@ namespace Assets.Factions
             return _gameobjectLookup.Keys.ToList();
         }
 
+        public void ModifyResource(ResourceType resource, int amount)
+        {
+            if (!_resources.ContainsKey(resource))
+            {
+                _resources.Add(resource, 0);
+            }
+            _resources[resource] += amount;
+
+            OnResourcesUpdated?.Invoke(resource, _resources[resource]);
+        }
+
         public void SetFactionHead(IActor actor)
         {
             throw new System.NotImplementedException();
         }
 
         public abstract void TakeTurn();
-
-        public void DoTurnStartActions()
-        {
-            foreach (var structure in GetStructures())
-            {
-                structure.Behaviour.TurnStart(structure);
-
-                AddResources(structure.Behaviour.GetYield(structure));
-            }
-        }
 
         private void AddResources((ResourceType resouceType, int amount)[] resouces)
         {
@@ -117,14 +127,5 @@ namespace Assets.Factions
                 ModifyResource(resouce.resouceType, resouce.amount);
             }
         }
-
-        public void DoTurnEndActions()
-        {
-            foreach (var structure in GetStructures())
-            {
-                structure.Behaviour.TurnEnd(structure);
-            }
-        }
-
     }
 }

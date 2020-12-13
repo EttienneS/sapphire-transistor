@@ -114,6 +114,8 @@
     <Compile Include="Assets\UI\ResourcePanel.cs" />
     <Compile Include="Assets\Factions\FactionDelegates.cs" />
     <Compile Include="Assets\UI\EndTurnButton.cs" />
+    <Compile Include="Assets\UI\CurrentPlayerLabel.cs" />
+    <Compile Include="Assets\UI\UIManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

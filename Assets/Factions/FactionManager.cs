@@ -12,6 +12,9 @@ namespace Assets.Factions
 
         private IFaction _playerFaction;
 
+        public event FactionDelegates.OnTurnEnded OnTurnEnded;
+        public event FactionDelegates.OnTurnStarted OnTurnStarted;
+
         public void AddFaction(IFaction faction)
         {
             _factionQueue.Enqueue(faction);
@@ -22,6 +25,7 @@ namespace Assets.Factions
         private void Faction_TurnEnded(IFaction faction)
         {
             faction.DoTurnEndActions();
+            OnTurnEnded?.Invoke(faction);
             MoveToNextTurn();
         }
 
@@ -53,6 +57,9 @@ namespace Assets.Factions
         {
             _factionQueue.Enqueue(_activeFaction);
             _activeFaction = _factionQueue.Dequeue();
+
+            OnTurnStarted?.Invoke(_activeFaction);
+
             _activeFaction.DoTurnStartActions();
             _activeFaction.TakeTurn();
         }

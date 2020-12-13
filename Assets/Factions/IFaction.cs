@@ -8,33 +8,34 @@ namespace Assets.Factions
 {
     public interface IFaction
     {
-        string Name { get; }
-
-        List<IStructureFacade> GetBuildableStructures();
-
-        void ModifyResource(ResourceType resource, int amount);
-
-        Dictionary<ResourceType, int> GetResources();
-
-        IActor GetFactionHead();
-
-        List<IActor> GetActors();
-        void AddActor(IActor actor);
-
-        void SetFactionHead(IActor actor);
-
-        List<IStructure> GetStructures();
-
-        void DoTurnStartActions();
-
-        void TakeTurn();
-
-        void DoTurnEndActions();
-
-        void AddStructure(IStructureFacade selectedFacade, ICoord coord);
-
         event FactionDelegates.OnResourceChanged OnResourcesUpdated;
 
         event FactionDelegates.OnTurnEnded TurnEnded;
+
+        event FactionDelegates.OnTurnStarted TurnStarted;
+
+        string Name { get; }
+
+        void AddActor(IActor actor);
+
+        void AddStructure(IStructureFacade selectedFacade, ICoord coord);
+
+        void DoTurnEndActions();
+
+        void DoTurnStartActions();
+
+        List<IActor> GetActors();
+
+        List<IStructureFacade> GetBuildableStructures();
+
+        IActor GetFactionHead();
+
+        Dictionary<ResourceType, int> GetResources();
+
+        List<IStructure> GetStructures();
+
+        void ModifyResource(ResourceType resource, int amount);
+        void SetFactionHead(IActor actor);
+        void TakeTurn();
     }
 }

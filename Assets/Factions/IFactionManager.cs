@@ -10,5 +10,8 @@
 
         IFaction GetPlayerFaction();
 
+        event FactionDelegates.OnTurnEnded OnTurnEnded;
+        event FactionDelegates.OnTurnStarted OnTurnStarted;
+
     }
 }
