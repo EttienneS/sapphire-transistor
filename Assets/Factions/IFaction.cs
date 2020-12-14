@@ -34,8 +34,12 @@ namespace Assets.Factions
 
         List<IStructure> GetStructures();
 
+        ICoord GetFactionCoreLocation();
+
         void ModifyResource(ResourceType resource, int amount);
+
         void SetFactionHead(IActor actor);
+
         void TakeTurn();
     }
 }

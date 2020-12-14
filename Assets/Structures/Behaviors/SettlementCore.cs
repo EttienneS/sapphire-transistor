@@ -3,15 +3,16 @@ using Assets.Resources;
 
 namespace Assets.Structures.Behaviors
 {
-    public class FarmBehavior : StructureBehaviorBase
+    public class SettlementCore : StructureBehaviorBase
     {
         private readonly (ResourceType, int)[] _baseYield;
 
-        public FarmBehavior(MapManager map) : base(map)
+
+        public SettlementCore(MapManager map) : base(map)
         {
             _baseYield = new[]
             {
-                (ResourceType.Food, 1)
+                (ResourceType.Gold, 1)
             };
         }
 

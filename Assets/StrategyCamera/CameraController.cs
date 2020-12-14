@@ -43,8 +43,6 @@ namespace Assets.StrategyCamera
         {
             ResetDeltas();
 
-            MoveToWorldCenter();
-
             // https://gameprogrammingpatterns.com/command.html
             // using the command pattern we can easily change the handler to work diffirently when on a phone
 #if (UNITY_IPHONE || UNITY_ANDROID)
@@ -71,14 +69,15 @@ namespace Assets.StrategyCamera
             return 90 + transform.rotation.eulerAngles.y;
         }
 
-        internal void MoveToWorldCenter()
+        internal void MoveToPosition(Vector3 position)
         {
-            transform.position = new Vector3((_maxX - _minX) / 2f, 1f, (_maxZ - _minZ) / 2f);
+            transform.position = position;
 
             newPosition = transform.position;
             newZoom = new Vector3(0, (minZoom + maxZoom) / 2f, -((minZoom + maxZoom) / 2f));
         }
 
+     
         private Vector3 ClampPosition(Vector3 position)
         {
             return new Vector3(Mathf.Clamp(position.x, _minX, _maxX),

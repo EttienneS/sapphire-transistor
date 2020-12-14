@@ -14,7 +14,7 @@ namespace Assets
             GUILayout.Space(10);
             if (GUILayout.Button("Regenerate World"))
             {
-                myTarget.RegenerateMap();
+                myTarget.GenerateMap();
             }
         }
     }

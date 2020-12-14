@@ -1,6 +1,6 @@
 ﻿using Assets.ServiceLocator;
-using Assets.Structures;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Factions
 {
@@ -13,11 +13,17 @@ namespace Assets.Factions
         private IFaction _playerFaction;
 
         public event FactionDelegates.OnTurnEnded OnTurnEnded;
+
         public event FactionDelegates.OnTurnStarted OnTurnStarted;
 
         public void AddFaction(IFaction faction)
         {
             _factionQueue.Enqueue(faction);
+
+            if (faction is PlayerFaction)
+            {
+                _playerFaction = faction;
+            }
 
             faction.TurnEnded += Faction_TurnEnded;
         }
@@ -42,15 +48,6 @@ namespace Assets.Factions
         public override void Initialize()
         {
             _factionQueue = new Queue<IFaction>();
-
-            var structureFactory = Locate<StructureFactory>();
-            var spawnManager = Locate<SpawnManager>();
-
-            _playerFaction = new PlayerFaction("Player", structureFactory, spawnManager);
-            AddFaction(_playerFaction);
-            AddFaction(new AIFaction("Enemy", structureFactory, spawnManager));
-
-            _activeFaction = _factionQueue.Dequeue();
         }
 
         public void MoveToNextTurn()
@@ -62,6 +59,11 @@ namespace Assets.Factions
 
             _activeFaction.DoTurnStartActions();
             _activeFaction.TakeTurn();
+        }
+
+        public List<IFaction> GetFactions()
+        {
+            return _factionQueue.ToList();
         }
     }
 }

@@ -19,8 +19,9 @@ namespace Assets.Structures
             var map = Locate<MapManager>();
 
             AddBehavior(new FarmBehavior(map));
+            AddBehavior(new SettlementCore(map));
+            AddBehavior(new NoBehavior(map));
         }
-
 
         public IStructure MakeStructure(IStructureFacade facade, ICoord coord)
         {

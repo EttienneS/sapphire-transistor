@@ -29,11 +29,13 @@ namespace Assets.ServiceLocator
             locator.Register(FindObjectOfType<MapManager>());
             locator.Register(new StructureFactory());
             locator.Register(new FactionManager());
+
             locator.Register(FindObjectOfType<MapGenerator>());
+            locator.Register(new NewGameManager());
 
             locator.ProcessInitializationQueue();
             locator.LogServices();
-           
+
         }
 
     }

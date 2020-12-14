@@ -11,14 +11,14 @@ namespace Assets.Factions
 {
     public abstract class FactionBase : IFaction
     {
-        private readonly Dictionary<IStructure, GameObject> _gameobjectLookup;
         private readonly Dictionary<ResourceType, int> _resources;
         private readonly SpawnManager _spawnManager;
         private readonly IStructureFactory _structureFactory;
+        private readonly Dictionary<IStructure, GameObject> _structureObjectLookup;
 
         public FactionBase(string name, IStructureFactory structureFactory, SpawnManager spawnManager)
         {
-            _gameobjectLookup = new Dictionary<IStructure, GameObject>();
+            _structureObjectLookup = new Dictionary<IStructure, GameObject>();
             _resources = new Dictionary<ResourceType, int>();
 
             Name = name;
@@ -43,9 +43,9 @@ namespace Assets.Factions
         public void AddStructure(IStructureFacade selectedFacade, ICoord coord)
         {
             var structure = _structureFactory.MakeStructure(selectedFacade, coord);
-            _gameobjectLookup.Add(structure, null);
+            _structureObjectLookup.Add(structure, null);
 
-            _spawnManager.SpawnStructure(selectedFacade, coord.ToAdjustedVector3(), (obj) => _gameobjectLookup[structure] = obj);
+            _spawnManager.SpawnStructure(selectedFacade, coord.ToAdjustedVector3(), (obj) => _structureObjectLookup[structure] = obj);
         }
 
         public void DoTurnEndActions()
@@ -82,9 +82,16 @@ namespace Assets.Factions
         {
             var facades = new List<IStructureFacade>
             {
-                new StructureFacade("Farm", "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>())
+                new StructureFacade("Farm", "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>()),
+                new StructureFacade("Road", "Road", "", _structureFactory.GetBehaviour<NoBehavior>()),
+                new StructureFacade("House", "Placeholder", "", _structureFactory.GetBehaviour<NoBehavior>()),
             };
             return facades;
+        }
+
+        public ICoord GetFactionCoreLocation()
+        {
+            return _structureObjectLookup.Keys.First().Coord;
         }
 
         public IActor GetFactionHead()
@@ -99,7 +106,7 @@ namespace Assets.Factions
 
         public List<IStructure> GetStructures()
         {
-            return _gameobjectLookup.Keys.ToList();
+            return _structureObjectLookup.Keys.ToList();
         }
 
         public void ModifyResource(ResourceType resource, int amount)

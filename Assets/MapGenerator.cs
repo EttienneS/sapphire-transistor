@@ -30,14 +30,14 @@ namespace Assets
 
             InitializeTerrainLookup();
 
-            RegenerateMap();
+            GenerateMap();
 
             MakeCellMagentaOnClick();
 
             ConfigureMapBounds();
         }
 
-        public void RegenerateMap()
+        public void GenerateMap()
         {
             using (Instrumenter.Start())
             {
@@ -70,7 +70,6 @@ namespace Assets
             var max = GetMapSize();
             var camera = Locate<CameraController>();
             camera.ConfigureBounds(0, max, 0, max + 50);
-            camera.MoveToWorldCenter();
         }
 
         private float GetAdjustedCellHeight(float height)

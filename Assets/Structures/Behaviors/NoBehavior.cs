@@ -3,21 +3,15 @@ using Assets.Resources;
 
 namespace Assets.Structures.Behaviors
 {
-    public class FarmBehavior : StructureBehaviorBase
+    public class NoBehavior : StructureBehaviorBase
     {
-        private readonly (ResourceType, int)[] _baseYield;
-
-        public FarmBehavior(MapManager map) : base(map)
+        public NoBehavior(MapManager map) : base(map)
         {
-            _baseYield = new[]
-            {
-                (ResourceType.Food, 1)
-            };
         }
 
         public override (ResourceType, int)[] GetYield(IStructure structure)
         {
-            return _baseYield;
+            return new (ResourceType, int)[0];
         }
 
         public override void TurnEnd(IStructure structure)

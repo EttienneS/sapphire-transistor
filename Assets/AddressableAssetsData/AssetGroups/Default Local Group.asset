@@ -24,6 +24,26 @@ MonoBehaviour:
     - Structures
     m_MainAsset: {fileID: 919132149155446097, guid: 7a559f4af896bb04f8623a9ead315969, type: 3}
     m_TargetAsset: {fileID: 919132149155446097, guid: 7a559f4af896bb04f8623a9ead315969, type: 3}
+  - m_GUID: 8e90f1329b26aa142898d2b866ed7c86
+    m_Address: Placeholder
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: b60cfe5a5ab405c4a849362a93cba171
+    m_Address: Church
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Structures
+    m_MainAsset: {fileID: 919132149155446097, guid: b60cfe5a5ab405c4a849362a93cba171, type: 3}
+    m_TargetAsset: {fileID: 919132149155446097, guid: b60cfe5a5ab405c4a849362a93cba171, type: 3}
+  - m_GUID: bf694999f60aaee4c8e83f9fbc2ab8cc
+    m_Address: Road
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Structures
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: d2fbab6347d84fd41a2717b9146bb5fc
     m_Address: StructureButtonPrefab
     m_ReadOnly: 0
