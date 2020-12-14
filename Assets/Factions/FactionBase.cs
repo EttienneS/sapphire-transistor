@@ -1,5 +1,6 @@
 ﻿using Assets.Actors;
 using Assets.Map;
+using Assets.Resources;
 using Assets.Structures;
 using Assets.Structures.Behaviors;
 using System.Collections.Generic;
@@ -11,17 +12,26 @@ namespace Assets.Factions
     public abstract class FactionBase : IFaction
     {
         private readonly Dictionary<IStructure, GameObject> _gameobjectLookup;
-        private SpawnManager _spawnManager;
-        private IStructureFactory _structureFactory;
+        private readonly Dictionary<ResourceType, int> _resources;
+        private readonly SpawnManager _spawnManager;
+        private readonly IStructureFactory _structureFactory;
 
         public FactionBase(string name, IStructureFactory structureFactory, SpawnManager spawnManager)
         {
             _gameobjectLookup = new Dictionary<IStructure, GameObject>();
+            _resources = new Dictionary<ResourceType, int>();
+
             Name = name;
 
             _structureFactory = structureFactory;
             _spawnManager = spawnManager;
         }
+
+        public event FactionDelegates.OnResourceChanged OnResourcesUpdated;
+
+        public event FactionDelegates.OnTurnEnded TurnEnded;
+
+        public event FactionDelegates.OnTurnStarted TurnStarted;
 
         public string Name { get; }
 
@@ -38,6 +48,31 @@ namespace Assets.Factions
             _spawnManager.SpawnStructure(selectedFacade, coord.ToAdjustedVector3(), (obj) => _gameobjectLookup[structure] = obj);
         }
 
+        public void DoTurnEndActions()
+        {
+            foreach (var structure in GetStructures())
+            {
+                structure.Behaviour.TurnEnd(structure);
+            }
+        }
+
+        public void DoTurnStartActions()
+        {
+            foreach (var structure in GetStructures())
+            {
+                structure.Behaviour.TurnStart(structure);
+
+                AddResources(structure.Behaviour.GetYield(structure));
+            }
+
+            TurnStarted?.Invoke(this);
+        }
+
+        public void EndTurn()
+        {
+            TurnEnded?.Invoke(this);
+        }
+
         public List<IActor> GetActors()
         {
             throw new System.NotImplementedException();
@@ -45,8 +80,10 @@ namespace Assets.Factions
 
         public List<IStructureFacade> GetBuildableStructures()
         {
-            var facades = new List<IStructureFacade>();
-            facades.Add(new StructureFacade("Farm", "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>()));
+            var facades = new List<IStructureFacade>
+            {
+                new StructureFacade("Farm", "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>())
+            };
             return facades;
         }
 
@@ -55,9 +92,25 @@ namespace Assets.Factions
             throw new System.NotImplementedException();
         }
 
+        public Dictionary<ResourceType, int> GetResources()
+        {
+            return _resources;
+        }
+
         public List<IStructure> GetStructures()
         {
             return _gameobjectLookup.Keys.ToList();
+        }
+
+        public void ModifyResource(ResourceType resource, int amount)
+        {
+            if (!_resources.ContainsKey(resource))
+            {
+                _resources.Add(resource, 0);
+            }
+            _resources[resource] += amount;
+
+            OnResourcesUpdated?.Invoke(resource, _resources[resource]);
         }
 
         public void SetFactionHead(IActor actor)
@@ -66,5 +119,13 @@ namespace Assets.Factions
         }
 
         public abstract void TakeTurn();
+
+        private void AddResources((ResourceType resouceType, int amount)[] resouces)
+        {
+            foreach (var resouce in resouces)
+            {
+                ModifyResource(resouce.resouceType, resouce.amount);
+            }
+        }
     }
 }

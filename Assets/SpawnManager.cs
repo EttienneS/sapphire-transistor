@@ -16,8 +16,18 @@ namespace Assets
 
         public void SpawnStructure(IStructureFacade structureFacade, Vector3 position, SpawnCallback callback)
         {
-            var op = Addressables.InstantiateAsync(structureFacade.AssetName, position, Quaternion.identity, transform);
+            SpawnAddressable(structureFacade.AssetName, position, transform, callback);
+        }
+
+        private void SpawnAddressable(string address, Vector3 position, Transform parent, SpawnCallback callback)
+        {
+            var op = Addressables.InstantiateAsync(address, position, Quaternion.identity, parent);
             op.Completed += (AsyncOperationHandle<GameObject> obj) => callback.Invoke(obj.Result);
+        }
+
+        public void SpawnUIElement(string name, Transform parent, SpawnCallback callback)
+        {
+            SpawnAddressable(name, parent.transform.position, parent, callback);
         }
     }
 }
