@@ -7,6 +7,7 @@ namespace Assets.Factions
         void AddFaction(IFaction faction);
 
         IFaction GetActiveFaction();
+
         List<IFaction> GetFactions();
 
         void MoveToNextTurn();
@@ -14,7 +15,7 @@ namespace Assets.Factions
         IFaction GetPlayerFaction();
 
         event FactionDelegates.OnTurnEnded OnTurnEnded;
-        event FactionDelegates.OnTurnStarted OnTurnStarted;
 
+        event FactionDelegates.OnTurnStarted OnTurnStarted;
     }
 }

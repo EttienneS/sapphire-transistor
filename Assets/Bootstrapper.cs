@@ -34,8 +34,6 @@ namespace Assets
 
             locator.ProcessInitializationQueue();
             locator.LogServices();
-
         }
-
     }
 }

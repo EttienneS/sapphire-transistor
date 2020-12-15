@@ -11,5 +11,7 @@ namespace Assets.Map
         string Name { get; }
 
         Dictionary<ResourceType, int> ResourceValue { get; }
+
+        int TravelCost { get; }
     }
 }

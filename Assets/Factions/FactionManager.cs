@@ -52,7 +52,10 @@ namespace Assets.Factions
 
         public void MoveToNextTurn()
         {
-            _factionQueue.Enqueue(_activeFaction);
+            if (_activeFaction != null)
+            {
+                _factionQueue.Enqueue(_activeFaction);
+            }
             _activeFaction = _factionQueue.Dequeue();
 
             OnTurnStarted?.Invoke(_activeFaction);

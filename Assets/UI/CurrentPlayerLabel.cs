@@ -8,6 +8,7 @@ namespace Assets.UI
     {
         private IFaction _currentFaction;
         private TMP_Text _label;
+
         internal void Hide()
         {
             gameObject.SetActive(false);

@@ -1,6 +1,4 @@
-﻿using Assets.Map;
-using Assets.ServiceLocator;
-using System;
+﻿using Assets.ServiceLocator;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,8 +39,6 @@ namespace Assets.StrategyCamera
             _maxZ = maxz;
         }
 
-      
-
         public override void Initialize()
         {
             ResetDeltas();
@@ -81,7 +77,6 @@ namespace Assets.StrategyCamera
             newZoom = new Vector3(0, minZoom, -minZoom);
         }
 
-     
         private Vector3 ClampPosition(Vector3 position)
         {
             return new Vector3(Mathf.Clamp(position.x, _minX, _maxX),

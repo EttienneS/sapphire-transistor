@@ -8,7 +8,7 @@ namespace Assets.UI
     {
         private CurrentPlayerLabel _currentPlayerLabel;
         private EndTurnButton _endTurnButton;
-        
+
         private IFactionManager _factionManager;
         private IFaction _playerFaction;
 

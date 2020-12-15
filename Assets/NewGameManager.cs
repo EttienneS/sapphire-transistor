@@ -33,26 +33,28 @@ namespace Assets
             cameraController.MoveToPosition(factionManger.GetPlayerFaction().GetFactionCoreLocation().ToAdjustedVector3());
         }
 
-        private void GenerateMap(MapManager mapManager)
-        {
-            _mapGen = new MapGenerator(mapManager, 30, new DefaultTerrainDefinition());
-            _mapGen.GenerateMap();
-        }
-
-        private static void MakeFactionCores(StructureFactory structureFactory, MapManager mapManager, FactionManager factionManger)
+        private static void MakeFactionCores(StructureFactory structureFactory, MapManager mapManager, FactionManager factionManager)
         {
             var core = new StructureFacade("SettlmentCore", "Church", "The heart of this settlement", structureFactory.GetBehaviour<SettlementCore>());
-            foreach (var faction in factionManger.GetFactions())
+            foreach (var faction in factionManager.GetFactions())
             {
                 var coreCell = mapManager.GetRandomCell((cell) => cell.TravelCost > 0);
                 faction.AddStructure(core, coreCell.Coord);
             }
+
+            factionManager.MoveToNextTurn();
         }
 
         private static void RegisterFactions(StructureFactory structureFactory, SpawnManager spawnManager, FactionManager factionManger)
         {
             factionManger.AddFaction(new PlayerFaction("Player", structureFactory, spawnManager));
             factionManger.AddFaction(new AIFaction("Enemy", structureFactory, spawnManager));
+        }
+
+        private void GenerateMap(MapManager mapManager)
+        {
+            _mapGen = new MapGenerator(mapManager, 30, new DefaultTerrainDefinition());
+            _mapGen.GenerateMap();
         }
     }
 }

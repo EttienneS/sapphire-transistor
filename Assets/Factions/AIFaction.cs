@@ -18,7 +18,7 @@ namespace Assets.Factions
 
         public void DoStuff()
         {
-            for (int i = 0; i< 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Thread.Sleep(100);
                 Debug.Log($"Working {i}...");

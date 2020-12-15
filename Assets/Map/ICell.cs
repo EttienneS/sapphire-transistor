@@ -7,5 +7,4 @@ namespace Assets.Map
         List<ICell> NonNullNeighbors { get; }
         ITerrain Terrain { get; }
     }
-
 }

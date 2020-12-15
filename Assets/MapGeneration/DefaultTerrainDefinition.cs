@@ -14,12 +14,12 @@ namespace Assets.MapGeneration
         {
             var terrains = new[]
             {
-                new Terrain("Snow", "e9ecef".GetColorFromHex()),
-                new Terrain("Stone", "6c757d".GetColorFromHex(), (ResourceType.Stone, 1)),
-                new Terrain("Forrest", "386641".GetColorFromHex(), (ResourceType.Wood, 2), (ResourceType.Food, 1)),
-                new Terrain("Grass", "a7c957".GetColorFromHex(), (ResourceType.Food, 1)),
-                new Terrain("Sand", "f2e8cf".GetColorFromHex()),
-                new Terrain("Water", "5390d9".GetColorFromHex(), (ResourceType.Food, 1)),
+                new Terrain("Snow", "e9ecef".GetColorFromHex(), 4),
+                new Terrain("Stone", "6c757d".GetColorFromHex(), 2, (ResourceType.Stone, 1)),
+                new Terrain("Forrest", "386641".GetColorFromHex(), 1, (ResourceType.Wood, 2), (ResourceType.Food, 1)),
+                new Terrain("Grass", "a7c957".GetColorFromHex(), 1,(ResourceType.Food, 1)),
+                new Terrain("Sand", "f2e8cf".GetColorFromHex(), 1),
+                new Terrain("Water", "5390d9".GetColorFromHex(), -1, (ResourceType.Food, 1)),
             };
 
             _terrainLookup = terrains.ToDictionary(t => t.Name, t => t);
