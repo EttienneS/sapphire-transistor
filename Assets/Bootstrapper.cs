@@ -1,10 +1,11 @@
 ﻿using Assets.Factions;
 using Assets.Map;
+using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using Assets.Structures;
 using UnityEngine;
 
-namespace Assets.ServiceLocator
+namespace Assets
 {
     /// <summary>
     ///   <para>Required controller monobehavior for the Service Locator.  This class initializes the ServiceLocator and keeps it alive.</para>
@@ -29,8 +30,6 @@ namespace Assets.ServiceLocator
             locator.Register(FindObjectOfType<MapManager>());
             locator.Register(new StructureFactory());
             locator.Register(new FactionManager());
-
-            locator.Register(FindObjectOfType<MapGenerator>());
             locator.Register(new NewGameManager());
 
             locator.ProcessInitializationQueue();

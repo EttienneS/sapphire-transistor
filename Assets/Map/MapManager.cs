@@ -18,6 +18,7 @@ namespace Assets.Map
         private ChunkRendererFactory _chunkRendererFactory;
         private ChunkRenderer[,] _chunkRenderers;
         private List<Cell> _flatCells;
+
         public int Height { get; set; }
 
         public int Width { get; set; }
@@ -37,8 +38,6 @@ namespace Assets.Map
                 Destroy(child.gameObject);
             }
         }
-
-
 
         public Cell GetCellAtCoord(ICoord coord)
         {
