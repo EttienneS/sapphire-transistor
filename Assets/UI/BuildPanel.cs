@@ -20,7 +20,7 @@ namespace Assets.UI
             _playerFaction = Locator.Instance.Get<FactionManager>().GetPlayerFaction();
             _spawnManager = Locator.Instance.Get<SpawnManager>();
 
-            foreach (var structure in _playerFaction.GetBuildableStructures())
+            foreach (var structure in _playerFaction.StructureManager.GetBuildableStructures())
             {
                 _spawnManager.SpawnUIElement("StructureButtonPrefab", transform, (obj) =>
                 {
@@ -50,7 +50,7 @@ namespace Assets.UI
 
             if (_selectedFacade != null)
             {
-                _playerFaction.AddStructure(_selectedFacade, cell.Coord);
+                _playerFaction.StructureManager.AddStructure(_selectedFacade, cell.Coord);
             }
         }
 

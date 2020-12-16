@@ -7,5 +7,6 @@ namespace Assets.Structures
         IStructureBehaviour GetBehaviour<T>() where T : IStructureBehaviour;
 
         IStructure MakeStructure(IStructureFacade facade, ICoord coord);
+
     }
 }

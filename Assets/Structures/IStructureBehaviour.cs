@@ -4,7 +4,7 @@ namespace Assets.Structures
 {
     public interface IStructureBehaviour
     {
-        (ResourceType, int)[] GetYield(IStructure structure);
+        (ResourceType, int)[] GetBaseYield(IStructure structure);
 
         void TurnStart(IStructure structure);
 

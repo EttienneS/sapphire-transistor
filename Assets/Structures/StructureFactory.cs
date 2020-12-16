@@ -25,7 +25,11 @@ namespace Assets.Structures
 
         public IStructure MakeStructure(IStructureFacade facade, ICoord coord)
         {
-            return new Structure(facade.Name, facade.StructurePrototype, coord);
+            var structure = new Structure(facade, coord);
+
+            StructureEventManager.StructurePlanned(structure);
+
+            return structure;
         }
 
         private void AddBehavior(IStructureBehaviour behavior)

@@ -9,7 +9,7 @@ namespace Assets.Structures.Behaviors
         {
         }
 
-        public override (ResourceType, int)[] GetYield(IStructure structure)
+        public override (ResourceType, int)[] GetBaseYield(IStructure structure)
         {
             return new (ResourceType, int)[0];
         }

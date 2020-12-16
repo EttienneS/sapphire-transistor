@@ -28,6 +28,7 @@ namespace Assets
             locator.Register(FindObjectOfType<SpawnManager>());
             locator.Register(FindObjectOfType<CameraController>());
             locator.Register(FindObjectOfType<MapManager>());
+            
             locator.Register(new StructureFactory());
             locator.Register(new FactionManager());
             locator.Register(new NewGameManager());

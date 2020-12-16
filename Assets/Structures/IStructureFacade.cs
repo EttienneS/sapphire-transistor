@@ -8,6 +8,6 @@ namespace Assets.Structures
         (ResourceType, int)[] Cost { get; }
         string Description { get; }
         string Name { get; }
-        IStructureBehaviour StructurePrototype { get; }
+        IStructureBehaviour BehaviorPrototype { get; }
     }
 }

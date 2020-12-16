@@ -12,7 +12,7 @@ namespace Assets.Structures
             _map = map;
         }
 
-        public abstract (ResourceType, int)[] GetYield(IStructure structure);
+        public abstract (ResourceType, int)[] GetBaseYield(IStructure structure);
 
         public abstract void TurnEnd(IStructure structure);
 

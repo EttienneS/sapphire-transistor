@@ -73,6 +73,7 @@
     <Compile Include="Assets\Map\Pathing\PathableCell.cs" />
     <Compile Include="Assets\UI\UIManager.cs" />
     <Compile Include="Assets\Structures\IStructure.cs" />
+    <Compile Include="Assets\MapGeneration\MapGenerator.cs" />
     <Compile Include="Assets\Map\Coord.cs" />
     <Compile Include="Assets\Map\CellEventManager.cs" />
     <Compile Include="Assets\Map\ITerrain.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Assets\Map\Constants.cs" />
     <Compile Include="Assets\Factions\FactionManager.cs" />
     <Compile Include="Assets\StrategyCamera\MouseAndKeyboardInputHandler.cs" />
+    <Compile Include="Assets\MapGeneration\ITerrainDefinition.cs" />
     <Compile Include="Assets\Structures\StructureFacade.cs" />
     <Compile Include="Assets\Structures\Behaviors\SettlementCore.cs" />
     <Compile Include="Assets\Map\Pathing\Pathfinder.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="Assets\Helpers\FastNoiseLite.cs" />
     <Compile Include="Assets\StrategyCamera\ZoomCommand.cs" />
     <Compile Include="Assets\Structures\StructureBehaviorBase.cs" />
+    <Compile Include="Assets\MapGeneration\DefaultTerrainDefinition.cs" />
     <Compile Include="Assets\Structures\Behaviors\FarmBehavior.cs" />
     <Compile Include="Assets\Map\Pathing\IPathFindableCell.cs" />
     <Compile Include="Assets\Factions\FactionBase.cs" />
@@ -120,9 +123,11 @@
     <Compile Include="Assets\Helpers\FastNoiseExtension.cs" />
     <Compile Include="Assets\Helpers\RandomExtensions.cs" />
     <Compile Include="Assets\Map\ICell.cs" />
-    <Compile Include="Assets\MapGeneration\MapGenerator.cs" />
-    <Compile Include="Assets\MapGeneration\ITerrainDefinition.cs" />
-    <Compile Include="Assets\MapGeneration\DefaultTerrainDefinition.cs" />
+    <Compile Include="Assets\Structures\StructureDelegates.cs" />
+    <Compile Include="Assets\Factions\StructureManager.cs" />
+    <Compile Include="Assets\Factions\IStructureManager.cs" />
+    <Compile Include="Assets\Structures\StructureEventManager.cs" />
+    <Compile Include="Assets\Structures\FacadeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

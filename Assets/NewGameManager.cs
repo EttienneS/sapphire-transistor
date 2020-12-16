@@ -30,7 +30,7 @@ namespace Assets
         private static void ConfigureCameraDefaults(MapManager mapManager, FactionManager factionManger, StrategyCamera.CameraController cameraController)
         {
             cameraController.ConfigureBounds(0, mapManager.Width, 0, mapManager.Height);
-            cameraController.MoveToPosition(factionManger.GetPlayerFaction().GetFactionCoreLocation().ToAdjustedVector3());
+            cameraController.MoveToPosition(factionManger.GetPlayerFaction().StructureManager.GetFactionCoreLocation().ToAdjustedVector3());
         }
 
         private static void MakeFactionCores(StructureFactory structureFactory, MapManager mapManager, FactionManager factionManager)
@@ -39,7 +39,7 @@ namespace Assets
             foreach (var faction in factionManager.GetFactions())
             {
                 var coreCell = mapManager.GetRandomCell((cell) => cell.TravelCost > 0);
-                faction.AddStructure(core, coreCell.Coord);
+                faction.StructureManager.AddStructure(core, coreCell.Coord);
             }
 
             factionManager.MoveToNextTurn();
