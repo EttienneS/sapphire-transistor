@@ -2,7 +2,7 @@
 
 namespace Assets.Structures
 {
-    public class StructureEventManager
+    public static class StructureEventManager
     {
         public static event StructureDelegates.StructureBuildCompletedDelegate OnStructureBuildCompleted;
 
