@@ -68,5 +68,10 @@ namespace Assets.Structures
                 StructureEventManager.StructureBuildProgress(this, ElapsedTurnsToBuild, TotalTurnsToBuild);
             }
         }
+
+        public override string ToString()
+        {
+            return $"{Name}: {Coord}";
+        }
     }
 }
