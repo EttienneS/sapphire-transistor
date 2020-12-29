@@ -35,7 +35,7 @@ namespace Assets
 
         private static void MakeFactionCores(StructureFactory structureFactory, MapManager mapManager, FactionManager factionManager)
         {
-            var core = new StructureFacade("SettlmentCore", "Church", "The heart of this settlement", structureFactory.GetBehaviour<SettlementCore>());
+            var core = new StructureFacade("SettlmentCore", "BellTower", "The heart of this settlement", structureFactory.GetBehaviour<SettlementCore>());
             foreach (var faction in factionManager.GetFactions())
             {
                 var coreCell = mapManager.GetRandomCell((cell) => cell.TravelCost > 0);

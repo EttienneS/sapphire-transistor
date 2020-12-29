@@ -41,7 +41,7 @@ namespace Assets.Factions
             {
                 new StructureFacade("Farm", "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>(), (ResourceType.Gold, 3)),
                 new StructureFacade("Road", "Road", "", _structureFactory.GetBehaviour<NoBehavior>(), (ResourceType.Gold, 1)),
-                new StructureFacade("House", "Placeholder", "", _structureFactory.GetBehaviour<NoBehavior>(), (ResourceType.Gold, 2)),
+                new StructureFacade("House", "House", "", _structureFactory.GetBehaviour<NoBehavior>(), (ResourceType.Gold, 2)),
             };
             return facades;
         }
