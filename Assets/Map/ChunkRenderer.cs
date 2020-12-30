@@ -122,14 +122,15 @@ namespace Assets.Map
                         case Resources.ResourceType.Food:
                             Gizmos.color = Color.red;
                             break;
+
                         case Resources.ResourceType.Wood:
                             Gizmos.color = Color.green;
                             break;
+
                         case Resources.ResourceType.Stone:
                             Gizmos.color = Color.gray;
                             break;
                     }
-                  
 
                     Gizmos.DrawCube(new Vector3(cell.Coord.X + off, cell.Coord.Y + (0.1f * res.Value), cell.Coord.Z + 0.5f), new Vector3(0.1f, 0.1f * res.Value, 0.1f));
                     off += 0.1f;

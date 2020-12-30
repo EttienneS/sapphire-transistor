@@ -7,8 +7,7 @@ namespace Assets.Structures.Behaviors
     {
         private readonly (ResourceType, int)[] _baseYield;
 
-
-        public FarmBehavior(MapManager map) : base(map)
+        public FarmBehavior(IMapManager map) : base(map)
         {
             _baseYield = new[]
             {
@@ -16,7 +15,7 @@ namespace Assets.Structures.Behaviors
             };
         }
 
-        public override (ResourceType, int)[] GetYield(IStructure structure)
+        public override (ResourceType, int)[] GetBaseYield(IStructure structure)
         {
             return _baseYield;
         }

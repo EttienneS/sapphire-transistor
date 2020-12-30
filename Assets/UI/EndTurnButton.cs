@@ -11,7 +11,7 @@ namespace Assets.UI
 
         private void Start()
         {
-            _factionManager = Locator.Instance.Get<FactionManager>();
+            _factionManager = Locator.Instance.Find<IFactionManager>();
             _playerFaction = _factionManager.GetPlayerFaction() as PlayerFaction;
         }
 

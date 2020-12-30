@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Map.Pathing
 {
-    public class Pathfinder : LocatableMonoBehaviorBase
+    public class Pathfinder : MonoBehaviour
     {
         private CellPriorityQueue _searchFrontier;
         private int _searchFrontierPhase;
@@ -185,8 +185,6 @@ namespace Assets.Map.Pathing
             }
         }
 
-        public override void Initialize()
-        {
-        }
+      
     }
 }

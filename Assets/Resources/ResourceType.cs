@@ -2,6 +2,6 @@
 {
     public enum ResourceType
     {
-        Food, Wood, Stone
+        Food, Wood, Stone, Gold
     }
 }

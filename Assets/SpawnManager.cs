@@ -1,12 +1,14 @@
 ﻿using Assets.ServiceLocator;
 using Assets.Structures;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Assets
 {
-    public class SpawnManager : LocatableMonoBehaviorBase
+    public class SpawnManager : LocatableMonoBehaviorBase, ISpawnManager
     {
         public delegate void SpawnCallback(GameObject spawnedObject);
 
@@ -28,6 +30,44 @@ namespace Assets
         public void SpawnUIElement(string name, Transform parent, SpawnCallback callback)
         {
             SpawnAddressable(name, parent.transform.position, parent, callback);
+        }
+
+        public void AddItemToDestroy(GameObject gameObject)
+        {
+            lock (_destroyCache)
+            {
+                _destroyCache.Add(gameObject);
+            }
+        }
+
+        public void Update()
+        {
+            DestroyItemsInCache();
+        }
+
+        private readonly List<GameObject> _destroyCache = new List<GameObject>();
+
+        public void DestroyItemsInCache()
+        {
+            try
+            {
+                lock (_destroyCache)
+                {
+                    while (_destroyCache.Count > 0)
+                    {
+                        var item = _destroyCache[0];
+                        _destroyCache.RemoveAt(0);
+                        if (item != null)
+                        {
+                            Destroy(item);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"Destroy failed: {ex}");
+            }
         }
     }
 }

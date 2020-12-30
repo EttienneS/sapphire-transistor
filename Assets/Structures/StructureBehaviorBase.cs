@@ -5,15 +5,14 @@ namespace Assets.Structures
 {
     public abstract class StructureBehaviorBase : IStructureBehaviour
     {
-        private readonly MapManager _map;
+        private readonly IMapManager _map;
 
-        public StructureBehaviorBase(MapManager map)
+        public StructureBehaviorBase(IMapManager map)
         {
             _map = map;
         }
 
-
-        public abstract (ResourceType, int)[] GetYield(IStructure structure);
+        public abstract (ResourceType, int)[] GetBaseYield(IStructure structure);
 
         public abstract void TurnEnd(IStructure structure);
 

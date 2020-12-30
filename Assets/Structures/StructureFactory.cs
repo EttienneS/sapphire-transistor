@@ -16,15 +16,20 @@ namespace Assets.Structures
 
         public override void Initialize()
         {
-            var map = Locate<MapManager>();
+            var map = Locate<IMapManager>();
 
             AddBehavior(new FarmBehavior(map));
+            AddBehavior(new SettlementCore(map));
+            AddBehavior(new NoBehavior(map));
         }
-
 
         public IStructure MakeStructure(IStructureFacade facade, ICoord coord)
         {
-            return new Structure(facade.Name, facade.StructurePrototype, coord);
+            var structure = new Structure(facade, coord);
+
+            StructureEventManager.StructurePlanned(structure);
+
+            return structure;
         }
 
         private void AddBehavior(IStructureBehaviour behavior)

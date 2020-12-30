@@ -11,16 +11,16 @@ namespace Assets.UI
     public class BuildPanel : MonoBehaviour
     {
         private IFaction _playerFaction;
-        private SpawnManager _spawnManager;
+        private ISpawnManager _spawnManager;
 
         private void Start()
         {
             CellEventManager.OnCellClicked += CellClicked;
 
-            _playerFaction = Locator.Instance.Get<FactionManager>().GetPlayerFaction();
-            _spawnManager = Locator.Instance.Get<SpawnManager>();
+            _playerFaction = Locator.Instance.Find<IFactionManager>().GetPlayerFaction();
+            _spawnManager = Locator.Instance.Find<ISpawnManager>();
 
-            foreach (var structure in _playerFaction.GetBuildableStructures())
+            foreach (var structure in _playerFaction.StructureManager.GetBuildableStructures())
             {
                 _spawnManager.SpawnUIElement("StructureButtonPrefab", transform, (obj) =>
                 {
@@ -50,7 +50,7 @@ namespace Assets.UI
 
             if (_selectedFacade != null)
             {
-                _playerFaction.AddStructure(_selectedFacade, cell.Coord);
+                _playerFaction.StructureManager.AddStructure(_selectedFacade, cell.Coord);
             }
         }
 

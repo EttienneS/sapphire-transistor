@@ -1,6 +1,4 @@
-﻿using Assets.Factions;
-using Assets.Map;
-using System.Collections.Generic;
+﻿using Assets.Map;
 
 namespace Assets.Structures
 {

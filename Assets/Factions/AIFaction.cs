@@ -7,7 +7,7 @@ namespace Assets.Factions
 {
     public class AIFaction : FactionBase
     {
-        public AIFaction(string name, IStructureFactory structureFactory, SpawnManager spawnManager) : base(name, structureFactory, spawnManager)
+        public AIFaction(string name, IStructureFactory structureFactory, ISpawnManager spawnManager) : base(name, structureFactory, spawnManager)
         {
         }
 
@@ -18,7 +18,7 @@ namespace Assets.Factions
 
         public void DoStuff()
         {
-            for (int i = 0; i< 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Thread.Sleep(100);
                 Debug.Log($"Working {i}...");

@@ -16,9 +16,9 @@ namespace Assets.ServiceLocator
             return _locator;
         }
 
-        public T Locate<T>() where T : IGameService
+        public T Locate<T>() where T : class
         {
-            return _locator.Get<T>();
+            return _locator.Find<T>();
         }
 
         public abstract void Initialize();

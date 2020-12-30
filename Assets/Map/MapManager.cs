@@ -1,18 +1,36 @@
-﻿using Assets.Map.Pathing;
+﻿using Assets.Helpers;
+using Assets.Map.Pathing;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Map
 {
-    public class MapManager : LocatableMonoBehaviorBase
+    public class MapManager : LocatableMonoBehaviorBase, IMapManager
     {
         public Material ChunkMaterial;
 
+        private Dictionary<ICoord, Cell> _cellLookup;
         private Cell[,] _cells;
         private ChunkRendererFactory _chunkRendererFactory;
         private ChunkRenderer[,] _chunkRenderers;
+        private List<Cell> _flatCells;
+
+        private Pathfinder _pathfinder;
+        public int Height { get; set; }
+
+        public int Width { get; set; }
+
+        public void AddCellIfFound(int x, int z, List<Cell> cells)
+        {
+            if (x < Width && z < Height && x >= 0 && z >= 0)
+            {
+                cells.Add(_cells[x, z]);
+            }
+        }
 
         public void DestroyChunks()
         {
@@ -20,6 +38,55 @@ namespace Assets.Map
             {
                 Destroy(child.gameObject);
             }
+        }
+
+        public Cell GetCellAtCoord(ICoord coord)
+        {
+            return _cellLookup[coord];
+        }
+
+        public Cell GetCenter()
+        {
+            return _cells[Width / 2, Height / 2];
+        }
+
+        public List<Cell> GetCircle(Cell center, int radius)
+        {
+            var cells = new List<Cell>();
+
+            var centerX = center.Coord.X;
+            var centerY = center.Coord.Z;
+
+            for (var x = centerX - radius; x <= centerX; x++)
+            {
+                for (var y = centerY - radius; y <= centerY; y++)
+                {
+                    if ((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY) <= radius * radius)
+                    {
+                        AddCellIfFound(centerX - (x - centerX), centerY - (y - centerY), cells);
+                        AddCellIfFound(centerX + (x - centerX), centerY + (y - centerY), cells);
+                        AddCellIfFound(centerX - (x - centerX), centerY + (y - centerY), cells);
+                        AddCellIfFound(centerX + (x - centerX), centerY - (y - centerY), cells);
+                    }
+                }
+            }
+
+            return cells;
+        }
+
+        public Pathfinder GetPathfinder()
+        {
+            return _pathfinder;
+        }
+
+        public Cell GetRandomCell(MapDelegates.CheckCell predicate)
+        {
+            return _flatCells.Where(c => predicate.Invoke(c)).GetRandomItem();
+        }
+
+        public Cell GetRandomCell()
+        {
+            return _cells[(int)(Random.value * Width), (int)(Random.value * Height)];
         }
 
         public ChunkRenderer GetRendererForCell(Cell cell)
@@ -32,39 +99,35 @@ namespace Assets.Map
 
         public override void Initialize()
         {
-            _chunkRendererFactory = new ChunkRendererFactory(Locate<CameraController>().Camera);
+            _chunkRendererFactory = new ChunkRendererFactory(Locate<ICameraController>().GetCamera());
         }
 
-        public void RenderCells(Cell[,] cellsToRender)
+        public void Create(Cell[,] cellsToRender)
         {
             DestroyChunks();
+
             _cells = cellsToRender;
+            _flatCells = _cells.Flatten().ToList();
 
             IndexCells(_cells);
 
-            var width = Mathf.FloorToInt(cellsToRender.GetLength(0) / Constants.ChunkSize);
-            var height = Mathf.FloorToInt(cellsToRender.GetLength(1) / Constants.ChunkSize);
+            Width = cellsToRender.GetLength(0);
+            Height = cellsToRender.GetLength(1);
 
-            _chunkRenderers = new ChunkRenderer[width, height];
-            for (int x = 0; x < width; x++)
+            var chunkWidth = Mathf.FloorToInt(cellsToRender.GetLength(0) / Constants.ChunkSize);
+            var chunkHeight = Mathf.FloorToInt(cellsToRender.GetLength(1) / Constants.ChunkSize);
+
+            _chunkRenderers = new ChunkRenderer[chunkWidth, chunkHeight];
+            for (int x = 0; x < chunkWidth; x++)
             {
-                for (int z = 0; z < height; z++)
+                for (int z = 0; z < chunkHeight; z++)
                 {
                     _chunkRenderers[x, z] = MakeChunkRenderer(x, z);
                 }
             }
-            CreatePathfinder();
-        }
 
-        private Dictionary<ICoord, Cell> _cellLookup;
-
-        private void IndexCells(Cell[,] cells)
-        {
-            _cellLookup = new Dictionary<ICoord, Cell>();
-            foreach (var cell in cells)
-            {
-                _cellLookup.Add(cell.Coord, cell);
-            }
+            _pathfinder = CreatePathfinder();
+            CreateRoadManager(_pathfinder);
         }
 
         internal Cell[,] GetCells(int offsetX, int offsetY)
@@ -84,18 +147,28 @@ namespace Assets.Map
             return cells;
         }
 
-        public Cell GetCellAtCoord(ICoord coord)
-        {
-            return _cellLookup[coord];
-        }
-
-        private void CreatePathfinder()
+        private Pathfinder CreatePathfinder()
         {
             var pf = new GameObject("Pathfinder");
             pf.transform.SetParent(transform);
+            return pf.AddComponent<Pathfinder>();
+        }
 
-            GetLocator().Unregister<Pathfinder>();
-            GetLocator().Register(pf.AddComponent<Pathfinder>());
+        private void CreateRoadManager(Pathfinder pathfinder)
+        {
+            var obj = new GameObject("Roadmanager");
+            obj.transform.SetParent(transform);
+            var roadManager = obj.AddComponent<RoadManager>();
+            roadManager.Load(pathfinder);
+        }
+
+        private void IndexCells(Cell[,] cells)
+        {
+            _cellLookup = new Dictionary<ICoord, Cell>();
+            foreach (var cell in cells)
+            {
+                _cellLookup.Add(cell.Coord, cell);
+            }
         }
 
         private ChunkRenderer MakeChunkRenderer(int x, int z)

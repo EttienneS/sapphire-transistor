@@ -28,7 +28,7 @@ namespace Assets.Map
         {
             get
             {
-                return Coord.Y;
+                return Terrain.TravelCost;
             }
         }
     }

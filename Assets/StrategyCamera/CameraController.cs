@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.StrategyCamera
 {
-    public class CameraController : LocatableMonoBehaviorBase
+    public class CameraController : LocatableMonoBehaviorBase, ICameraController
     {
         public Camera Camera;
         public float maxZoom;
@@ -43,8 +43,6 @@ namespace Assets.StrategyCamera
         {
             ResetDeltas();
 
-            MoveToWorldCenter();
-
             // https://gameprogrammingpatterns.com/command.html
             // using the command pattern we can easily change the handler to work diffirently when on a phone
 #if (UNITY_IPHONE || UNITY_ANDROID)
@@ -71,12 +69,12 @@ namespace Assets.StrategyCamera
             return 90 + transform.rotation.eulerAngles.y;
         }
 
-        internal void MoveToWorldCenter()
+        public void MoveToPosition(Vector3 position)
         {
-            transform.position = new Vector3((_maxX - _minX) / 2f, 1f, (_maxZ - _minZ) / 2f);
+            transform.position = position;
 
             newPosition = transform.position;
-            newZoom = new Vector3(0, (minZoom + maxZoom) / 2f, -((minZoom + maxZoom) / 2f));
+            newZoom = new Vector3(0, minZoom, -minZoom);
         }
 
         private Vector3 ClampPosition(Vector3 position)
@@ -112,5 +110,12 @@ namespace Assets.StrategyCamera
             transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * movementTime);
             Camera.transform.localPosition = ClampZoom(Vector3.Lerp(Camera.transform.localPosition, newZoom, Time.deltaTime * movementTime));
         }
+
+        public Camera GetCamera()
+        {
+            return Camera;
+        }
+
+    
     }
 }

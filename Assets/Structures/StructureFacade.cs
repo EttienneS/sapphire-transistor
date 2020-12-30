@@ -10,7 +10,7 @@ namespace Assets.Structures
 
         public (ResourceType, int)[] Cost { get; }
 
-        public IStructureBehaviour StructurePrototype { get; }
+        public IStructureBehaviour BehaviorPrototype { get; }
 
         public string AssetName { get; }
 
@@ -20,7 +20,7 @@ namespace Assets.Structures
             AssetName = assetName;
             Description = description;
             Cost = cost;
-            StructurePrototype = structurePrototype;
+            BehaviorPrototype = structurePrototype;
         }
     }
 }
