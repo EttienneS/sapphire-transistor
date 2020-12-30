@@ -8,7 +8,7 @@ namespace Assets.Factions
     {
         private readonly Dictionary<ResourceType, int> _resources;
 
-        public FactionBase(string name, IStructureFactory structureFactory, SpawnManager spawnManager)
+        public FactionBase(string name, IStructureFactory structureFactory, ISpawnManager spawnManager)
         {
             _resources = new Dictionary<ResourceType, int>();
 

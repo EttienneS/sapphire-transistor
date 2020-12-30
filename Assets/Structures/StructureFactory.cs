@@ -16,7 +16,7 @@ namespace Assets.Structures
 
         public override void Initialize()
         {
-            var map = Locate<MapManager>();
+            var map = Locate<IMapManager>();
 
             AddBehavior(new FarmBehavior(map));
             AddBehavior(new SettlementCore(map));

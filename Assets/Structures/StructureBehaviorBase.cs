@@ -5,9 +5,9 @@ namespace Assets.Structures
 {
     public abstract class StructureBehaviorBase : IStructureBehaviour
     {
-        private readonly MapManager _map;
+        private readonly IMapManager _map;
 
-        public StructureBehaviorBase(MapManager map)
+        public StructureBehaviorBase(IMapManager map)
         {
             _map = map;
         }

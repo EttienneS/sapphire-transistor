@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Map
 {
-    public class MapManager : LocatableMonoBehaviorBase
+    public class MapManager : LocatableMonoBehaviorBase, IMapManager
     {
         public Material ChunkMaterial;
 
@@ -19,6 +19,7 @@ namespace Assets.Map
         private ChunkRenderer[,] _chunkRenderers;
         private List<Cell> _flatCells;
 
+        private Pathfinder _pathfinder;
         public int Height { get; set; }
 
         public int Width { get; set; }
@@ -73,6 +74,11 @@ namespace Assets.Map
             return cells;
         }
 
+        public Pathfinder GetPathfinder()
+        {
+            return _pathfinder;
+        }
+
         public Cell GetRandomCell(MapDelegates.CheckCell predicate)
         {
             return _flatCells.Where(c => predicate.Invoke(c)).GetRandomItem();
@@ -93,12 +99,13 @@ namespace Assets.Map
 
         public override void Initialize()
         {
-            _chunkRendererFactory = new ChunkRendererFactory(Locate<CameraController>().Camera);
+            _chunkRendererFactory = new ChunkRendererFactory(Locate<ICameraController>().GetCamera());
         }
 
-        public void RenderCells(Cell[,] cellsToRender)
+        public void Create(Cell[,] cellsToRender)
         {
             DestroyChunks();
+
             _cells = cellsToRender;
             _flatCells = _cells.Flatten().ToList();
 
@@ -118,7 +125,9 @@ namespace Assets.Map
                     _chunkRenderers[x, z] = MakeChunkRenderer(x, z);
                 }
             }
-            CreatePathfinder();
+
+            _pathfinder = CreatePathfinder();
+            CreateRoadManager(_pathfinder);
         }
 
         internal Cell[,] GetCells(int offsetX, int offsetY)
@@ -138,13 +147,19 @@ namespace Assets.Map
             return cells;
         }
 
-        private void CreatePathfinder()
+        private Pathfinder CreatePathfinder()
         {
             var pf = new GameObject("Pathfinder");
             pf.transform.SetParent(transform);
+            return pf.AddComponent<Pathfinder>();
+        }
 
-            GetLocator().Unregister<Pathfinder>();
-            GetLocator().Register(pf.AddComponent<Pathfinder>());
+        private void CreateRoadManager(Pathfinder pathfinder)
+        {
+            var obj = new GameObject("Roadmanager");
+            obj.transform.SetParent(transform);
+            var roadManager = obj.AddComponent<RoadManager>();
+            roadManager.Load(pathfinder);
         }
 
         private void IndexCells(Cell[,] cells)

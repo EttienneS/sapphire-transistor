@@ -1,32 +1,29 @@
 ﻿using Assets.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Assets.ServiceLocator
 {
     public sealed class Locator
     {
+        private readonly Dictionary<Type, IGameService> _services;
+
+        private Locator()
+        {
+            _services = new Dictionary<Type, IGameService>();
+        }
+
+        public static Locator Instance { get; set; }
+
         public static void Instaniate()
         {
             Instance = new Locator();
         }
 
-        public static Locator Instance { get; set; }
-
-        private readonly Queue<IGameService> _initializationQueue;
-        private readonly Dictionary<string, IGameService> _services;
-
-        private Locator()
+        public T Find<T>() where T : class
         {
-            _services = new Dictionary<string, IGameService>();
-            _initializationQueue = new Queue<IGameService>();
-        }
-
-        public T Get<T>() where T : IGameService
-        {
-            string key = typeof(T).Name;
+            var key = typeof(T);
             if (!_services.ContainsKey(key))
             {
                 Debug.LogError($"{key} not registered with {GetType().Name}");
@@ -38,39 +35,25 @@ namespace Assets.ServiceLocator
 
         public void ProcessInitializationQueue()
         {
-            while (_initializationQueue.Count > 0)
+            foreach (var item in _services)
             {
-                var nextItem = _initializationQueue.Dequeue();
-                var name = nextItem.GetType().Name;
-                using (Instrumenter.Start(name))
+                using (Instrumenter.Start(item.Key.Name))
                 {
-                    InitializeService(name, nextItem);
+                    InitializeService(item.Value);
                 }
             }
         }
 
-        public void Register<T>(T service) where T : IGameService
+        public void Register<TService>(IGameService service) where TService : class
         {
-            var serviceType = service.GetType();
-            if (_initializationQueue.Any(i => i.GetType() == serviceType) || _services.Any(i => i.GetType() == serviceType))
+            var serviceType = typeof(TService);
+            if (_services.ContainsKey(serviceType))
             {
                 Debug.LogError($"Attempted to register service of type {serviceType} which is already registered with the {GetType().Name}.");
                 return;
             }
 
-            _initializationQueue.Enqueue(service);
-        }
-
-        public void Unregister<T>() where T : IGameService
-        {
-            string key = typeof(T).Name;
-            if (!_services.ContainsKey(key))
-            {
-                Debug.Log($"Attempted to unregister service of type {key} which is not registered with the {GetType().Name}.");
-                return;
-            }
-
-            _services.Remove(key);
+            _services.Add(serviceType, service);
         }
 
         internal void LogServices()
@@ -78,16 +61,15 @@ namespace Assets.ServiceLocator
             var msg = "Loaded services:\n";
             foreach (var service in _services)
             {
-                msg += $"- {service.Key}\n";
+                msg += $"- {service.Key} >> {service.Value}\n";
             }
             Debug.Log(msg);
         }
 
-        private void InitializeService(string name, IGameService service)
+        private void InitializeService(IGameService service)
         {
             service.BindServiceLocator(this);
             service.Initialize();
-            _services.Add(name, service);
         }
     }
 }

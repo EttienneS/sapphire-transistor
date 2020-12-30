@@ -1,4 +1,5 @@
-﻿using Assets.Map;
+﻿using Assets.Factions;
+using Assets.Map;
 using Assets.Resources;
 
 namespace Assets.Structures

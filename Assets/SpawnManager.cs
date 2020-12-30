@@ -8,7 +8,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Assets
 {
-    public class SpawnManager : LocatableMonoBehaviorBase
+    public class SpawnManager : LocatableMonoBehaviorBase, ISpawnManager
     {
         public delegate void SpawnCallback(GameObject spawnedObject);
 

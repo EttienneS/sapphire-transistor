@@ -11,14 +11,14 @@ namespace Assets.UI
     public class BuildPanel : MonoBehaviour
     {
         private IFaction _playerFaction;
-        private SpawnManager _spawnManager;
+        private ISpawnManager _spawnManager;
 
         private void Start()
         {
             CellEventManager.OnCellClicked += CellClicked;
 
-            _playerFaction = Locator.Instance.Get<FactionManager>().GetPlayerFaction();
-            _spawnManager = Locator.Instance.Get<SpawnManager>();
+            _playerFaction = Locator.Instance.Find<IFactionManager>().GetPlayerFaction();
+            _spawnManager = Locator.Instance.Find<ISpawnManager>();
 
             foreach (var structure in _playerFaction.StructureManager.GetBuildableStructures())
             {

@@ -11,7 +11,7 @@ namespace Assets.UI
     public class ResourcePanel : MonoBehaviour
     {
         private IFaction _playerFaction;
-        private SpawnManager _spawnManager;
+        private ISpawnManager _spawnManager;
 
         private Dictionary<ResourceType, TMP_Text> _labelLookup;
 
@@ -19,8 +19,8 @@ namespace Assets.UI
         {
             _labelLookup = new Dictionary<ResourceType, TMP_Text>();
 
-            _playerFaction = Locator.Instance.Get<FactionManager>().GetPlayerFaction();
-            _spawnManager = Locator.Instance.Get<SpawnManager>();
+            _playerFaction = Locator.Instance.Find<IFactionManager>().GetPlayerFaction();
+            _spawnManager = Locator.Instance.Find<ISpawnManager>();
 
             foreach (var resourceType in Enum.GetValues(typeof(ResourceType)))
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Structures;
+using System.Collections.Generic;
 
 namespace Assets.Factions
 {
@@ -17,5 +18,7 @@ namespace Assets.Factions
         event FactionDelegates.OnTurnEnded OnTurnEnded;
 
         event FactionDelegates.OnTurnStarted OnTurnStarted;
+
+        IFaction GetOwnerOfStructure(IStructure structure);
     }
 }

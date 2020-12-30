@@ -129,6 +129,10 @@
     <Compile Include="Assets\Structures\FacadeExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
+    <Compile Include="Assets\Map\RoadManager.cs" />
+    <Compile Include="Assets\ISpawnManager.cs" />
+    <Compile Include="Assets\StrategyCamera\ICameraController.cs" />
+    <Compile Include="Assets\Map\IMapManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

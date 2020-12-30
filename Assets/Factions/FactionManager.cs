@@ -1,4 +1,5 @@
 ﻿using Assets.ServiceLocator;
+using Assets.Structures;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -67,6 +68,19 @@ namespace Assets.Factions
         public List<IFaction> GetFactions()
         {
             return _factionQueue.ToList();
+        }
+
+        public IFaction GetOwnerOfStructure(IStructure structure)
+        {
+            foreach (var faction in GetFactions())
+            {
+                if (faction.StructureManager.GetStructures().Contains(structure))
+                {
+                    return faction;
+                }
+            }
+
+            throw new KeyNotFoundException($"{structure} owner not found!");
         }
     }
 }

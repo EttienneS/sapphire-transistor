@@ -7,7 +7,7 @@ namespace Assets.Structures.Behaviors
     {
         private readonly (ResourceType, int)[] _baseYield;
 
-        public FarmBehavior(MapManager map) : base(map)
+        public FarmBehavior(IMapManager map) : base(map)
         {
             _baseYield = new[]
             {

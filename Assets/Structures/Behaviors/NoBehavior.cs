@@ -5,7 +5,7 @@ namespace Assets.Structures.Behaviors
 {
     public class NoBehavior : StructureBehaviorBase
     {
-        public NoBehavior(MapManager map) : base(map)
+        public NoBehavior(IMapManager map) : base(map)
         {
         }
 

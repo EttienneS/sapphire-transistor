@@ -6,12 +6,12 @@ namespace Assets.MapGeneration
 {
     public class MapGenerator
     {
-        private readonly MapManager _mapManager;
+        private readonly IMapManager _mapManager;
         private readonly ITerrainDefinition _terrainDefinition;
         private readonly int _chunksToRender = 30;
         private Cell[,] map;
 
-        public MapGenerator(MapManager mapManager, int chunksToRender, ITerrainDefinition terrainDefinition)
+        public MapGenerator(IMapManager mapManager, int chunksToRender, ITerrainDefinition terrainDefinition)
         {
             _mapManager = mapManager;
             _chunksToRender = chunksToRender;
@@ -40,7 +40,7 @@ namespace Assets.MapGeneration
                 }
             }
 
-            _mapManager.RenderCells(map);
+            _mapManager.Create(map);
         }
 
         private float GetAdjustedCellHeight(float height)

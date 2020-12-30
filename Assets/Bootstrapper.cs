@@ -25,13 +25,13 @@ namespace Assets
 
             var locator = Locator.Instance;
 
-            locator.Register(FindObjectOfType<SpawnManager>());
-            locator.Register(FindObjectOfType<CameraController>());
-            locator.Register(FindObjectOfType<MapManager>());
-            
-            locator.Register(new StructureFactory());
-            locator.Register(new FactionManager());
-            locator.Register(new NewGameManager());
+            locator.Register<ISpawnManager>(FindObjectOfType<SpawnManager>());
+            locator.Register<ICameraController>(FindObjectOfType<CameraController>());
+            locator.Register<IMapManager>(FindObjectOfType<MapManager>());
+
+            locator.Register<IStructureFactory>(new StructureFactory());
+            locator.Register<IFactionManager>(new FactionManager());
+            locator.Register<NewGameManager>(new NewGameManager());
 
             locator.ProcessInitializationQueue();
             locator.LogServices();

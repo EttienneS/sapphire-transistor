@@ -11,10 +11,10 @@ namespace Assets.Factions
     public class StructureManager : IStructureManager
     {
         private readonly Dictionary<IStructure, GameObject> _structureObjectLookup;
-        private readonly SpawnManager _spawnManager;
+        private readonly ISpawnManager _spawnManager;
         private readonly IStructureFactory _structureFactory;
 
-        public StructureManager(SpawnManager spawnManager, IStructureFactory structureFactory)
+        public StructureManager(ISpawnManager spawnManager, IStructureFactory structureFactory)
         {
             _spawnManager = spawnManager;
             _structureFactory = structureFactory;
@@ -40,7 +40,6 @@ namespace Assets.Factions
             var facades = new List<IStructureFacade>
             {
                 new StructureFacade("Farm", "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>(), (ResourceType.Gold, 3)),
-                new StructureFacade("Road", "Road", "", _structureFactory.GetBehaviour<NoBehavior>(), (ResourceType.Gold, 1)),
                 new StructureFacade("House", "House", "", _structureFactory.GetBehaviour<NoBehavior>(), (ResourceType.Gold, 2)),
             };
             return facades;
@@ -90,4 +89,5 @@ namespace Assets.Factions
             return yield;
         }
     }
+
 }

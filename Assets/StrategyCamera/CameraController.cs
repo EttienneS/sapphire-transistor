@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.StrategyCamera
 {
-    public class CameraController : LocatableMonoBehaviorBase
+    public class CameraController : LocatableMonoBehaviorBase, ICameraController
     {
         public Camera Camera;
         public float maxZoom;
@@ -69,7 +69,7 @@ namespace Assets.StrategyCamera
             return 90 + transform.rotation.eulerAngles.y;
         }
 
-        internal void MoveToPosition(Vector3 position)
+        public void MoveToPosition(Vector3 position)
         {
             transform.position = position;
 
@@ -110,5 +110,12 @@ namespace Assets.StrategyCamera
             transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * movementTime);
             Camera.transform.localPosition = ClampZoom(Vector3.Lerp(Camera.transform.localPosition, newZoom, Time.deltaTime * movementTime));
         }
+
+        public Camera GetCamera()
+        {
+            return Camera;
+        }
+
+    
     }
 }
