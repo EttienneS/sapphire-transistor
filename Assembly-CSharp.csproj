@@ -133,6 +133,7 @@
     <Compile Include="Assets\ISpawnManager.cs" />
     <Compile Include="Assets\StrategyCamera\ICameraController.cs" />
     <Compile Include="Assets\Map\IMapManager.cs" />
+    <Compile Include="Assets\ServiceLocator\IServiceLocator.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

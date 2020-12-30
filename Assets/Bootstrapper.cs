@@ -13,17 +13,13 @@ namespace Assets
     /// </summary>
     public class Bootstrapper : MonoBehaviour
     {
-        private Locator _serviceLocator;
-
         /// <summary>
         /// Creates the ServiceLocator and registers MonoBehaviors that already exist in the scene.
         /// Does an optional call to ProcessInitializationQueue to resovle the references in the loded monobehaviors.
         /// </summary>
         public void Awake()
         {
-            Locator.Instaniate();
-
-            var locator = Locator.Instance;
+            var locator = Locator.Create();
 
             locator.Register<ISpawnManager>(FindObjectOfType<SpawnManager>());
             locator.Register<ICameraController>(FindObjectOfType<CameraController>());
@@ -33,8 +29,7 @@ namespace Assets
             locator.Register<IFactionManager>(new FactionManager());
             locator.Register<NewGameManager>(new NewGameManager());
 
-            locator.ProcessInitializationQueue();
-            locator.LogServices();
+            locator.InitializeServices();
         }
     }
 }

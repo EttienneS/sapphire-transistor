@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.ServiceLocator
 {
-    public sealed class Locator
+    public sealed class Locator : IServiceLocator
     {
         private readonly Dictionary<Type, IGameService> _services;
 
@@ -14,11 +14,13 @@ namespace Assets.ServiceLocator
             _services = new Dictionary<Type, IGameService>();
         }
 
-        public static Locator Instance { get; set; }
+        public static IServiceLocator Instance { get; set; }
 
-        public static void Instaniate()
+        public static IServiceLocator Create()
         {
             Instance = new Locator();
+
+            return Instance;
         }
 
         public T Find<T>() where T : class
@@ -33,7 +35,7 @@ namespace Assets.ServiceLocator
             return (T)_services[key];
         }
 
-        public void ProcessInitializationQueue()
+        public void InitializeServices()
         {
             foreach (var item in _services)
             {
@@ -42,6 +44,8 @@ namespace Assets.ServiceLocator
                     InitializeService(item.Value);
                 }
             }
+
+            LogServices();
         }
 
         public void Register<TService>(IGameService service) where TService : class
