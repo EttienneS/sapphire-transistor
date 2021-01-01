@@ -41,7 +41,7 @@ namespace Assets.ServiceLocator
             {
                 using (Instrumenter.Start(item.Key.Name))
                 {
-                    InitializeService(item.Value);
+                    item.Value.Initialize();
                 }
             }
 
@@ -56,6 +56,7 @@ namespace Assets.ServiceLocator
                 Debug.LogError($"Attempted to register service of type {serviceType} which is already registered with the {GetType().Name}.");
                 return;
             }
+            service.BindServiceLocator(this);
 
             _services.Add(serviceType, service);
         }
@@ -70,10 +71,5 @@ namespace Assets.ServiceLocator
             Debug.Log(msg);
         }
 
-        private void InitializeService(IGameService service)
-        {
-            service.BindServiceLocator(this);
-            service.Initialize();
-        }
     }
 }

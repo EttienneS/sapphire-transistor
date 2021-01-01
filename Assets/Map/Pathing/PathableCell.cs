@@ -9,6 +9,7 @@ namespace Assets.Map.Pathing
 
         private int _hash;
 
+        public ICoord Coord { get; set; }
         public IPathFindableCell NextWithSamePriority { get; set; }
 
         public IPathFindableCell PathFrom { get; set; }
@@ -18,10 +19,6 @@ namespace Assets.Map.Pathing
         public int SearchPhase { get; set; }
 
         public int SearchPriority => (int)SearchDistance + SearchHeuristic;
-
-        public abstract float TravelCost { get; }
-
-        public ICoord Coord { get; set; }
 
         public static bool operator !=(PathableCell obj1, PathableCell obj2)
         {
@@ -92,6 +89,8 @@ namespace Assets.Map.Pathing
         {
             return Neighbors[(int)direction];
         }
+
+        public abstract float GetTravelCost();
 
         public void SetNeighbor(Direction direction, PathableCell cell)
         {

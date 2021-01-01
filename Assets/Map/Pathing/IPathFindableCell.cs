@@ -10,10 +10,11 @@
         int SearchPhase { get; set; }
 
         int SearchPriority { get; }
-        float TravelCost { get; }
 
         int DistanceTo(IPathFindableCell other);
 
         IPathFindableCell GetNeighbor(Direction direction);
+
+        float GetTravelCost();
     }
 }

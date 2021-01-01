@@ -39,7 +39,7 @@ namespace Assets
             var core = new StructureFacade("SettlmentCore", "BellTower", "The heart of this settlement", structureFactory.GetBehaviour<SettlementCore>());
             foreach (var faction in factionManager.GetFactions())
             {
-                var coreCell = mapManager.GetRandomCell((cell) => cell.TravelCost > 0);
+                var coreCell = mapManager.GetRandomCell((cell) => cell.GetTravelCost() > 0);
                 faction.StructureManager.AddStructure(core, coreCell.Coord);
 
                 foreach (var cell in coreCell.NonNullNeighbors)
