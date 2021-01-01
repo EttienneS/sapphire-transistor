@@ -127,7 +127,6 @@ namespace Assets.Map
             }
 
             _pathfinder = CreatePathfinder();
-            CreateRoadManager(_pathfinder);
         }
 
         internal Cell[,] GetCells(int offsetX, int offsetY)
@@ -154,13 +153,7 @@ namespace Assets.Map
             return pf.AddComponent<Pathfinder>();
         }
 
-        private void CreateRoadManager(Pathfinder pathfinder)
-        {
-            var obj = new GameObject("Roadmanager");
-            obj.transform.SetParent(transform);
-            var roadManager = obj.AddComponent<RoadManager>();
-            roadManager.Load(pathfinder);
-        }
+    
 
         private void IndexCells(Cell[,] cells)
         {

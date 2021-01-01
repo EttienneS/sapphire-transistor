@@ -18,18 +18,15 @@ namespace Assets.Map
         {
             get
             {
-                return _nonNullNeighbours ?? (_nonNullNeighbours = Neighbors.Where(n => n != null).ToList().ConvertAll(c => c as ICell).ToList());
+                return _nonNullNeighbours ??= Neighbors.Where(n => n != null).ToList().ConvertAll(c => c as ICell).ToList();
             }
         }
 
         public ITerrain Terrain { get; }
 
-        public override float TravelCost
+        public override float GetTravelCost()
         {
-            get
-            {
-                return Terrain.TravelCost;
-            }
+            return Terrain.TravelCost;
         }
     }
 }

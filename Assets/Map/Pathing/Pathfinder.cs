@@ -1,5 +1,4 @@
-﻿using Assets.ServiceLocator;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -107,13 +106,12 @@ namespace Assets.Map.Pathing
                     {
                         var neighbor = current.GetNeighbor(d);
 
-                        var neighborTravelCost = 1f;
-                        if (neighbor == null
-                              || neighbor.SearchPhase > _searchFrontierPhase)
+                        if (neighbor == null || neighbor.SearchPhase > _searchFrontierPhase)
                         {
                             continue;
                         }
 
+                        var neighborTravelCost = neighbor.GetTravelCost();
                         if (neighborTravelCost < 0)
                         {
                             continue;
@@ -184,7 +182,5 @@ namespace Assets.Map.Pathing
                 }
             }
         }
-
-      
     }
 }
