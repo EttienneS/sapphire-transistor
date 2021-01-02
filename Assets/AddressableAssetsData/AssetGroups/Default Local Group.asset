@@ -42,15 +42,15 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - UI
-    m_MainAsset: {fileID: 3110824048267316609, guid: d2fbab6347d84fd41a2717b9146bb5fc, type: 3}
-    m_TargetAsset: {fileID: 3110824048267316609, guid: d2fbab6347d84fd41a2717b9146bb5fc, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: d3a48bae57dfd844c9750d12c07f65b5
     m_Address: ResourceLabelPrefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - UI
-    m_MainAsset: {fileID: 2008985005187681183, guid: d3a48bae57dfd844c9750d12c07f65b5, type: 3}
-    m_TargetAsset: {fileID: 2008985005187681183, guid: d3a48bae57dfd844c9750d12c07f65b5, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: 1ab6c1a3e266e124b83259ea1f5c6de5
     m_Address: BellTower
     m_ReadOnly: 0
@@ -63,6 +63,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Structures
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 52364592654c8b140b7bce3e5d5fc7bd
+    m_Address: RadialMenu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 8bdf860c26dc18a44924ab6121b9da18
+    m_Address: RadialMenuElement
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0

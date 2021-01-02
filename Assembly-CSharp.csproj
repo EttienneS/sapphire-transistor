@@ -133,6 +133,10 @@
     <Compile Include="Assets\Structures\FacadeExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
+    <Compile Include="Assets\UI\IUIManager.cs" />
+    <Compile Include="Assets\UI\RadialMenuController.cs" />
+    <Compile Include="Assets\UI\RadialMenuElement.cs" />
+    <Compile Include="Assets\UI\RadialMenuDelegates.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

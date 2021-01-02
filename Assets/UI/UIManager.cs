@@ -1,28 +1,15 @@
 ﻿using Assets.Factions;
 using Assets.ServiceLocator;
-using UnityEngine;
 
 namespace Assets.UI
 {
-    public class UIManager : MonoBehaviour
+    public class UIManager : LocatableMonoBehaviorBase, IUIManager
     {
         private CurrentPlayerLabel _currentPlayerLabel;
         private EndTurnButton _endTurnButton;
 
         private IFactionManager _factionManager;
         private IFaction _playerFaction;
-
-        private void Start()
-        {
-            _factionManager = Locator.Instance.Find<IFactionManager>();
-            _playerFaction = _factionManager.GetPlayerFaction();
-            _factionManager.OnTurnStarted += FactionManager_OnTurnStarted;
-
-            _currentPlayerLabel = GetComponentInChildren<CurrentPlayerLabel>();
-            _endTurnButton = GetComponentInChildren<EndTurnButton>();
-
-            _currentPlayerLabel.Hide();
-        }
 
         private IFaction _activePlayer;
 
@@ -54,5 +41,33 @@ namespace Assets.UI
                 _endTurnButton.gameObject.SetActive(false);
             }
         }
+
+        public override void Initialize()
+        {
+            _factionManager = Locate<IFactionManager>();
+            _playerFaction = _factionManager.GetPlayerFaction();
+            _factionManager.OnTurnStarted += FactionManager_OnTurnStarted;
+
+            _currentPlayerLabel = GetComponentInChildren<CurrentPlayerLabel>();
+            _endTurnButton = GetComponentInChildren<EndTurnButton>();
+
+            _currentPlayerLabel.Hide();
+
+            RadialMenuManager = new RadialMenuManager(Locate<ISpawnManager>());
+        }
+
+        public RadialMenuManager RadialMenuManager { get; private set; }
+    }
+
+    public class RadialMenuManager
+    {
+        private ISpawnManager _spawnManager;
+        public RadialMenuManager(ISpawnManager spawnManager)
+        {
+            _spawnManager = spawnManager;
+        }
+
+    
+
     }
 }

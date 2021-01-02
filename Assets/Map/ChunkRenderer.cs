@@ -62,6 +62,19 @@ namespace Assets.Map
             }
         }
 
+        public void OnMouseOver()
+        {
+            var inputRay = _camera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(inputRay, out RaycastHit hit))
+            {
+                var hitX = (int)hit.point.x % Constants.ChunkSize;
+                var hitZ = (int)hit.point.z % Constants.ChunkSize;
+                var cell = _cells[hitX, hitZ];
+
+                CellEventManager.MouseOverCell(cell);
+            }
+        }
+
         public void SetCamera(Camera camera)
         {
             _camera = camera;
