@@ -94,7 +94,6 @@
     <Compile Include="Assets\Factions\AIFaction.cs" />
     <Compile Include="Assets\Factions\FactionBase.cs" />
     <Compile Include="Assets\UI\CurrentPlayerLabel.cs" />
-    <Compile Include="Assets\UI\BuildPanel.cs" />
     <Compile Include="Assets\StrategyCamera\CameraController.cs" />
     <Compile Include="Assets\Structures\StructureDelegates.cs" />
     <Compile Include="Assets\UI\UIManager.cs" />

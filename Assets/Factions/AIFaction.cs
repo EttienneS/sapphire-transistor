@@ -7,7 +7,7 @@ namespace Assets.Factions
 {
     public class AIFaction : FactionBase
     {
-        public AIFaction(string name, IStructureFactory structureFactory, ISpawnManager spawnManager) : base(name, structureFactory, spawnManager)
+        public AIFaction(string name, ServiceLocator.IServiceLocator serviceLocator) : base(name, serviceLocator)
         {
         }
 

@@ -2,5 +2,6 @@
 {
     public interface IUIManager
     {
+        RadialMenuManager RadialMenuManager { get; set; }
     }
 }

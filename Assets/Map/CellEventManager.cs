@@ -7,8 +7,8 @@ namespace Assets.Map
         public delegate void CellClickedDelegate(Cell cell);
         public delegate void MouseOverCellDelegate(Cell cell);
 
-        public static CellClickedDelegate OnCellClicked;
-        public static MouseOverCellDelegate OnMouseOver;
+        public  static CellClickedDelegate OnCellClicked;
+        public  static MouseOverCellDelegate OnMouseOver;
 
         public static void CellClicked(Cell cell)
         {
