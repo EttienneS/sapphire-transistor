@@ -65,6 +65,7 @@
     <Compile Include="Assets\Factions\IFactionManager.cs" />
     <Compile Include="Assets\Structures\IStructure.cs" />
     <Compile Include="Assets\StrategyCamera\TouchScreenHandler.cs" />
+    <Compile Include="Assets\UI\RadialMenuController.cs" />
     <Compile Include="Assets\Helpers\FastNoiseExtension.cs" />
     <Compile Include="Assets\Map\ICell.cs" />
     <Compile Include="Assets\Map\Pathing\IPathFindableCell.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Assets\Map\Cell.cs" />
     <Compile Include="Assets\UI\EndTurnButton.cs" />
     <Compile Include="Assets\StrategyCamera\RotationCommand.cs" />
+    <Compile Include="Assets\UI\IUIManager.cs" />
     <Compile Include="Assets\Map\ICoord.cs" />
     <Compile Include="Assets\ServiceLocator\IServiceLocator.cs" />
     <Compile Include="Assets\Map\ITerrain.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Assets\Structures\IStructureFactory.cs" />
     <Compile Include="Assets\StrategyCamera\ZoomCommand.cs" />
     <Compile Include="Assets\Helpers\RandomExtensions.cs" />
+    <Compile Include="Assets\UI\RadialMenuElement.cs" />
     <Compile Include="Assets\Map\Pathing\Pathfinder.cs" />
     <Compile Include="Assets\Resources\ResourceType.cs" />
     <Compile Include="Assets\Map\ChunkRendererFactory.cs" />
@@ -124,6 +127,7 @@
     <Compile Include="Assets\MapGeneration\ITerrainDefinition.cs" />
     <Compile Include="Assets\Structures\StructureEventManager.cs" />
     <Compile Include="Assets\Structures\Behaviors\SettlementCore.cs" />
+    <Compile Include="Assets\UI\RadialMenuDelegates.cs" />
     <Compile Include="Assets\StrategyCamera\CameraInputHandler.cs" />
     <Compile Include="Assets\Structures\Behaviors\NoBehavior.cs" />
     <Compile Include="Assets\Map\Pathing\Direction.cs" />
@@ -133,10 +137,7 @@
     <Compile Include="Assets\Structures\FacadeExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
-    <Compile Include="Assets\UI\IUIManager.cs" />
-    <Compile Include="Assets\UI\RadialMenuController.cs" />
-    <Compile Include="Assets\UI\RadialMenuElement.cs" />
-    <Compile Include="Assets\UI\RadialMenuDelegates.cs" />
+    <Compile Include="Assets\UI\RadialMenuManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

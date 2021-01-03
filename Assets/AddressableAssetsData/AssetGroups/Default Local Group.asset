@@ -68,13 +68,8 @@ MonoBehaviour:
   - m_GUID: 52364592654c8b140b7bce3e5d5fc7bd
     m_Address: RadialMenu
     m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: 8bdf860c26dc18a44924ab6121b9da18
-    m_Address: RadialMenuElement
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - UI
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0

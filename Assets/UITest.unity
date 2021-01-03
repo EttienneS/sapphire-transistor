@@ -420,6 +420,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: RadialMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 11484684, guid: 52364592654c8b140b7bce3e5d5fc7bd, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11484684, guid: 52364592654c8b140b7bce3e5d5fc7bd, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11484684, guid: 52364592654c8b140b7bce3e5d5fc7bd, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 22455874, guid: 52364592654c8b140b7bce3e5d5fc7bd, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

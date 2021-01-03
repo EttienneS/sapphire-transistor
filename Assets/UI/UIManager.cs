@@ -1,5 +1,7 @@
 ﻿using Assets.Factions;
 using Assets.ServiceLocator;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.UI
 {
@@ -18,9 +20,21 @@ namespace Assets.UI
             _activePlayer = faction;
         }
 
+        private bool flag;
+
         private void Update()
         {
             ShowOrHideActivePlayerMessage();
+            if (!flag)
+            {
+                flag = true;
+                var elements = new List<(string, RadialMenuDelegates.MenuItemClicked)>();
+                for (int i = 0; i < Random.Range(3, 10); i++)
+                {
+                    elements.Add(($"Test {i}", () => flag = false));
+                }
+                RadialMenuManager.ShowRadialMenu(true, elements.ToArray());
+            }
         }
 
         private void ShowOrHideActivePlayerMessage()
@@ -53,21 +67,9 @@ namespace Assets.UI
 
             _currentPlayerLabel.Hide();
 
-            RadialMenuManager = new RadialMenuManager(Locate<ISpawnManager>());
+            RadialMenuManager = new RadialMenuManager(Locate<ISpawnManager>(), transform);
         }
 
         public RadialMenuManager RadialMenuManager { get; private set; }
-    }
-
-    public class RadialMenuManager
-    {
-        private ISpawnManager _spawnManager;
-        public RadialMenuManager(ISpawnManager spawnManager)
-        {
-            _spawnManager = spawnManager;
-        }
-
-    
-
     }
 }

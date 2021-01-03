@@ -18,7 +18,7 @@ namespace Assets.Map
 
         public static void MouseOverCell(Cell cell)
         {
-            Debug.Log($"Mouse over {cell.Coord.X}-{cell.Coord.Z}");
+            // Debug.Log($"Mouse over {cell.Coord.X}-{cell.Coord.Z}");
             OnMouseOver?.Invoke(cell);
         }
     }
