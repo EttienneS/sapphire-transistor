@@ -72,6 +72,13 @@ MonoBehaviour:
     - UI
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: fda23e3b7d66f6e4888ee2e3c8b0cef4
+    m_Address: Highlight
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: aa16110a372069b46b6f3f9cae36d497, type: 2}
   m_SchemaSet:

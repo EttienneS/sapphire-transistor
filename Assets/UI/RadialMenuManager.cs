@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.UI
 {
     public class RadialMenuManager
     {
-        private ISpawnManager _spawnManager;
-        private Transform _parent;
+        private readonly ISpawnManager _spawnManager;
+        private readonly Transform _parent;
 
         public RadialMenuManager(ISpawnManager spawnManager, Transform parent)
         {
@@ -13,7 +14,7 @@ namespace Assets.UI
             _parent = parent;
         }
 
-        public void ShowRadialMenu(bool closeOnSelect, params (string label, RadialMenuDelegates.MenuItemClicked onClick)[] options)
+        public void ShowRadialMenu(bool closeOnSelect, RadialMenuDelegates.MenuClosed onMenuClose, IEnumerable<(string label, RadialMenuDelegates.MenuItemClicked onClick)> options)
         {
             _spawnManager.SpawnUIElement("RadialMenu", _parent, (radialmenuObj) =>
             {
@@ -23,6 +24,9 @@ namespace Assets.UI
                 {
                     menu.AddButton(label, onClick);
                 }
+
+                menu.AddButton("Cancel", () => menu.CloseMenu());
+                menu.MenuClosed += onMenuClose;
             }
             );
         }

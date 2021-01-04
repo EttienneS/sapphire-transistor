@@ -12,7 +12,7 @@ namespace Assets.Structures
 
         public IStructureBehaviour BehaviorPrototype { get; }
 
-        public string AssetName { get; }
+        public string Address { get; }
 
         public StructureFacade(string name, string assetName, string description, IStructureBehaviour structurePrototype) : this(name, assetName, description, structurePrototype, (ResourceType.Gold, 0))
         {
@@ -21,7 +21,7 @@ namespace Assets.Structures
         public StructureFacade(string name, string assetName, string description, IStructureBehaviour structurePrototype, params (ResourceType, int)[] cost)
         {
             Name = name;
-            AssetName = assetName;
+            Address = assetName;
             Description = description;
             Cost = cost;
             BehaviorPrototype = structurePrototype;

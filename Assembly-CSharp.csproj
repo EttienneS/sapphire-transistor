@@ -137,6 +137,8 @@
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
     <Compile Include="Assets\UI\RadialMenuManager.cs" />
+    <Compile Include="Assets\Map\GridMesh.cs" />
+    <Compile Include="Assets\Helpers\UIHelper.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

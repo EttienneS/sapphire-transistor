@@ -1,9 +1,9 @@
-﻿using Assets.Map;
+﻿using Assets.Helpers;
+using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.UI;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Assets.Factions
 {
@@ -23,33 +23,26 @@ namespace Assets.Factions
 
         public void CellClicked(Cell cell)
         {
-            if (MouseOverUi())
+            if (UIHelper.MouseOverUi())
             {
                 return;
             }
 
-            var elements = new List<(string, RadialMenuDelegates.MenuItemClicked)>();
+            var radialMenuOptions = new List<(string, RadialMenuDelegates.MenuItemClicked)>();
 
             foreach (var structure in StructureManager.GetBuildableStructures())
             {
-                elements.Add(($"{structure.Name}", () =>
+                radialMenuOptions.Add(($"{structure.Name}", () =>
                 {
                     StructureManager.AddStructure(structure, cell.Coord);
                 }
                 ));
             }
-            _uiManager.RadialMenuManager.ShowRadialMenu(true, elements.ToArray());
-        }
 
-        private bool MouseOverUi()
-        {
-            if (EventSystem.current == null)
-            {
-                // event system not on yet
-                return false;
-            }
-
-            return EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null;
+            _uiManager.HighlightCell(cell, Color.red);
+            _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
+                                                        onMenuClose: () => _uiManager.DisableHighlight(),
+                                                        radialMenuOptions);
         }
     }
 }

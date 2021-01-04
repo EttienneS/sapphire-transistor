@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Assets.Map
 {
@@ -24,6 +25,8 @@ namespace Assets.Map
         private List<Vector2> _uvs;
 
         private List<Vector3> _vertices;
+
+        private GridMesh _gridMesh;
 
         public int X { get; internal set; }
 
@@ -89,6 +92,26 @@ namespace Assets.Map
         {
             transform.position = GetPosition();
             GenerateMesh();
+
+            GenerateGrid();
+        }
+
+        private void GenerateGrid()
+        {
+            var gridObj = new GameObject("Grid");
+            gridObj.transform.SetParent(transform);
+            gridObj.transform.localPosition = new Vector3(-0.5f, 0.01f, -0.5f);
+            gridObj.AddComponent<MeshFilter>();
+            var renderer = gridObj.AddComponent<MeshRenderer>();
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            _gridMesh = gridObj.AddComponent<GridMesh>();
+
+            var mat = new Material(Shader.Find("Sprites/Default"))
+            {
+                color = new Color(0, 0, 0, 0.2f)
+            };
+
+            _gridMesh.DrawGrid(GetWidth(), mat);
         }
 
         internal void SetMaterial(Material chunkMaterial)

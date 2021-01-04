@@ -32,7 +32,7 @@ namespace Assets.Factions
         {
             var structure = _structureFactory.MakeStructure(selectedFacade, coord);
             _structureObjectLookup.Add(structure, null);
-            _spawnManager.SpawnStructure(selectedFacade, coord.ToAdjustedVector3(), (obj) => _structureObjectLookup[structure] = obj);
+            _spawnManager.SpawnAddressable(selectedFacade.Address, coord.ToAdjustedVector3(), (obj) => _structureObjectLookup[structure] = obj);
         }
 
         public List<IStructureFacade> GetBuildableStructures()

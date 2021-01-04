@@ -24,9 +24,11 @@ namespace Assets.UI
         {
             var menuButton = Instantiate(RadialMenuElementPrefab, ElementContainer.transform);
             menuButton.Load(text, onItemClicked);
+
 #if DEBUG
             menuButton.MenuItemClicked += () => Debug.Log($"{text} Clicked!");
 #endif
+
             if (CloseOnSelect)
             {
                 menuButton.MenuItemClicked += () => CloseMenu();
@@ -34,8 +36,11 @@ namespace Assets.UI
             UpdatePositionOfElements();
         }
 
+        public event RadialMenuDelegates.MenuClosed MenuClosed;
+
         public void CloseMenu()
         {
+            MenuClosed?.Invoke();
             Destroy(gameObject);
         }
 
