@@ -7,6 +7,7 @@ namespace Assets.UI
     {
         private readonly ISpawnManager _spawnManager;
         private readonly Transform _parent;
+        private RadialMenuController _activeMenu;
 
         public RadialMenuManager(ISpawnManager spawnManager, Transform parent)
         {
@@ -16,17 +17,22 @@ namespace Assets.UI
 
         public void ShowRadialMenu(bool closeOnSelect, RadialMenuDelegates.MenuClosed onMenuClose, IEnumerable<(string label, RadialMenuDelegates.MenuItemClicked onClick)> options)
         {
+            if (_activeMenu != null)
+            {
+                _activeMenu.CloseMenu();
+            }
+
             _spawnManager.SpawnUIElement("RadialMenu", _parent, (radialmenuObj) =>
             {
-                var menu = radialmenuObj.GetComponent<RadialMenuController>();
-                menu.CloseOnSelect = closeOnSelect;
+                _activeMenu = radialmenuObj.GetComponent<RadialMenuController>();
+                _activeMenu.CloseOnSelect = closeOnSelect;
                 foreach (var (label, onClick) in options)
                 {
-                    menu.AddButton(label, onClick);
+                    _activeMenu.AddButton(label, onClick);
                 }
 
-                menu.AddButton("Cancel", () => menu.CloseMenu());
-                menu.MenuClosed += onMenuClose;
+                _activeMenu.AddButton("Cancel", () => _activeMenu.CloseMenu());
+                _activeMenu.MenuClosed += onMenuClose;
             }
             );
         }

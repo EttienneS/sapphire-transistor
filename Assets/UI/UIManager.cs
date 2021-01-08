@@ -26,10 +26,14 @@ namespace Assets.UI
             }
         }
 
-        public void HighlightCell(Cell cell, Color color)
+        public void HighlightCell(ICoord coord, Color color)
         {
             DisableHighlight();
-            _spawnManager.SpawnAddressable("Highlight", cell.Coord.ToAdjustedVector3(), (obj) => _highlight = obj);
+            _spawnManager.SpawnAddressable("Highlight", coord.ToAdjustedVector3(), (obj) =>
+            {
+                _highlight = obj;
+                _highlight.GetComponent<MeshRenderer>().material.color = color;
+            });
         }
 
         public override void Initialize()

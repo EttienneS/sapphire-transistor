@@ -1,5 +1,7 @@
-﻿using Assets.ServiceLocator;
+﻿using Assets.Map;
+using Assets.ServiceLocator;
 using Assets.Structures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -65,14 +67,19 @@ namespace Assets.Factions
             _activeFaction.TakeTurn();
         }
 
-        public List<IFaction> GetFactions()
+        public List<IFaction> GetAllFactions()
         {
-            return _factionQueue.ToList();
+            var factions = _factionQueue.ToList();
+            if (_activeFaction != null)
+            {
+                factions.Add(_activeFaction);
+            }
+            return factions;
         }
 
         public IFaction GetOwnerOfStructure(IStructure structure)
         {
-            foreach (var faction in GetFactions())
+            foreach (var faction in GetAllFactions())
             {
                 if (faction.StructureManager.GetStructures().Contains(structure))
                 {
@@ -82,5 +89,22 @@ namespace Assets.Factions
 
             throw new KeyNotFoundException($"{structure} owner not found!");
         }
+
+        public bool TryGetStructureInCell(Cell cell, out IStructure structure)
+        {
+            foreach (var faction in GetAllFactions())
+            {
+                structure = faction.StructureManager.GetStructures().Find(s => s.Coord == cell.Coord);
+                if (structure != null)
+                {
+                    return true;
+                }
+            }
+
+            structure = null;
+            return false;
+        }
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Assets.Structures;
+﻿using Assets.Map;
+using Assets.Structures;
 using System.Collections.Generic;
 
 namespace Assets.Factions
@@ -9,7 +10,7 @@ namespace Assets.Factions
 
         IFaction GetActiveFaction();
 
-        List<IFaction> GetFactions();
+        List<IFaction> GetAllFactions();
 
         void MoveToNextTurn();
 
@@ -20,5 +21,7 @@ namespace Assets.Factions
         event FactionDelegates.OnTurnStarted OnTurnStarted;
 
         IFaction GetOwnerOfStructure(IStructure structure);
+
+        bool TryGetStructureInCell(Cell cell, out IStructure structure);
     }
 }
