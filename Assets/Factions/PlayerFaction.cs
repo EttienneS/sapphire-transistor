@@ -44,8 +44,23 @@ namespace Assets.Factions
 
         private void ShowStructureInfo(IStructure structure)
         {
-            _uiManager.HighlightCell(structure.Coord, Color.blue);
             Debug.Log($"{structure.Name}: {structure.Coord}");
+            var radialMenuOptions = new List<(string, RadialMenuDelegates.MenuItemClicked)>();
+
+            radialMenuOptions.Add(($"Remove {structure.Name}", () =>
+            {
+                StructureManager.RemoveStructure(structure);
+            }));
+
+            HighlightAndShowRadialMenu(structure.Coord, Color.blue, radialMenuOptions);
+        }
+
+        private void HighlightAndShowRadialMenu(ICoord coord, Color color, List<(string, RadialMenuDelegates.MenuItemClicked)> radialMenuOptions)
+        {
+            _uiManager.HighlightCell(coord, color);
+            _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
+                                                        onMenuClose: () => _uiManager.DisableHighlight(),
+                                                        radialMenuOptions);
         }
 
         private void ShowBuildRadialMenu(Cell cell)
@@ -61,10 +76,7 @@ namespace Assets.Factions
                 ));
             }
 
-            _uiManager.HighlightCell(cell.Coord, Color.red);
-            _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
-                                                        onMenuClose: () => _uiManager.DisableHighlight(),
-                                                        radialMenuOptions);
+            HighlightAndShowRadialMenu(cell.Coord, Color.red, radialMenuOptions);
         }
     }
 }
