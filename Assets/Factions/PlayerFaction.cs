@@ -3,7 +3,6 @@ using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
 using Assets.UI;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,17 +44,15 @@ namespace Assets.Factions
         private void ShowStructureInfo(IStructure structure)
         {
             Debug.Log($"{structure.Name}: {structure.Coord}");
-            var radialMenuOptions = new List<(string, RadialMenuDelegates.MenuItemClicked)>();
-
-            radialMenuOptions.Add(($"Remove {structure.Name}", () =>
+            var radialMenuOptions = new List<RadialMenuOptionFacade>
             {
-                StructureManager.RemoveStructure(structure);
-            }));
+                new RadialMenuOptionFacade($"Remove {structure.Name}", () => StructureManager.RemoveStructure(structure))
+            };
 
             HighlightAndShowRadialMenu(structure.Coord, Color.blue, radialMenuOptions);
         }
 
-        private void HighlightAndShowRadialMenu(ICoord coord, Color color, List<(string, RadialMenuDelegates.MenuItemClicked)> radialMenuOptions)
+        private void HighlightAndShowRadialMenu(ICoord coord, Color color, List<RadialMenuOptionFacade> radialMenuOptions)
         {
             _uiManager.HighlightCell(coord, color);
             _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
@@ -65,15 +62,19 @@ namespace Assets.Factions
 
         private void ShowBuildRadialMenu(Cell cell)
         {
-            var radialMenuOptions = new List<(string, RadialMenuDelegates.MenuItemClicked)>();
+            var radialMenuOptions = new List<RadialMenuOptionFacade>();
 
             foreach (var structure in StructureManager.GetBuildableStructures())
             {
-                radialMenuOptions.Add(($"{structure.Name}", () =>
+                var placementCheck = structure.CanBePlacedInCell(cell);
+                if (placementCheck.CanPlace)
                 {
-                    StructureManager.AddStructure(structure, cell.Coord);
+                    radialMenuOptions.Add(new RadialMenuOptionFacade($"{structure.Name}", () => StructureManager.AddStructure(structure, cell.Coord)));
                 }
-                ));
+                else
+                {
+                    radialMenuOptions.Add(new RadialMenuOptionFacade($"Can't place: {structure.Name} {placementCheck.Message}", () => { }, false));
+                }
             }
 
             HighlightAndShowRadialMenu(cell.Coord, Color.red, radialMenuOptions);

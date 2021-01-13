@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace Assets.Map
 {
-    public class Cell : PathableCell, ICell
+    public class Cell : PathableCell
     {
-        private List<ICell> _nonNullNeighbours;
+        private List<Cell> _nonNullNeighbours;
 
         public Cell(int x, int z, float height, ITerrain terain)
         {
@@ -14,11 +14,11 @@ namespace Assets.Map
             Terrain = terain;
         }
 
-        public List<ICell> NonNullNeighbors
+        public List<Cell> NonNullNeighbors
         {
             get
             {
-                return _nonNullNeighbours ??= Neighbors.Where(n => n != null).ToList().ConvertAll(c => c as ICell).ToList();
+                return _nonNullNeighbours ??= Neighbors.Where(n => n != null).ToList().ConvertAll(c => c as Cell).ToList();
             }
         }
 
@@ -27,6 +27,11 @@ namespace Assets.Map
         public override float GetTravelCost()
         {
             return Terrain.TravelCost;
+        }
+
+        public override string ToString()
+        {
+            return $"{Coord}: {Terrain.Name}";
         }
     }
 }

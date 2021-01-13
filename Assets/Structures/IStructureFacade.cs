@@ -1,4 +1,6 @@
-﻿using Assets.Resources;
+﻿using Assets.Map;
+using Assets.Resources;
+using static Assets.Structures.StructureDelegates;
 
 namespace Assets.Structures
 {
@@ -9,5 +11,6 @@ namespace Assets.Structures
         string Description { get; }
         string Name { get; }
         IStructureBehaviour BehaviorPrototype { get; }
+        IStructurePlacementResult CanBePlacedInCell(Cell cell);
     }
 }

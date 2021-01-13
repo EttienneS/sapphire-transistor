@@ -153,34 +153,6 @@ namespace Assets.Map.Pathing
             }
         }
 
-        public static void LinkCellsToNeighbors(PathableCell[,] cells, int lenght)
-        {
-            for (var z = 0; z < 0 + lenght; z++)
-            {
-                for (var x = 0; x < 0 + lenght; x++)
-                {
-                    var cell = cells[x, z];
-                    if (x > 0)
-                    {
-                        cell.SetNeighbor(Direction.W, cells[x, z]);
-
-                        if (z > 0)
-                        {
-                            cell.SetNeighbor(Direction.SW, cells[x - 1, z - 1]);
-
-                            if (x < lenght - 1)
-                            {
-                                cell.SetNeighbor(Direction.SE, cells[x + 1, z - 1]);
-                            }
-                        }
-                    }
-
-                    if (z > 0)
-                    {
-                        cell.SetNeighbor(Direction.S, cells[x, z - 1]);
-                    }
-                }
-            }
-        }
+        
     }
 }

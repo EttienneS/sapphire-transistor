@@ -28,6 +28,7 @@ namespace Assets
 
             locator.Register<IStructureFactory>(new StructureFactory());
             locator.Register<IFactionManager>(new FactionManager());
+            locator.Register<IStructurePlacementValidator>(new StructurePlacementValidator());
             locator.Register<NewGameManager>(new NewGameManager());
 
             locator.Register<IUIManager>(FindObjectOfType<UIManager>());

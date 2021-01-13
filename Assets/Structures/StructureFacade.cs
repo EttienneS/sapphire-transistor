@@ -1,4 +1,5 @@
-﻿using Assets.Resources;
+﻿using Assets.Map;
+using Assets.Resources;
 
 namespace Assets.Structures
 {
@@ -14,17 +15,25 @@ namespace Assets.Structures
 
         public string Address { get; }
 
-        public StructureFacade(string name, string assetName, string description, IStructureBehaviour structurePrototype) : this(name, assetName, description, structurePrototype, (ResourceType.Gold, 0))
+        private StructureDelegates.StructurePlacementValidationDelegate _structurePlacementValidation;
+
+        public StructureFacade(string name, string assetName, string description, IStructureBehaviour structurePrototype, StructureDelegates.StructurePlacementValidationDelegate structurePlacementValidationDelegate) : this(name, assetName, description, structurePrototype, structurePlacementValidationDelegate, (ResourceType.Gold, 0))
         {
         }
 
-        public StructureFacade(string name, string assetName, string description, IStructureBehaviour structurePrototype, params (ResourceType, int)[] cost)
+        public StructureFacade(string name, string assetName, string description, IStructureBehaviour structurePrototype, StructureDelegates.StructurePlacementValidationDelegate structurePlacementValidationDelegate, params (ResourceType, int)[] cost)
         {
             Name = name;
             Address = assetName;
             Description = description;
             Cost = cost;
             BehaviorPrototype = structurePrototype;
+            _structurePlacementValidation = structurePlacementValidationDelegate;
+        }
+
+        public IStructurePlacementResult CanBePlacedInCell(Cell cell)
+        {
+            return _structurePlacementValidation.Invoke(cell);
         }
     }
 }

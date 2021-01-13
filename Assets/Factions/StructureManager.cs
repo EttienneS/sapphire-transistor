@@ -14,12 +14,14 @@ namespace Assets.Factions
         private readonly ISpawnManager _spawnManager;
         private readonly IStructureFactory _structureFactory;
 
-        public StructureManager(ISpawnManager spawnManager, IStructureFactory structureFactory)
+        private readonly IStructurePlacementValidator _structurePlacementValidator; 
+
+        public StructureManager(ISpawnManager spawnManager, IStructureFactory structureFactory, IStructurePlacementValidator structurePlacementValidator)
         {
             _spawnManager = spawnManager;
             _structureFactory = structureFactory;
             _structureObjectLookup = new Dictionary<IStructure, GameObject>();
-
+            _structurePlacementValidator = structurePlacementValidator;
             StructureEventManager.OnStructureDestroyed += RemoveStructure;
         }
 
@@ -39,9 +41,9 @@ namespace Assets.Factions
         {
             var facades = new List<IStructureFacade>
             {
-                new StructureFacade("Farm", "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>(), (ResourceType.Gold, 3)),
-                new StructureFacade("House", "House", "", _structureFactory.GetBehaviour<NoBehavior>(), (ResourceType.Gold, 2)),
-                new StructureFacade("Road", "Road", "", _structureFactory.GetBehaviour<NoBehavior>(), (ResourceType.Gold, 1))
+                new StructureFacade("Road", "Road", "", _structureFactory.GetBehaviour<NoBehavior>(), _structurePlacementValidator.CanPlaceRoad,  (ResourceType.Gold, 1)),
+                new StructureFacade("Farm", "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>(), _structurePlacementValidator.CanPlaceFarm, (ResourceType.Gold, 3)),
+                new StructureFacade("House", "House", "", _structureFactory.GetBehaviour<NoBehavior>(), _structurePlacementValidator.CanPlaceDefault, (ResourceType.Gold, 2)),
             };
             return facades;
         }
@@ -90,5 +92,4 @@ namespace Assets.Factions
             return yield;
         }
     }
-
 }

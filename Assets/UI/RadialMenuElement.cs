@@ -11,10 +11,10 @@ namespace Assets.UI
             MenuItemClicked?.Invoke();
         }
 
-        public void Load(string text, RadialMenuDelegates.MenuItemClicked menuItemClicked)
+        public void Load(string text)
         {
             GetComponentInChildren<TMPro.TMP_Text>().text = text;
-            MenuItemClicked += menuItemClicked;
         }
+
     }
 }
