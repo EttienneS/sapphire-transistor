@@ -127,6 +127,37 @@ namespace Assets.Map
             }
 
             _pathfinder = CreatePathfinder();
+            LinkCellsToNeighbors(_cells, Width, Height);
+        }
+
+        internal void LinkCellsToNeighbors(PathableCell[,] cells, int width, int height)
+        {
+            for (var z = 0; z < height; z++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    var cell = cells[x, z];
+                    if (x > 0)
+                    {
+                        cell.SetNeighbor(Direction.W, cells[x - 1, z]);
+
+                        if (z > 0)
+                        {
+                            cell.SetNeighbor(Direction.SW, cells[x - 1, z - 1]);
+
+                            if (x < width - 1)
+                            {
+                                cell.SetNeighbor(Direction.SE, cells[x + 1, z - 1]);
+                            }
+                        }
+                    }
+
+                    if (z > 0)
+                    {
+                        cell.SetNeighbor(Direction.S, cells[x, z - 1]);
+                    }
+                }
+            }
         }
 
         internal Cell[,] GetCells(int offsetX, int offsetY)
@@ -152,8 +183,6 @@ namespace Assets.Map
             pf.transform.SetParent(transform);
             return pf.AddComponent<Pathfinder>();
         }
-
-    
 
         private void IndexCells(Cell[,] cells)
         {

@@ -7,7 +7,8 @@ namespace Assets
     {
         void AddItemToDestroy(GameObject gameObject);
         void DestroyItemsInCache();
-        void SpawnStructure(IStructureFacade structureFacade, Vector3 position, SpawnManager.SpawnCallback callback);
+        void SpawnAddressable(string meshName, Vector3 position, SpawnManager.SpawnCallback callback);
+        void SpawnAddressable(string meshName, Vector3 position, Transform parent, SpawnManager.SpawnCallback callback);
         void SpawnUIElement(string name, Transform parent, SpawnManager.SpawnCallback callback);
     }
 }

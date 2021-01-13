@@ -3,6 +3,7 @@ using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using Assets.Structures;
+using Assets.UI;
 using UnityEngine;
 
 namespace Assets
@@ -27,7 +28,10 @@ namespace Assets
 
             locator.Register<IStructureFactory>(new StructureFactory());
             locator.Register<IFactionManager>(new FactionManager());
+            locator.Register<IStructurePlacementValidator>(new StructurePlacementValidator());
             locator.Register<NewGameManager>(new NewGameManager());
+
+            locator.Register<IUIManager>(FindObjectOfType<UIManager>());
 
             locator.InitializeServices();
         }

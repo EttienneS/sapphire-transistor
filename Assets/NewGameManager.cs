@@ -15,13 +15,12 @@ namespace Assets
         public override void Initialize()
         {
             var structureFactory = Locate<IStructureFactory>();
-            var spawnManager = Locate<ISpawnManager>();
             var mapManager = Locate<IMapManager>();
             var factionManger = Locate<IFactionManager>();
 
             GenerateMap(mapManager);
 
-            RegisterFactions(structureFactory, spawnManager, factionManger);
+            RegisterFactions(factionManger);
             MakeFactionCores(structureFactory, mapManager, factionManger);
 
             var cameraController = Locate<ICameraController>();
@@ -36,8 +35,8 @@ namespace Assets
 
         private static void MakeFactionCores(IStructureFactory structureFactory, IMapManager mapManager, IFactionManager factionManager)
         {
-            var core = new StructureFacade("SettlmentCore", "BellTower", "The heart of this settlement", structureFactory.GetBehaviour<SettlementCore>());
-            foreach (var faction in factionManager.GetFactions())
+            var core = new StructureFacade("SettlmentCore", "BellTower", "The heart of this settlement", structureFactory.GetBehaviour<SettlementCore>(), (_) => new InvalidPlacementResult("Invalid"));
+            foreach (var faction in factionManager.GetAllFactions())
             {
                 var coreCell = mapManager.GetRandomCell((cell) => cell.GetTravelCost() > 0);
                 faction.StructureManager.AddStructure(core, coreCell.Coord);
@@ -51,10 +50,11 @@ namespace Assets
             factionManager.MoveToNextTurn();
         }
 
-        private static void RegisterFactions(IStructureFactory structureFactory, ISpawnManager spawnManager, IFactionManager factionManger)
+        private void RegisterFactions(IFactionManager factionManager)
         {
-            factionManger.AddFaction(new PlayerFaction("Player", structureFactory, spawnManager));
-            factionManger.AddFaction(new AIFaction("Enemy", structureFactory, spawnManager));
+            var locator = GetLocator();
+            factionManager.AddFaction(new PlayerFaction("Player", locator));
+            factionManager.AddFaction(new AIFaction("Enemy", locator));
         }
 
         private void GenerateMap(IMapManager mapManager)

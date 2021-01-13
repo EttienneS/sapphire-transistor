@@ -4,6 +4,7 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Helpers
 {
+
     public static class ColorExtensions
     {
         public static Color GetRandomColor(float alpha = 1.0f)

@@ -1,4 +1,5 @@
 ﻿using Assets.Resources;
+using Assets.ServiceLocator;
 using Assets.Structures;
 using System.Collections.Generic;
 
@@ -8,12 +9,16 @@ namespace Assets.Factions
     {
         private readonly Dictionary<ResourceType, int> _resources;
 
-        public FactionBase(string name, IStructureFactory structureFactory, ISpawnManager spawnManager)
+
+        public FactionBase(string name, IServiceLocator serviceLocator)
         {
             _resources = new Dictionary<ResourceType, int>();
 
             Name = name;
-            StructureManager = new StructureManager(spawnManager, structureFactory);
+
+            StructureManager = new StructureManager(serviceLocator.Find<ISpawnManager>(), 
+                                                    serviceLocator.Find<IStructureFactory>(), 
+                                                    serviceLocator.Find<IStructurePlacementValidator>());
         }
 
         public event FactionDelegates.OnResourceChanged OnResourcesUpdated;
