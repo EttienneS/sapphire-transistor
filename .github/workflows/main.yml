@@ -1,5 +1,7 @@
 name: Build Game
 on: push
+  branches:
+    - master
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
