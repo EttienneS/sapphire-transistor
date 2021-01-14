@@ -52,7 +52,12 @@ namespace Assets.Map
             {
                 for (int z = 0; z < chunkHeight; z++)
                 {
-                    _chunkRenderers[x, z] = MakeChunkRenderer(x, z);
+                    var renderer = MakeChunkRenderer(x, z);
+                    _chunkRenderers[x, z] = renderer;
+
+                    MapEventManager.ChunkRenderCreated(renderer);
+
+                    renderer.Deactivate();
                 }
             }
 
@@ -75,7 +80,9 @@ namespace Assets.Map
 
         public Cell GetCellAtCoord(int x, int z)
         {
-            return _cellLookup[(x, z)];
+            var lookupX = Mathf.Clamp(x, 0, Width);
+            var lookupZ = Mathf.Clamp(z, 0, Height);
+            return _cellLookup[(lookupX, lookupZ)];
         }
 
         public Cell GetCenter()
@@ -133,6 +140,76 @@ namespace Assets.Map
         public override void Initialize()
         {
             _chunkRendererFactory = new ChunkRendererFactory(Locate<ICameraController>().GetCamera());
+
+            CameraEventManager.OnCameraPositionChanged += ActivateChunksNearCamera;
+        }
+
+        private float _lastZoomLevel = -1;
+        private ChunkRenderer _lastActiveChunk;
+
+        private void ActivateChunksNearCamera(Vector3 cameraLocation)
+        {
+            if (_lastActiveChunk == null || _lastZoomLevel == -1)
+            {
+                _lastActiveChunk = GetChunkForcell(GetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z));
+                _lastZoomLevel = -1;
+                ActivateChunks(_lastActiveChunk, cameraLocation.y);
+            }
+            else
+            {
+                var currentChunk = GetChunkForcell(GetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z));
+                if (_lastActiveChunk != currentChunk || _lastZoomLevel != cameraLocation.y)
+                {
+                    ActivateChunks(currentChunk, cameraLocation.y);
+                }
+                _lastActiveChunk = currentChunk;
+            }
+            _lastZoomLevel = cameraLocation.y;
+        }
+
+        private void ActivateChunks(ChunkRenderer currentChunk, float zoom)
+        {
+            // always have at least 2 chunks visible
+            var offset = Mathf.Max(2, zoom / 20);
+            var chunkWidth = Mathf.FloorToInt(_cells.GetLength(0) / Constants.ChunkSize);
+            var chunkHeight = Mathf.FloorToInt(_cells.GetLength(1) / Constants.ChunkSize);
+
+            var xstart = (int)Mathf.Max(0, currentChunk.X - offset);
+            var xend = (int)Mathf.Min(chunkWidth, currentChunk.X + offset);
+            var zstart = (int)Mathf.Max(0, currentChunk.Z - offset);
+            var zend = (int)Mathf.Min(chunkHeight, currentChunk.Z + offset);
+
+            var deactivate = _chunkRenderers.Flatten().ToList();
+            for (var x = xstart; x < xend; x++)
+            {
+                for (var z = zstart; z < zend; z++)
+                {
+                    var chunk = _chunkRenderers[x, z];
+                   
+                    deactivate.Remove(chunk);
+                    if (chunk == currentChunk)
+                    {
+                        // activate current chunk last
+                        continue;
+                    }
+                    chunk.Activate();
+                }
+            }
+
+            foreach (var cr in deactivate)
+            {
+                cr.Deactivate();
+            }
+
+            currentChunk.Activate(true);
+        }
+
+        internal ChunkRenderer GetChunkForcell(Cell cell)
+        {
+            var chunkX = cell.Coord.X / Constants.ChunkSize;
+            var chunkZ = cell.Coord.Z / Constants.ChunkSize;
+
+            return _chunkRenderers[chunkX, chunkZ];
         }
 
         internal Cell[,] GetCells(int offsetX, int offsetY)

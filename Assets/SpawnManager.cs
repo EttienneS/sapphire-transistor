@@ -1,6 +1,9 @@
-﻿using Assets.ServiceLocator;
+﻿using Assets.Map;
+using Assets.ServiceLocator;
+using Assets.Structures;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -9,6 +12,7 @@ namespace Assets
 {
     public class SpawnManager : LocatableMonoBehaviorBase, ISpawnManager
     {
+        private readonly Dictionary<ChunkRenderer, List<IStructure>> _chunkStructureLookup = new Dictionary<ChunkRenderer, List<IStructure>>();
         private readonly List<GameObject> _destroyCache = new List<GameObject>();
 
         private Dictionary<string, Queue<GameObject>> _objectPools = new Dictionary<string, Queue<GameObject>>();
@@ -50,7 +54,8 @@ namespace Assets
         {
             var poolConfigs = new List<(string pool, int size)>
             {
-                ("Tree", 200)
+                ("Tree", 1000),
+                ("Road", 100),
             };
 
             foreach (var (pool, size) in poolConfigs)
@@ -67,6 +72,13 @@ namespace Assets
 
                 _objectPools.Add(pool, queue);
             }
+
+            MapEventManager.OnChunkRenderCreated += MapEventManager_OnChunkRenderCreated;
+            MapEventManager.OnChunkRenderActivated += MapEventManager_OnChunkRenderActivated;
+            MapEventManager.OnChunkRenderDeactivated += MapEventManager_OnChunkRenderDeactivated;
+
+            StructureEventManager.OnStructurePlanned += StructureEventManager_OnStructurePlanned;
+            StructureEventManager.OnStructureDestroyed += StructureEventManager_OnStructureDestroyed;
         }
 
         public void RecyleItem(string pool, GameObject gameObject)
@@ -119,6 +131,36 @@ namespace Assets
 
             _objectPools[address].Enqueue(obj);
             return obj;
+        }
+
+        private void MapEventManager_OnChunkRenderActivated(ChunkRenderer renderer)
+        {
+            foreach (var structure in _chunkStructureLookup[renderer])
+            {
+                SpawnAddressable(structure.Address, structure.Coord.ToAdjustedVector3(), (_) => { });
+            }
+        }
+
+        private void MapEventManager_OnChunkRenderCreated(ChunkRenderer renderer)
+        {
+            _chunkStructureLookup.Add(renderer, new List<IStructure>());
+        }
+
+        private void MapEventManager_OnChunkRenderDeactivated(ChunkRenderer renderer)
+        {
+
+        }
+
+        private void StructureEventManager_OnStructureDestroyed(IStructure structure)
+        {
+            var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(structure.Coord));
+            _chunkStructureLookup[renderer].Remove(structure);
+        }
+
+        private void StructureEventManager_OnStructurePlanned(IStructure structure)
+        {
+            var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(structure.Coord));
+            _chunkStructureLookup[renderer].Add(structure);
         }
     }
 }

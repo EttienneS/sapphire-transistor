@@ -11,12 +11,17 @@ namespace Assets.StrategyCamera
             _amount = amount;
         }
 
-        public override void Execute(CameraController camera)
+        public override void Execute(ICameraController camera)
         {
-            camera.newZoom += _amount;
-            camera.newZoom = new Vector3(camera.newZoom.x,
-                                         Mathf.Clamp(camera.newZoom.y, camera.minZoom, camera.maxZoom),
-                                         Mathf.Clamp(camera.newZoom.z, -camera.maxZoom, -camera.minZoom));
+            var zoom = camera.GetNewZoom();
+            var (minZoom, maxZoom) = camera.GetMinMaxZoom();
+
+            zoom += _amount;
+            zoom = new Vector3(zoom.x,
+                                         Mathf.Clamp(zoom.y, minZoom, maxZoom),
+                                         Mathf.Clamp(zoom.z, -maxZoom, -minZoom));
+
+            camera.SetNewZoom(zoom);
         }
     }
 }

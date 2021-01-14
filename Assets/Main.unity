@@ -866,7 +866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 323206059}
-  maxZoom: 80
+  maxZoom: 50
   minZoom: 10
   movementSpeed: 0.25
   movementTime: 5

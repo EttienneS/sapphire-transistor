@@ -52,7 +52,6 @@ namespace Assets.Factions
                 radialMenuOptions.Add(new RadialMenuOptionFacade($"Remove {structure.Name}", () => StructureManager.RemoveStructure(structure)));
             }
 
-
             HighlightAndShowRadialMenu(structure.Coord, Color.blue, radialMenuOptions);
         }
 

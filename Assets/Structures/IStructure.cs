@@ -1,5 +1,4 @@
-﻿using Assets.Factions;
-using Assets.Map;
+﻿using Assets.Map;
 using Assets.Resources;
 
 namespace Assets.Structures
@@ -9,6 +8,7 @@ namespace Assets.Structures
         IStructureBehaviour Behaviour { get; }
         ICoord Coord { get; }
         string Name { get; }
+        string Address { get; }
 
         (ResourceType, int)[] GetYield(IStructure structure);
 

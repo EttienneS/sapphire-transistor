@@ -11,9 +11,9 @@ namespace Assets.StrategyCamera
             _amount = amount;
         }
 
-        public override void Execute(CameraController camera)
+        public override void Execute(ICameraController camera)
         {
-            camera.newRotation *= Quaternion.Euler(Vector3.up * (-_amount.x / 5));
+            camera.SetNewRotation(camera.GetNewRotation() * Quaternion.Euler(Vector3.up * (-_amount.x / 5)));
         }
     }
 }

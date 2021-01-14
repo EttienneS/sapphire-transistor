@@ -77,7 +77,7 @@ namespace Assets.StrategyCamera
             if (plane.Raycast(ray, out float entry))
             {
                 _dragCurrentPosition = ray.GetPoint(entry);
-                _cameraController.newPosition = _cameraController.transform.position + _dragStartPosition - _dragCurrentPosition;
+                _cameraController.SetNewPosition(_cameraController.transform.position + _dragStartPosition - _dragCurrentPosition);
             }
         }
 

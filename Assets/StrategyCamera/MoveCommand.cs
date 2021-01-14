@@ -11,9 +11,9 @@ namespace Assets.StrategyCamera
             _amount = amount;
         }
 
-        public override void Execute(CameraController camera)
+        public override void Execute(ICameraController camera)
         {
-            camera.newPosition += _amount;
+            camera.SetNewPosition(camera.GetNewPosition() + _amount);
         }
     }
 }

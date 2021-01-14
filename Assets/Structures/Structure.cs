@@ -11,7 +11,7 @@ namespace Assets.Structures
             Behaviour = facade.BehaviorPrototype;
 
             TotalTurnsToBuild = facade.GetTotalBuildTime();
-
+            Address = facade.Address;
             Coord = coord;
         }
 
@@ -22,6 +22,8 @@ namespace Assets.Structures
         public string Name { get; }
 
         public bool Built { get; set; }
+
+        public string Address { get; }
 
         public (ResourceType, int)[] GetYield(IStructure structure)
         {
