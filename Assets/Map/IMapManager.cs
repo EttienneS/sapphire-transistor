@@ -10,6 +10,7 @@ namespace Assets.Map
 
         void Create(Cell[,] cellsToRender);
         void DestroyChunks();
+        Cell GetCellAtCoord(int x, int z);
         Cell GetCellAtCoord(ICoord coord);
         Cell GetCenter();
         List<Cell> GetCircle(Cell center, int radius);

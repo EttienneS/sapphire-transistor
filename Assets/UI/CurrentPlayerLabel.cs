@@ -27,6 +27,10 @@ namespace Assets.UI
 
         private void Update()
         {
+            if (_currentFaction == null)
+            {
+                return;
+            }
             _label.text = $"Waiting for {_currentFaction.Name}'s turn..";
         }
     }

@@ -1,7 +1,6 @@
 ﻿using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,10 +8,9 @@ namespace Assets.Factions
 {
     public class FactionManager : GameServiceBase, IFactionManager
     {
-        private Queue<IFaction> _factionQueue;
-
         private IFaction _activeFaction;
-
+        private Queue<IFaction> _factionQueue;
+        private IFaction _natureFaction;
         private IFaction _playerFaction;
 
         public event FactionDelegates.OnTurnEnded OnTurnEnded;
@@ -28,24 +26,50 @@ namespace Assets.Factions
                 _playerFaction = faction;
             }
 
+            if (faction is NatureFaction)
+            {
+                _natureFaction = faction;
+            }
+
             faction.TurnEnded += Faction_TurnEnded;
-        }
-
-        private void Faction_TurnEnded(IFaction faction)
-        {
-            faction.DoTurnEndActions();
-            OnTurnEnded?.Invoke(faction);
-            MoveToNextTurn();
-        }
-
-        public IFaction GetPlayerFaction()
-        {
-            return _playerFaction;
         }
 
         public IFaction GetActiveFaction()
         {
             return _activeFaction;
+        }
+
+        public List<IFaction> GetAllFactions()
+        {
+            var factions = _factionQueue.ToList();
+            if (_activeFaction != null)
+            {
+                factions.Add(_activeFaction);
+            }
+            return factions;
+        }
+
+        public IFaction GetNatureFaction()
+        {
+            return _natureFaction;
+        }
+
+        public IFaction GetOwnerOfStructure(IStructure structure)
+        {
+            foreach (var faction in GetAllFactions())
+            {
+                if (faction.StructureManager.GetStructures().Contains(structure))
+                {
+                    return faction;
+                }
+            }
+
+            throw new KeyNotFoundException($"{structure} owner not found!");
+        }
+
+        public IFaction GetPlayerFaction()
+        {
+            return _playerFaction;
         }
 
         public override void Initialize()
@@ -67,29 +91,6 @@ namespace Assets.Factions
             _activeFaction.TakeTurn();
         }
 
-        public List<IFaction> GetAllFactions()
-        {
-            var factions = _factionQueue.ToList();
-            if (_activeFaction != null)
-            {
-                factions.Add(_activeFaction);
-            }
-            return factions;
-        }
-
-        public IFaction GetOwnerOfStructure(IStructure structure)
-        {
-            foreach (var faction in GetAllFactions())
-            {
-                if (faction.StructureManager.GetStructures().Contains(structure))
-                {
-                    return faction;
-                }
-            }
-
-            throw new KeyNotFoundException($"{structure} owner not found!");
-        }
-
         public bool TryGetStructureInCell(Cell cell, out IStructure structure)
         {
             foreach (var faction in GetAllFactions())
@@ -105,6 +106,11 @@ namespace Assets.Factions
             return false;
         }
 
-
+        private void Faction_TurnEnded(IFaction faction)
+        {
+            faction.DoTurnEndActions();
+            OnTurnEnded?.Invoke(faction);
+            MoveToNextTurn();
+        }
     }
 }

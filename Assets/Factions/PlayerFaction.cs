@@ -44,10 +44,14 @@ namespace Assets.Factions
         private void ShowStructureInfo(IStructure structure)
         {
             Debug.Log($"{structure.Name}: {structure.Coord}");
-            var radialMenuOptions = new List<RadialMenuOptionFacade>
+
+            var radialMenuOptions = new List<RadialMenuOptionFacade>();
+
+            if (StructureManager.GetStructures().Contains(structure))
             {
-                new RadialMenuOptionFacade($"Remove {structure.Name}", () => StructureManager.RemoveStructure(structure))
-            };
+                radialMenuOptions.Add(new RadialMenuOptionFacade($"Remove {structure.Name}", () => StructureManager.RemoveStructure(structure)));
+            }
+
 
             HighlightAndShowRadialMenu(structure.Coord, Color.blue, radialMenuOptions);
         }

@@ -1,5 +1,6 @@
 ﻿using Assets.Helpers;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ namespace Assets.ServiceLocator
     public sealed class Locator : IServiceLocator
     {
         private readonly Dictionary<Type, IGameService> _services;
+
+        private List<Type> _readyServices = new List<Type>();
 
         private Locator()
         {
@@ -35,13 +38,15 @@ namespace Assets.ServiceLocator
             return (T)_services[key];
         }
 
-        public void InitializeServices()
+        public IEnumerator ProcessServiceList()
         {
             foreach (var item in _services)
             {
                 using (Instrumenter.Start(item.Key.Name))
                 {
                     item.Value.Initialize();
+                    _readyServices.Add(item.Key);
+                    yield return null;
                 }
             }
 
@@ -61,6 +66,17 @@ namespace Assets.ServiceLocator
             _services.Add(serviceType, service);
         }
 
+        public bool ServicesReady(params Type[] types)
+        {
+            foreach (var type in types)
+            {
+                if (!_readyServices.Contains(type))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         internal void LogServices()
         {
             var msg = "Loaded services:\n";
@@ -70,6 +86,5 @@ namespace Assets.ServiceLocator
             }
             Debug.Log(msg);
         }
-
     }
 }

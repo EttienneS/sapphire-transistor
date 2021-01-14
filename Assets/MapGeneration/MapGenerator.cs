@@ -39,7 +39,6 @@ namespace Assets.MapGeneration
                     map[x, z] = new Cell(x, z, 0, terrrain);
                 }
             }
-
             _mapManager.Create(map);
         }
 

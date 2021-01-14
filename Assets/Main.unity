@@ -868,7 +868,7 @@ MonoBehaviour:
   Camera: {fileID: 323206059}
   maxZoom: 80
   minZoom: 10
-  movementSpeed: 1
+  movementSpeed: 0.25
   movementTime: 5
   normalSpeed: 0.5
   rotationAmount: 1

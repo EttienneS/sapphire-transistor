@@ -18,13 +18,39 @@ namespace Assets
             var mapManager = Locate<IMapManager>();
             var factionManger = Locate<IFactionManager>();
 
-            GenerateMap(mapManager);
+            GenerateMap(mapManager, size: 10);
 
             RegisterFactions(factionManger);
+
+            PopulateMap(mapManager, structureFactory, factionManger);
+
             MakeFactionCores(structureFactory, mapManager, factionManger);
 
             var cameraController = Locate<ICameraController>();
             ConfigureCameraDefaults(mapManager, factionManger, cameraController);
+        }
+
+        private void PopulateMap(IMapManager mapManager, IStructureFactory structureFactory, IFactionManager factionManager)
+        {
+            var natureFaction = factionManager.GetNatureFaction();
+
+            var tree = new StructureFacade("Tree", "Tree", "Pine tree", structureFactory.GetBehaviour<NoBehavior>(), (_) => new InvalidPlacementResult("Invalid"));
+
+            for (int x = 0; x < mapManager.Width; x++)
+            {
+                for (int z = 0; z < mapManager.Height; z++)
+                {
+                    var cell = mapManager.GetCellAtCoord(new Coord(x, 0, z));
+
+                    if (cell.Terrain.Name == "Forrest")
+                    {
+                        if (UnityEngine.Random.value > 0.5f)
+                        {
+                            natureFaction.StructureManager.AddStructure(tree, cell.Coord);
+                        }
+                    }
+                }
+            }
         }
 
         private static void ConfigureCameraDefaults(IMapManager mapManager, IFactionManager factionManger, ICameraController cameraController)
@@ -40,11 +66,6 @@ namespace Assets
             {
                 var coreCell = mapManager.GetRandomCell((cell) => cell.GetTravelCost() > 0);
                 faction.StructureManager.AddStructure(core, coreCell.Coord);
-
-                foreach (var cell in coreCell.NonNullNeighbors)
-                {
-                    faction.StructureManager.AddStructure(core, coreCell.Coord);
-                }
             }
 
             factionManager.MoveToNextTurn();
@@ -53,13 +74,15 @@ namespace Assets
         private void RegisterFactions(IFactionManager factionManager)
         {
             var locator = GetLocator();
+
             factionManager.AddFaction(new PlayerFaction("Player", locator));
+            factionManager.AddFaction(new NatureFaction("Nature", locator));
             factionManager.AddFaction(new AIFaction("Enemy", locator));
         }
 
-        private void GenerateMap(IMapManager mapManager)
+        private void GenerateMap(IMapManager mapManager, int size)
         {
-            _mapGen = new MapGenerator(mapManager, 30, new DefaultTerrainDefinition());
+            _mapGen = new MapGenerator(mapManager, size, new DefaultTerrainDefinition());
             _mapGen.GenerateMap();
         }
     }

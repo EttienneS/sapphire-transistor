@@ -75,9 +75,18 @@ namespace Assets.UI
             }
         }
 
+        private bool _ready;
+
         private void Update()
         {
-            ShowOrHideActivePlayerMessage();
+            if (!_ready)
+            {
+                _ready = GetLocator().ServicesReady(typeof(IFactionManager));
+            }
+            else
+            {
+                ShowOrHideActivePlayerMessage();
+            }
         }
     }
 }

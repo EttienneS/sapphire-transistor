@@ -57,7 +57,7 @@ namespace Assets.Factions
         {
             if (_structureObjectLookup.ContainsKey(structure))
             {
-                _spawnManager.AddItemToDestroy(_structureObjectLookup[structure]);
+                _spawnManager.RecyleItem(structure.Name, _structureObjectLookup[structure]);
                 _structureObjectLookup.Remove(structure);
             }
         }

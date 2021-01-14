@@ -13,7 +13,7 @@ namespace Assets.Map
     {
         public Material ChunkMaterial;
 
-        private Dictionary<ICoord, Cell> _cellLookup;
+        private Dictionary<(int x, int z), Cell> _cellLookup;
         private Cell[,] _cells;
         private ChunkRendererFactory _chunkRendererFactory;
         private ChunkRenderer[,] _chunkRenderers;
@@ -32,6 +32,34 @@ namespace Assets.Map
             }
         }
 
+        public void Create(Cell[,] cellsToRender)
+        {
+            DestroyChunks();
+
+            _cells = cellsToRender;
+            _flatCells = _cells.Flatten().ToList();
+
+            IndexCells(_cells);
+
+            Width = cellsToRender.GetLength(0);
+            Height = cellsToRender.GetLength(1);
+
+            var chunkWidth = Mathf.FloorToInt(cellsToRender.GetLength(0) / Constants.ChunkSize);
+            var chunkHeight = Mathf.FloorToInt(cellsToRender.GetLength(1) / Constants.ChunkSize);
+
+            _chunkRenderers = new ChunkRenderer[chunkWidth, chunkHeight];
+            for (int x = 0; x < chunkWidth; x++)
+            {
+                for (int z = 0; z < chunkHeight; z++)
+                {
+                    _chunkRenderers[x, z] = MakeChunkRenderer(x, z);
+                }
+            }
+
+            _pathfinder = CreatePathfinder();
+            LinkCellsToNeighbors(_cells, Width, Height);
+        }
+
         public void DestroyChunks()
         {
             foreach (Transform child in transform)
@@ -42,7 +70,12 @@ namespace Assets.Map
 
         public Cell GetCellAtCoord(ICoord coord)
         {
-            return _cellLookup[coord];
+            return GetCellAtCoord(coord.X, coord.Z);
+        }
+
+        public Cell GetCellAtCoord(int x, int z)
+        {
+            return _cellLookup[(x, z)];
         }
 
         public Cell GetCenter()
@@ -102,32 +135,21 @@ namespace Assets.Map
             _chunkRendererFactory = new ChunkRendererFactory(Locate<ICameraController>().GetCamera());
         }
 
-        public void Create(Cell[,] cellsToRender)
+        internal Cell[,] GetCells(int offsetX, int offsetY)
         {
-            DestroyChunks();
+            var cells = new Cell[Constants.ChunkSize, Constants.ChunkSize];
+            offsetX *= Constants.ChunkSize;
+            offsetY *= Constants.ChunkSize;
 
-            _cells = cellsToRender;
-            _flatCells = _cells.Flatten().ToList();
-
-            IndexCells(_cells);
-
-            Width = cellsToRender.GetLength(0);
-            Height = cellsToRender.GetLength(1);
-
-            var chunkWidth = Mathf.FloorToInt(cellsToRender.GetLength(0) / Constants.ChunkSize);
-            var chunkHeight = Mathf.FloorToInt(cellsToRender.GetLength(1) / Constants.ChunkSize);
-
-            _chunkRenderers = new ChunkRenderer[chunkWidth, chunkHeight];
-            for (int x = 0; x < chunkWidth; x++)
+            for (var x = 0; x < Constants.ChunkSize; x++)
             {
-                for (int z = 0; z < chunkHeight; z++)
+                for (var y = 0; y < Constants.ChunkSize; y++)
                 {
-                    _chunkRenderers[x, z] = MakeChunkRenderer(x, z);
+                    cells[x, y] = _cells[offsetX + x, offsetY + y];
                 }
             }
 
-            _pathfinder = CreatePathfinder();
-            LinkCellsToNeighbors(_cells, Width, Height);
+            return cells;
         }
 
         internal void LinkCellsToNeighbors(PathableCell[,] cells, int width, int height)
@@ -160,23 +182,6 @@ namespace Assets.Map
             }
         }
 
-        internal Cell[,] GetCells(int offsetX, int offsetY)
-        {
-            var cells = new Cell[Constants.ChunkSize, Constants.ChunkSize];
-            offsetX *= Constants.ChunkSize;
-            offsetY *= Constants.ChunkSize;
-
-            for (var x = 0; x < Constants.ChunkSize; x++)
-            {
-                for (var y = 0; y < Constants.ChunkSize; y++)
-                {
-                    cells[x, y] = _cells[offsetX + x, offsetY + y];
-                }
-            }
-
-            return cells;
-        }
-
         private Pathfinder CreatePathfinder()
         {
             var pf = new GameObject("Pathfinder");
@@ -186,10 +191,10 @@ namespace Assets.Map
 
         private void IndexCells(Cell[,] cells)
         {
-            _cellLookup = new Dictionary<ICoord, Cell>();
+            _cellLookup = new Dictionary<(int x, int z), Cell>();
             foreach (var cell in cells)
             {
-                _cellLookup.Add(cell.Coord, cell);
+                _cellLookup.Add((cell.Coord.X, cell.Coord.Z), cell);
             }
         }
 

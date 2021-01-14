@@ -15,12 +15,24 @@ namespace Assets.UI
 
         private Dictionary<ResourceType, TMP_Text> _labelLookup;
 
-        private void Start()
-        {
-            _labelLookup = new Dictionary<ResourceType, TMP_Text>();
+        private bool _ready;
 
-            _playerFaction = Locator.Instance.Find<IFactionManager>().GetPlayerFaction();
+        private void LoadPanel()
+        {
+            if (!Locator.Instance.ServicesReady(typeof(ISpawnManager), typeof(IFactionManager)))
+            {
+                return;
+            }
+
             _spawnManager = Locator.Instance.Find<ISpawnManager>();
+            _playerFaction = Locator.Instance.Find<IFactionManager>().GetPlayerFaction();
+
+            if (_playerFaction == null)
+            {
+                return;
+            }
+
+            _labelLookup = new Dictionary<ResourceType, TMP_Text>();
 
             foreach (var resourceType in Enum.GetValues(typeof(ResourceType)))
             {
@@ -28,6 +40,7 @@ namespace Assets.UI
             }
 
             _playerFaction.OnResourcesUpdated += OnPlayerResoucesUpdated;
+            _ready = true;
         }
 
         private bool _updateResouces;
@@ -39,14 +52,21 @@ namespace Assets.UI
 
         public void Update()
         {
-            if (_updateResouces)
+            if (_ready)
             {
-                _updateResouces = false;
-
-                foreach (var res in _playerFaction.GetResources())
+                if (_updateResouces)
                 {
-                    _labelLookup[res.Key].text = $"{res.Key}: {res.Value}";
+                    _updateResouces = false;
+
+                    foreach (var res in _playerFaction.GetResources())
+                    {
+                        _labelLookup[res.Key].text = $"{res.Key}: {res.Value}";
+                    }
                 }
+            }
+            else
+            {
+                LoadPanel();
             }
         }
 

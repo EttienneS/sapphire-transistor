@@ -39,6 +39,7 @@ namespace Assets.StrategyCamera
             _maxZ = maxz;
         }
 
+        private bool _ready;
         public override void Initialize()
         {
             ResetDeltas();
@@ -51,17 +52,22 @@ namespace Assets.StrategyCamera
 #else
             _cameraInputHandler = new MouseAndKeyboardInputHandler(this);
 #endif
+            _ready = true;
         }
 
         public void Update()
         {
-            _cameraInputHandler.HandleInput();
-
-            while (_commands.Count > 0)
+            if (_ready)
             {
-                _commands.Dequeue().Execute(this);
+                _cameraInputHandler.HandleInput();
+
+                while (_commands.Count > 0)
+                {
+                    _commands.Dequeue().Execute(this);
+                }
+                UpdateCameraAndEnsureBounds();
             }
-            UpdateCameraAndEnsureBounds();
+          
         }
 
         internal float GetPerpendicularRotation()
