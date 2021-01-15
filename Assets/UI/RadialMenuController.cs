@@ -16,38 +16,24 @@ namespace Assets.UI
         public GameObject ElementContainer;
         public RadialMenuElement RadialMenuElementPrefab;
 
-        private RadialMenuDelegates.MenuItemClicked _activeItemMethod;
-        private (string text, RadialMenuDelegates.MenuItemClicked onClick)? _default;
-        private Vector2 _origin = Vector2.zero;
+        private RadialMenuDelegates.MenuItemConfirmed _activeItemMethod;
+        private (string text, RadialMenuDelegates.MenuItemClicked onClick, RadialMenuDelegates.MenuItemConfirmed onConfirm)? _default;
+        private Vector2 _origin = Vector2.zero; // in case we want the circle center to move
         private float Radius;
-        // in case we want the circle center to move
 
         public event RadialMenuDelegates.MenuClosed MenuClosed;
 
-        public void AddButton(string text, RadialMenuDelegates.MenuItemClicked onItemClicked, bool enabled = true)
+        public void AddButton(string text, RadialMenuDelegates.MenuItemClicked onItemClicked, RadialMenuDelegates.MenuItemConfirmed onItemConfirmed,  bool enabled = true)
         {
             var menuButton = Instantiate(RadialMenuElementPrefab, ElementContainer.transform);
             menuButton.Load(text);
+            menuButton.MenuItemClicked += () => MenuButton_MenuItemClicked(text, onItemClicked, onItemConfirmed);
 
-            if (!text.Equals("Cancel", System.StringComparison.OrdinalIgnoreCase))
+            // use first or last remembered selection as default option
+            Debug.Log($"{text} - {RadialMenuMemory.LastClickedOption}");
+            if (text.Equals(RadialMenuMemory.LastClickedOption, System.StringComparison.OrdinalIgnoreCase) || _default == null)
             {
-                menuButton.MenuItemClicked += () => MenuButton_MenuItemClicked(text, onItemClicked);
-                // use first or last remembered selection as default option
-                Debug.Log($"{text} - {RadialMenuMemory.LastClickedOption}");
-
-                if (text.Equals(RadialMenuMemory.LastClickedOption, System.StringComparison.OrdinalIgnoreCase))
-                {
-                    _default = (text, onItemClicked);
-                }
-                else if (_default == null)
-                {
-                    _default = (text, onItemClicked);
-                }
-            }
-            else
-            {
-                // if cancel is clicked do not confirm
-                menuButton.MenuItemClicked += () => onItemClicked.Invoke();
+                _default = (text, onItemClicked, onItemConfirmed);
             }
 
 #if DEBUG
@@ -69,7 +55,7 @@ namespace Assets.UI
             var offset = Mathf.Max(buttonRect.x, buttonRect.y) / 2;
             Radius = (Mathf.Max(containerRect.x, containerRect.y) / 2) + offset;
         }
-
+         
         public void CloseMenu()
         {
             MenuClosed?.Invoke();
@@ -88,7 +74,7 @@ namespace Assets.UI
 
         internal void SetDefaults()
         {
-            MenuButton_MenuItemClicked(_default.Value.text, _default.Value.onClick);
+            MenuButton_MenuItemClicked(_default.Value.text, _default.Value.onClick, _default.Value.onConfirm);
         }
 
         private static float GetRadian(int elementCount)
@@ -108,14 +94,15 @@ namespace Assets.UI
             return ElementContainer.GetComponentsInChildren<RadialMenuElement>();
         }
 
-        private void MenuButton_MenuItemClicked(string text, RadialMenuDelegates.MenuItemClicked menuItemClicked)
+        private void MenuButton_MenuItemClicked(string text, RadialMenuDelegates.MenuItemClicked menuItemClicked, RadialMenuDelegates.MenuItemConfirmed menuItemConfirmed)
         {
             Debug.Log($"{RadialMenuMemory.LastClickedOption}");
 
             RadialMenuMemory.LastClickedOption = text;
             ConfirmButton.GetComponentInChildren<TMP_Text>().text = text;
-            _activeItemMethod = menuItemClicked;
+            _activeItemMethod = menuItemConfirmed;
 
+            menuItemClicked.Invoke();
             Debug.Log($"{RadialMenuMemory.LastClickedOption}");
         }
 

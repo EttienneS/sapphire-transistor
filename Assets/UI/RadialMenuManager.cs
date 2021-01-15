@@ -3,19 +3,6 @@ using UnityEngine;
 
 namespace Assets.UI
 {
-    public class RadialMenuOptionFacade
-    {
-        public string Text { get; }
-        public RadialMenuDelegates.MenuItemClicked OnClick { get; }
-        public bool Enabled { get; }
-        public RadialMenuOptionFacade(string text, RadialMenuDelegates.MenuItemClicked onClick, bool enabled = true)
-        {
-            Text = text;
-            OnClick = onClick;
-            Enabled = enabled;
-        }
-    }
-
     public class RadialMenuManager
     {
         private readonly ISpawnManager _spawnManager;
@@ -41,10 +28,10 @@ namespace Assets.UI
                 _activeMenu.CloseOnSelect = closeOnSelect;
                 foreach (var option in options)
                 {
-                    _activeMenu.AddButton(option.Text, option.OnClick, option.Enabled);
+                    _activeMenu.AddButton(option.Text, option.OnClick, option.OnConfirm, option.Enabled);
                 }
 
-                _activeMenu.AddButton("Cancel", () => _activeMenu.CloseMenu());
+                _activeMenu.AddButton("Cancel", () => { }, () => _activeMenu.CloseMenu());
                 _activeMenu.MenuClosed += onMenuClose;
                 _activeMenu.SetDefaults();
             }

@@ -4,61 +4,52 @@ using Assets.Structures;
 using Assets.Structures.Behaviors;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Assets.Factions
 {
     public class StructureManager : IStructureManager
     {
-        private readonly Dictionary<IStructure, GameObject> _structureObjectLookup;
+        private readonly List<IStructure> _structures;
         private readonly ISpawnManager _spawnManager;
         private readonly IStructureFactory _structureFactory;
 
-        private readonly IStructurePlacementValidator _structurePlacementValidator; 
+        private readonly IStructurePlacementValidator _structurePlacementValidator;
 
         public StructureManager(ISpawnManager spawnManager, IStructureFactory structureFactory, IStructurePlacementValidator structurePlacementValidator)
         {
             _spawnManager = spawnManager;
             _structureFactory = structureFactory;
-            _structureObjectLookup = new Dictionary<IStructure, GameObject>();
+            _structures = new List<IStructure>();
             _structurePlacementValidator = structurePlacementValidator;
             StructureEventManager.OnStructureDestroyed += RemoveStructure;
         }
 
-        public ICoord GetFactionCoreLocation()
+        public void AddStructure(IStructureFacade facade, ICoord coord)
         {
-            return _structureObjectLookup.Keys.First().Coord;
-        }
-
-        public void AddStructure(IStructureFacade selectedFacade, ICoord coord)
-        {
-            var structure = _structureFactory.MakeStructure(selectedFacade, coord);
-            _structureObjectLookup.Add(structure, null);
-            _spawnManager.SpawnAddressable(selectedFacade.Address, coord.ToAdjustedVector3(), (obj) => _structureObjectLookup[structure] = obj);
+            _structures.Add(_structureFactory.MakeStructure(facade, coord));
         }
 
         public List<IStructureFacade> GetBuildableStructures()
         {
             var facades = new List<IStructureFacade>
             {
-                new StructureFacade("Road", "Road", "", _structureFactory.GetBehaviour<NoBehavior>(), _structurePlacementValidator.CanPlaceRoad,  (ResourceType.Gold, 1)),
-                new StructureFacade("Farm", "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>(), _structurePlacementValidator.CanPlaceFarm, (ResourceType.Gold, 3)),
-                new StructureFacade("House", "House", "", _structureFactory.GetBehaviour<NoBehavior>(), _structurePlacementValidator.CanPlaceDefault, (ResourceType.Gold, 2)),
+                new StructureFacade("Road", 1,1, "Road", "", _structureFactory.GetBehaviour<NoBehavior>(), _structurePlacementValidator.CanPlaceRoad,  (ResourceType.Gold, 1)),
+                new StructureFacade("Farm", 2,2, "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>(), _structurePlacementValidator.CanPlaceFarm, (ResourceType.Gold, 3)),
+                new StructureFacade("House", 1,1, "House", "", _structureFactory.GetBehaviour<NoBehavior>(), _structurePlacementValidator.CanPlaceDefault, (ResourceType.Gold, 2)),
             };
             return facades;
         }
 
         public List<IStructure> GetStructures()
         {
-            return _structureObjectLookup.Keys.ToList();
+            return _structures;
         }
 
         public void RemoveStructure(IStructure structure)
         {
-            if (_structureObjectLookup.ContainsKey(structure))
+            if (_structures.Contains(structure))
             {
-                _spawnManager.RecyleItem(structure.Name, _structureObjectLookup[structure]);
-                _structureObjectLookup.Remove(structure);
+                _structures.Remove(structure);
             }
         }
 

@@ -95,7 +95,7 @@ namespace Assets.Factions
         {
             foreach (var faction in GetAllFactions())
             {
-                structure = faction.StructureManager.GetStructures().Find(s => s.Coord == cell.Coord);
+                structure = faction.StructureManager.GetStructures().Find(s => s.OccupiedCoords.Any(c => c.Equals(cell.Coord)));
                 if (structure != null)
                 {
                     return true;

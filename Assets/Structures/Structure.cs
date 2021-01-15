@@ -1,5 +1,6 @@
 ﻿using Assets.Map;
 using Assets.Resources;
+using System.Collections.Generic;
 
 namespace Assets.Structures
 {
@@ -12,18 +13,35 @@ namespace Assets.Structures
 
             TotalTurnsToBuild = facade.GetTotalBuildTime();
             Address = facade.Address;
-            Coord = coord;
+
+            Width = facade.Width;
+            Height = facade.Height;
+
+            var coords = new List<ICoord>();
+            for (int x = 0; x < Width; x++)
+            {
+                for (int z = 0; z < Height; z++)
+                {
+                    coords.Add(new Coord(coord.X + x, coord.Y, coord.Z + z));
+                }
+            }
+            OccupiedCoords = coords.ToArray();
         }
 
         public IStructureBehaviour Behaviour { get; }
         public int TotalTurnsToBuild { get; set; }
         public int ElapsedTurnsToBuild { get; set; }
-        public ICoord Coord { get; }
         public string Name { get; }
 
         public bool Built { get; set; }
 
         public string Address { get; }
+
+        public ICoord[] OccupiedCoords { get; }
+
+        public int Width { get; }
+
+        public int Height { get; }
 
         public (ResourceType, int)[] GetYield(IStructure structure)
         {
@@ -73,7 +91,12 @@ namespace Assets.Structures
 
         public override string ToString()
         {
-            return $"{Name}: {Coord}";
+            return $"{Name}: {GetOrigin()}";
+        }
+
+        public ICoord GetOrigin()
+        {
+            return OccupiedCoords[0];
         }
     }
 }

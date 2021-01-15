@@ -169,20 +169,19 @@ namespace Assets.Map
 
         private void ActivateChunks(ChunkRenderer currentChunk, float zoom)
         {
-            // always have at least 2 chunks visible
-            var offset = Mathf.Max(2, zoom / 20);
+            var offset = 1;
             var chunkWidth = Mathf.FloorToInt(_cells.GetLength(0) / Constants.ChunkSize);
             var chunkHeight = Mathf.FloorToInt(_cells.GetLength(1) / Constants.ChunkSize);
 
-            var xstart = (int)Mathf.Max(0, currentChunk.X - offset);
-            var xend = (int)Mathf.Min(chunkWidth, currentChunk.X + offset);
-            var zstart = (int)Mathf.Max(0, currentChunk.Z - offset);
-            var zend = (int)Mathf.Min(chunkHeight, currentChunk.Z + offset);
+            var xstart = Mathf.Max(0, currentChunk.X - offset);
+            var xend = Mathf.Min(chunkWidth, currentChunk.X + offset);
+            var zstart = Mathf.Max(0, currentChunk.Z - offset);
+            var zend = Mathf.Min(chunkHeight, currentChunk.Z + offset);
 
             var deactivate = _chunkRenderers.Flatten().ToList();
-            for (var x = xstart; x < xend; x++)
+            for (var x = xstart; x <= xend; x++)
             {
-                for (var z = zstart; z < zend; z++)
+                for (var z = zstart; z <= zend; z++)
                 {
                     var chunk = _chunkRenderers[x, z];
                    

@@ -11,6 +11,9 @@ namespace Assets.Structures
         string Description { get; }
         string Name { get; }
         IStructureBehaviour BehaviorPrototype { get; }
-        IStructurePlacementResult CanBePlacedInCell(Cell cell);
+        IStructurePlacementResult CheckCellPlacement(Cell cell);
+
+        int Width { get; }
+        int Height { get; }
     }
 }

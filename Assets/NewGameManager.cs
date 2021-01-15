@@ -34,7 +34,7 @@ namespace Assets
         {
             var natureFaction = factionManager.GetNatureFaction();
 
-            var tree = new StructureFacade("Tree", "Tree", "Pine tree", structureFactory.GetBehaviour<NoBehavior>(), (_) => new InvalidPlacementResult("Invalid"));
+            var tree = new StructureFacade("Tree", 1, 1, "Tree", "Pine tree", structureFactory.GetBehaviour<NoBehavior>());
 
             for (int x = 0; x < mapManager.Width; x++)
             {
@@ -56,12 +56,12 @@ namespace Assets
         private static void ConfigureCameraDefaults(IMapManager mapManager, IFactionManager factionManger, ICameraController cameraController)
         {
             cameraController.ConfigureBounds(0, mapManager.Width, 0, mapManager.Height);
-            cameraController.MoveToPosition(factionManger.GetPlayerFaction().StructureManager.GetFactionCoreLocation().ToAdjustedVector3());
+            cameraController.MoveToPosition(factionManger.GetPlayerFaction().StructureManager.GetStructures()[0].GetOrigin().ToAdjustedVector3());
         }
 
         private static void MakeFactionCores(IStructureFactory structureFactory, IMapManager mapManager, IFactionManager factionManager)
         {
-            var core = new StructureFacade("SettlmentCore", "BellTower", "The heart of this settlement", structureFactory.GetBehaviour<SettlementCore>(), (_) => new InvalidPlacementResult("Invalid"));
+            var core = new StructureFacade("SettlmentCore", 2, 2, "BellTower", "The heart of this settlement", structureFactory.GetBehaviour<SettlementCore>());
             foreach (var faction in factionManager.GetAllFactions())
             {
                 var coreCell = mapManager.GetRandomCell((cell) => cell.GetTravelCost() > 0);

@@ -7,8 +7,8 @@ namespace Assets.UI
     {
         RadialMenuManager RadialMenuManager { get; set; }
 
-        void HighlightCell(ICoord coord, Color color);
+        void HighlightCells(ICoord[] coord, Color color);
 
-        void DisableHighlight();
+        void DisableHighlights();
     }
 }

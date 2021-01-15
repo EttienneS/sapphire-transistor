@@ -94,6 +94,7 @@
     <Compile Include="Assets\Structures\IStructureFacade.cs" />
     <Compile Include="Assets\StrategyCamera\MoveCommand.cs" />
     <Compile Include="Assets\Factions\AIFaction.cs" />
+    <Compile Include="Assets\StrategyCamera\CameraEventManager.cs" />
     <Compile Include="Assets\Factions\FactionBase.cs" />
     <Compile Include="Assets\UI\CurrentPlayerLabel.cs" />
     <Compile Include="Assets\UI\RadialMenuManager.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Assets\Map\Pathing\PathRequest.cs" />
     <Compile Include="Assets\Factions\FactionManager.cs" />
     <Compile Include="Assets\Structures\IStructureFactory.cs" />
+    <Compile Include="Assets\Map\MapEventManager.cs" />
     <Compile Include="Assets\StrategyCamera\ZoomCommand.cs" />
     <Compile Include="Assets\Helpers\RandomExtensions.cs" />
     <Compile Include="Assets\UI\RadialMenuElement.cs" />
@@ -138,11 +140,11 @@
     <Compile Include="Assets\StrategyCamera\CameraCommand.cs" />
     <Compile Include="Assets\Structures\Behaviors\FarmBehavior.cs" />
     <Compile Include="Assets\Map\Pathing\PathableCell.cs" />
-    <Compile Include="Assets\Structures\FacadeExtensions.cs" />
+    <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
-    <Compile Include="Assets\StrategyCamera\CameraEventManager.cs" />
-    <Compile Include="Assets\Map\MapEventManager.cs" />
+    <Compile Include="Assets\Map\CoordExtension.cs" />
+    <Compile Include="Assets\UI\RadialMenuOptionFacade.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

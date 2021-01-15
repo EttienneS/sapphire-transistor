@@ -15,7 +15,6 @@ namespace Assets.Factions
 
         List<IStructure> GetStructures();
 
-        ICoord GetFactionCoreLocation();
 
         void DoTurnEndActions();
 

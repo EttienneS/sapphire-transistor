@@ -10,8 +10,8 @@ namespace Assets.Factions
 {
     public class PlayerFaction : FactionBase
     {
-        private IUIManager _uiManager;
-        private IFactionManager _factionManager;
+        private readonly IUIManager _uiManager;
+        private readonly IFactionManager _factionManager;
 
         public PlayerFaction(string name, IServiceLocator serviceLocator) : base(name, serviceLocator)
         {
@@ -43,23 +43,18 @@ namespace Assets.Factions
 
         private void ShowStructureInfo(IStructure structure)
         {
-            Debug.Log($"{structure.Name}: {structure.Coord}");
+            Debug.Log($"{structure.Name}: {structure.OccupiedCoords[0]}");
 
             var radialMenuOptions = new List<RadialMenuOptionFacade>();
 
             if (StructureManager.GetStructures().Contains(structure))
             {
-                radialMenuOptions.Add(new RadialMenuOptionFacade($"Remove {structure.Name}", () => StructureManager.RemoveStructure(structure)));
+                radialMenuOptions.Add(new RadialMenuOptionFacade($"Remove {structure.Name}", () => { },
+                                                                                             () => StructureManager.RemoveStructure(structure)));
             }
 
-            HighlightAndShowRadialMenu(structure.Coord, Color.blue, radialMenuOptions);
-        }
-
-        private void HighlightAndShowRadialMenu(ICoord coord, Color color, List<RadialMenuOptionFacade> radialMenuOptions)
-        {
-            _uiManager.HighlightCell(coord, color);
             _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
-                                                        onMenuClose: () => _uiManager.DisableHighlight(),
+                                                        onMenuClose: () => _uiManager.DisableHighlights(),
                                                         radialMenuOptions);
         }
 
@@ -67,20 +62,31 @@ namespace Assets.Factions
         {
             var radialMenuOptions = new List<RadialMenuOptionFacade>();
 
-            foreach (var structure in StructureManager.GetBuildableStructures())
+            foreach (var facade in StructureManager.GetBuildableStructures())
             {
-                var placementCheck = structure.CanBePlacedInCell(cell);
-                if (placementCheck.CanPlace)
-                {
-                    radialMenuOptions.Add(new RadialMenuOptionFacade($"{structure.Name}", () => StructureManager.AddStructure(structure, cell.Coord)));
-                }
-                else
-                {
-                    radialMenuOptions.Add(new RadialMenuOptionFacade($"Can't place: {structure.Name} {placementCheck.Message}", () => { }, false));
-                }
+                radialMenuOptions.Add(new RadialMenuOptionFacade($"{facade.Name}",
+                    onClick: () => ShowFacadeFootprintOutline(cell, facade),
+                    onConfirm: () => PlaceFacadeIfPossible(cell, facade)));
             }
 
-            HighlightAndShowRadialMenu(cell.Coord, Color.red, radialMenuOptions);
+            _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
+                                                        onMenuClose: () => _uiManager.DisableHighlights(),
+                                                        radialMenuOptions);
+        }
+
+        private void PlaceFacadeIfPossible(Cell cell, IStructureFacade facade)
+        {
+            if (facade.CheckCellPlacement(cell).CanPlace)
+            {
+                StructureManager.AddStructure(facade, cell.Coord);
+            }
+        }
+
+        private void ShowFacadeFootprintOutline(Cell cell, IStructureFacade structure)
+        {
+            var placementCheck = structure.CheckCellPlacement(cell);
+            var color = placementCheck.CanPlace ? Color.green : Color.red;
+            _uiManager.HighlightCells(structure.GetPlacementCoords(cell.Coord), color);
         }
     }
 }
