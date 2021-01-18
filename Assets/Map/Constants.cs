@@ -2,6 +2,6 @@
 {
     public static class Constants
     {
-        public const int ChunkSize = 30;
+        public const int ChunkSize = 32;
     }
 }

@@ -56,6 +56,9 @@ namespace Assets
             {
                 ("Tree", 1000),
                 ("Road", 100),
+                ("BellTower", 10),
+                ("Barn", 20),
+                ("House", 100),
             };
 
             foreach (var (pool, size) in poolConfigs)

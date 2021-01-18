@@ -98,5 +98,10 @@ namespace Assets.Structures
         {
             return OccupiedCoords[0];
         }
+
+        public string GetStatus()
+        {
+            return $"{Name}:\n\t{GetOrigin()}\n\tBuilt: {ElapsedTurnsToBuild}/{TotalTurnsToBuild}";
+        }
     }
 }

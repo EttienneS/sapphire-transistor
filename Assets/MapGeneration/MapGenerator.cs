@@ -36,7 +36,7 @@ namespace Assets.MapGeneration
                 {
                     var cellHeight = GetAdjustedCellHeight(height[x, z]);
                     var terrrain = _terrainDefinition.GetTerrainTypeForHeight(cellHeight);
-                    map[x, z] = new Cell(x, z, 0, terrrain);
+                    map[x, z] = new Cell(x, z, terrrain.Name == "Water" ? -0.25f : 0, terrrain);
                 }
             }
             _mapManager.Create(map);

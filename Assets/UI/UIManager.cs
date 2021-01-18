@@ -17,6 +17,7 @@ namespace Assets.UI
         private IFaction _playerFaction;
         private ISpawnManager _spawnManager;
         public RadialMenuManager RadialMenuManager { get; set; }
+        public MessageManager MessageManager { get; set; }
 
         public void DisableHighlights()
         {
@@ -41,7 +42,7 @@ namespace Assets.UI
                     obj.GetComponent<MeshRenderer>().material.color = color;
                 });
             }
-          
+
         }
 
         public override void Initialize()
@@ -57,6 +58,7 @@ namespace Assets.UI
             _currentPlayerLabel.Hide();
 
             RadialMenuManager = new RadialMenuManager(_spawnManager, transform);
+            MessageManager = new MessageManager(_spawnManager, transform);
         }
 
         private void FactionManager_OnTurnStarted(IFaction faction)

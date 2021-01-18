@@ -10,7 +10,7 @@ namespace Assets.StrategyCamera
 
         public static void CameraPositionChanged(Vector3 newPostion)
         {
-            Debug.Log($"New pos: {newPostion}");
+            //Debug.Log($"New pos: {newPostion}");
             OnCameraPositionChanged?.Invoke(newPostion);
         }
     }

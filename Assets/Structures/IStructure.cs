@@ -22,5 +22,6 @@ namespace Assets.Structures
 
         void TurnStart(IStructure structure);
         ICoord GetOrigin();
+        string GetStatus();
     }
 }

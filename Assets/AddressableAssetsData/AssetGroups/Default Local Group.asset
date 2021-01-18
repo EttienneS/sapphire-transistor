@@ -86,6 +86,18 @@ MonoBehaviour:
     - Structures
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: b730b57577bda0742915b899a83b713b
+    m_Address: ValidBlueprintMaterial
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: ff1646da5ea55794c8abb2c43968589b
+    m_Address: IInvalidBlueprintMaterial
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: aa16110a372069b46b6f3f9cae36d497, type: 2}
   m_SchemaSet:

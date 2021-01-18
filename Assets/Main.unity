@@ -300,7 +300,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 500
+  far clip plane: 300
   field of view: 30
   orthographic: 0
   orthographic size: 5
@@ -867,7 +867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camera: {fileID: 323206059}
   maxZoom: 50
-  minZoom: 10
+  minZoom: 20
   movementSpeed: 0.25
   movementTime: 5
   normalSpeed: 0.5

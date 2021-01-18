@@ -95,6 +95,7 @@
     <Compile Include="Assets\StrategyCamera\MoveCommand.cs" />
     <Compile Include="Assets\Factions\AIFaction.cs" />
     <Compile Include="Assets\StrategyCamera\CameraEventManager.cs" />
+    <Compile Include="Assets\Map\CoordExtension.cs" />
     <Compile Include="Assets\Factions\FactionBase.cs" />
     <Compile Include="Assets\UI\CurrentPlayerLabel.cs" />
     <Compile Include="Assets\UI\RadialMenuManager.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Assets\ServiceLocator\LocatableMonoBehaviorBase.cs" />
     <Compile Include="Assets\Map\Coord.cs" />
     <Compile Include="Assets\Map\Constants.cs" />
+    <Compile Include="Assets\UI\RadialMenuOptionFacade.cs" />
     <Compile Include="Assets\Helpers\ColorExtensions.cs" />
     <Compile Include="Assets\MapGeneration\ITerrainDefinition.cs" />
     <Compile Include="Assets\Structures\StructureEventManager.cs" />
@@ -143,8 +145,7 @@
     <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
-    <Compile Include="Assets\Map\CoordExtension.cs" />
-    <Compile Include="Assets\UI\RadialMenuOptionFacade.cs" />
+    <Compile Include="Assets\UI\MessageManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
