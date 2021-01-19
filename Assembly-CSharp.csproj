@@ -78,12 +78,14 @@
     <Compile Include="Assets\Map\Pathing\CellPriorityQueue.cs" />
     <Compile Include="Assets\Structures\StructureBehaviorBase.cs" />
     <Compile Include="Assets\Actors\IActor.cs" />
+    <Compile Include="Assets\UI\MessagePanelController.cs" />
     <Compile Include="Assets\Bootstrapper.cs" />
     <Compile Include="Assets\ServiceLocator\Locator.cs" />
     <Compile Include="Assets\ISpawnManager.cs" />
     <Compile Include="Assets\Map\Cell.cs" />
     <Compile Include="Assets\UI\EndTurnButton.cs" />
     <Compile Include="Assets\StrategyCamera\RotationCommand.cs" />
+    <Compile Include="Assets\UI\MessageManager.cs" />
     <Compile Include="Assets\UI\IUIManager.cs" />
     <Compile Include="Assets\Map\ICoord.cs" />
     <Compile Include="Assets\ServiceLocator\IServiceLocator.cs" />
@@ -145,7 +147,7 @@
     <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
-    <Compile Include="Assets\UI\MessageManager.cs" />
+    <Compile Include="Assets\Structures\Behaviors\HouseBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

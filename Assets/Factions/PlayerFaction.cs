@@ -52,10 +52,16 @@ namespace Assets.Factions
                 radialMenuOptions.Add(new RadialMenuOptionFacade($"Remove {structure.Name}", () => { },
                                                                                              () => StructureManager.RemoveStructure(structure)));
             }
-            _uiManager.MessageManager.ShowMessage(structure.GetStatus());
+            _uiManager.MessageManager.ShowMessage(structure.Name, structure.GetStatus());
             _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
-                                                        onMenuClose: () => _uiManager.DisableHighlights(),
+                                                        onMenuClose: () => ResetUI(),
                                                         radialMenuOptions);
+        }
+
+        public void ResetUI()
+        {
+            _uiManager.DisableHighlights();
+            _uiManager.MessageManager.HideAll();
         }
 
         private void ShowBuildRadialMenu(Cell cell)
@@ -64,21 +70,27 @@ namespace Assets.Factions
 
             foreach (var facade in StructureManager.GetBuildableStructures())
             {
-                radialMenuOptions.Add(new RadialMenuOptionFacade($"{facade.Name}",
-                    onClick: () => ShowFacadeFootprintOutline(cell, facade),
-                    onConfirm: () => PlaceFacadeIfPossible(cell, facade)));
+                radialMenuOptions.Add(new RadialMenuOptionFacade(
+                                            text: $"{facade.Name}",
+                                            onClick: () => ShowFacadeFootprintOutline(cell, facade),
+                                            onConfirm: () => PlaceFacadeIfPossible(cell, facade),
+                                            enabled: CanAfford(facade.Cost)));
             }
 
             _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
-                                                        onMenuClose: () => _uiManager.DisableHighlights(),
+                                                        onMenuClose: () => ResetUI(),
                                                         radialMenuOptions);
         }
 
         private void PlaceFacadeIfPossible(Cell cell, IStructureFacade facade)
         {
-            if (facade.CheckCellPlacement(cell).CanPlace)
+            if (facade.CheckCellPlacement(cell).CanPlace && CanAfford(facade.Cost))
             {
                 StructureManager.AddStructure(facade, cell.Coord);
+                foreach (var cost in facade.Cost)
+                {
+                    ModifyResource(cost.Item1, -cost.Item2);
+                }
             }
         }
 

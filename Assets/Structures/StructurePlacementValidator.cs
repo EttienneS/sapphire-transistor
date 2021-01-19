@@ -23,7 +23,7 @@ namespace Assets.Structures
             {
                 if (CellEmpty(cell))
                 {
-                    if (HasNeighbouringRoad(cell))
+                    if (HasNeigbourContainingStructure(cell, "Road"))
                     {
                         oneCellHasroad = true;
                     }
@@ -79,6 +79,11 @@ namespace Assets.Structures
                 {
                     return _notEmptyResult;
                 }
+
+                if (!HasNeigbourContainingStructure(cell, "Road") && !HasNeigbourContainingStructure(cell, "SettlementCore"))
+                {
+                    return _noRoadResult;
+                }
             }
 
             return _validResult;
@@ -99,12 +104,12 @@ namespace Assets.Structures
             return true;
         }
 
-        private bool HasNeighbouringRoad(Cell cell)
+        private bool HasNeigbourContainingStructure(Cell cell, string name)
         {
             foreach (var neighbour in cell.GetCardinalNeighbours())
             {
                 if (_factionManager.TryGetStructureInCell(neighbour, out IStructure structure)
-                    && structure.Name == "Road")
+                    && structure.Name == name)
                 {
                     return true;
                 }
@@ -112,5 +117,7 @@ namespace Assets.Structures
 
             return false;
         }
+
+       
     }
 }

@@ -9,15 +9,14 @@ namespace Assets.Factions
     {
         private readonly Dictionary<ResourceType, int> _resources;
 
-
         public FactionBase(string name, IServiceLocator serviceLocator)
         {
             _resources = new Dictionary<ResourceType, int>();
 
             Name = name;
 
-            StructureManager = new StructureManager(serviceLocator.Find<ISpawnManager>(), 
-                                                    serviceLocator.Find<IStructureFactory>(), 
+            StructureManager = new StructureManager(serviceLocator.Find<ISpawnManager>(),
+                                                    serviceLocator.Find<IStructureFactory>(),
                                                     serviceLocator.Find<IStructurePlacementValidator>());
         }
 
@@ -30,6 +29,24 @@ namespace Assets.Factions
         public string Name { get; }
 
         public IStructureManager StructureManager { get; }
+
+        public bool CanAfford((ResourceType resource, int amount)[] cost)
+        {
+            var resources = GetResources();
+            foreach (var resource in cost)
+            {
+                if (!resources.ContainsKey(resource.resource))
+                {
+                    return false;
+                }
+                if (resources[resource.resource] < resource.amount)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         public void DoTurnEndActions()
         {

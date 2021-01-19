@@ -25,13 +25,14 @@ namespace Assets.UI
             _spawnManager.SpawnUIElement("RadialMenu", _parent, (radialmenuObj) =>
             {
                 _activeMenu = radialmenuObj.GetComponent<RadialMenuController>();
+                _activeMenu.transform.position += new Vector3(0, -200f);
                 _activeMenu.CloseOnSelect = closeOnSelect;
                 foreach (var option in options)
                 {
                     _activeMenu.AddButton(option.Text, option.OnClick, option.OnConfirm, option.Enabled);
                 }
 
-                _activeMenu.AddButton("Cancel", () => { }, () => _activeMenu.CloseMenu());
+                _activeMenu.AddButton("Cancel", () => _activeMenu.CloseMenu(), () => _activeMenu.CloseMenu());
                 _activeMenu.MenuClosed += onMenuClose;
                 _activeMenu.SetDefaults();
             }

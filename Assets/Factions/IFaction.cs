@@ -1,5 +1,4 @@
-﻿using Assets.Map;
-using Assets.Resources;
+﻿using Assets.Resources;
 using System.Collections.Generic;
 
 namespace Assets.Factions
@@ -14,13 +13,15 @@ namespace Assets.Factions
 
         string Name { get; }
 
+        IStructureManager StructureManager { get; }
+
+        bool CanAfford((ResourceType resource, int amount)[] cost);
+
         void DoTurnEndActions();
 
         void DoTurnStartActions();
 
         Dictionary<ResourceType, int> GetResources();
-
-        IStructureManager StructureManager { get; }
 
         void ModifyResource(ResourceType resource, int amount);
 

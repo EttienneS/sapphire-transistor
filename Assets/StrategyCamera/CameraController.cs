@@ -73,6 +73,7 @@ namespace Assets.StrategyCamera
 
         public void MoveToPosition(Vector3 position)
         {
+            Debug.Log($"Move to: {position}");
             transform.position = position;
 
             _newPosition = transform.position;

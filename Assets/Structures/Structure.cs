@@ -101,7 +101,7 @@ namespace Assets.Structures
 
         public string GetStatus()
         {
-            return $"{Name}:\n\t{GetOrigin()}\n\tBuilt: {ElapsedTurnsToBuild}/{TotalTurnsToBuild}";
+            return $"Location: {GetOrigin()}\nBuilt: {ElapsedTurnsToBuild}/{TotalTurnsToBuild}";
         }
     }
 }

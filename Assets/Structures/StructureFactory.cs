@@ -18,6 +18,7 @@ namespace Assets.Structures
         {
             var map = Locate<IMapManager>();
 
+            AddBehavior(new HouseBehavior(map));
             AddBehavior(new FarmBehavior(map));
             AddBehavior(new SettlementCore(map));
             AddBehavior(new NoBehavior(map));

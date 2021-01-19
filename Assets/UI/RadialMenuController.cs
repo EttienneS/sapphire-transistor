@@ -29,21 +29,21 @@ namespace Assets.UI
             menuButton.Load(text);
             menuButton.MenuItemClicked += () => MenuButton_MenuItemClicked(text, onItemClicked, onItemConfirmed);
 
-            // use first or last remembered selection as default option
-            Debug.Log($"{text} - {RadialMenuMemory.LastClickedOption}");
-            if (text.Equals(RadialMenuMemory.LastClickedOption, System.StringComparison.OrdinalIgnoreCase) || _default == null)
+            if (text != "Cancel")
             {
-                _default = (text, onItemClicked, onItemConfirmed);
-            }
+                // use first or last remembered selection as default option
+                Debug.Log($"{text} - {RadialMenuMemory.LastClickedOption}");
+                if (text.Equals(RadialMenuMemory.LastClickedOption, System.StringComparison.OrdinalIgnoreCase) || _default == null)
+                {
+                    _default = (text, onItemClicked, onItemConfirmed);
+                }
 
-#if DEBUG
-            menuButton.MenuItemClicked += () => Debug.Log($"{text} Clicked!");
-#endif
-
-            if (!enabled)
-            {
-                menuButton.GetComponent<Button>().interactable = false;
+                if (!enabled)
+                {
+                    menuButton.GetComponent<Button>().interactable = false;
+                }
             }
+            
 
             UpdatePositionOfElements();
         }

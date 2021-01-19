@@ -35,7 +35,7 @@ namespace Assets.Factions
             {
                 new StructureFacade("Road", 1,1, "Road", "", _structureFactory.GetBehaviour<NoBehavior>(), _structurePlacementValidator.CanPlaceRoad,  (ResourceType.Gold, 1)),
                 new StructureFacade("Farm", 2,2, "Barn", "", _structureFactory.GetBehaviour<FarmBehavior>(), _structurePlacementValidator.CanPlaceFarm, (ResourceType.Gold, 3)),
-                new StructureFacade("House", 1,1, "House", "", _structureFactory.GetBehaviour<NoBehavior>(), _structurePlacementValidator.CanPlaceDefault, (ResourceType.Gold, 2)),
+                new StructureFacade("House", 1,1, "House", "", _structureFactory.GetBehaviour<HouseBehavior>(), _structurePlacementValidator.CanPlaceDefault, (ResourceType.Gold, 2)),
             };
             return facades;
         }

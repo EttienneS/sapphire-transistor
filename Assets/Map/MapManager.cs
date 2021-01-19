@@ -178,29 +178,41 @@ namespace Assets.Map
             var zstart = Mathf.Max(0, currentChunk.Z - offset);
             var zend = Mathf.Min(chunkHeight, currentChunk.Z + offset);
 
-            var deactivate = _chunkRenderers.Flatten().ToList();
-            for (var x = xstart; x <= xend; x++)
+           
+            try
             {
-                for (var z = zstart; z <= zend; z++)
+                var deactivate = _chunkRenderers.Flatten().ToList();
+                for (var x = xstart; x <= xend; x++)
                 {
-                    var chunk = _chunkRenderers[x, z];
-                   
-                    deactivate.Remove(chunk);
-                    if (chunk == currentChunk)
+                    for (var z = zstart; z <= zend; z++)
                     {
-                        // activate current chunk last
-                        continue;
+                        var chunk = _chunkRenderers[x, z];
+
+                        deactivate.Remove(chunk);
+                        if (chunk == currentChunk)
+                        {
+                            // activate current chunk last
+                            continue;
+                        }
+                        chunk.Activate();
                     }
-                    chunk.Activate();
                 }
-            }
 
-            foreach (var cr in deactivate)
+                foreach (var cr in deactivate)
+                {
+                    cr.Deactivate();
+                }
+
+                currentChunk.Activate(true);
+            }
+            catch (System.Exception ex)
             {
-                cr.Deactivate();
+                Debug.LogError($"xstart: {xstart}");
+                Debug.LogError($"xend: {xend}");
+                Debug.LogError($"zstart: {zstart}");
+                Debug.LogError($"zend: {zend}");
             }
-
-            currentChunk.Activate(true);
+            
         }
 
         internal ChunkRenderer GetChunkForcell(Cell cell)
