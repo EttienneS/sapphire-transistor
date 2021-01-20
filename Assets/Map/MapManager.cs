@@ -170,15 +170,15 @@ namespace Assets.Map
         private void ActivateChunks(ChunkRenderer currentChunk, float zoom)
         {
             var offset = 1;
-            var chunkWidth = Mathf.FloorToInt(_cells.GetLength(0) / Constants.ChunkSize);
-            var chunkHeight = Mathf.FloorToInt(_cells.GetLength(1) / Constants.ChunkSize);
+            var chunkWidth = Mathf.FloorToInt(_cells.GetLength(0) / Constants.ChunkSize) - 1;
+            var chunkHeight = Mathf.FloorToInt(_cells.GetLength(1) / Constants.ChunkSize) - 1;
 
             var xstart = Mathf.Max(0, currentChunk.X - offset);
             var xend = Mathf.Min(chunkWidth, currentChunk.X + offset);
             var zstart = Mathf.Max(0, currentChunk.Z - offset);
             var zend = Mathf.Min(chunkHeight, currentChunk.Z + offset);
 
-           
+
             try
             {
                 var deactivate = _chunkRenderers.Flatten().ToList();
@@ -212,7 +212,7 @@ namespace Assets.Map
                 Debug.LogError($"zstart: {zstart}");
                 Debug.LogError($"zend: {zend}");
             }
-            
+
         }
 
         internal ChunkRenderer GetChunkForcell(Cell cell)
