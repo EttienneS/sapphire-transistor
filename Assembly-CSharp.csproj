@@ -72,6 +72,7 @@
     <Compile Include="Assets\Map\Pathing\IPathFindableCell.cs" />
     <Compile Include="Assets\Map\ChunkRenderer.cs" />
     <Compile Include="Assets\StrategyCamera\ICameraController.cs" />
+    <Compile Include="Assets\Structures\Behaviors\HouseBehavior.cs" />
     <Compile Include="Assets\StrategyCamera\MouseAndKeyboardInputHandler.cs" />
     <Compile Include="Assets\Structures\Structure.cs" />
     <Compile Include="Assets\Helpers\Instrumenter.cs" />
@@ -147,7 +148,7 @@
     <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
-    <Compile Include="Assets\Structures\Behaviors\HouseBehavior.cs" />
+    <Compile Include="Assets\MapGeneration\NatureFacadeManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -18,11 +18,11 @@ namespace Assets
             var mapManager = Locate<IMapManager>();
             var factionManger = Locate<IFactionManager>();
 
-            GenerateMap(mapManager, size: 10);
-
             RegisterFactions(factionManger);
 
-            PopulateMap(mapManager, structureFactory, factionManger);
+            GenerateMap(mapManager, size: 10, structureFactory, factionManger);
+
+
 
             MakeFactionCores(structureFactory, mapManager, factionManger);
 
@@ -30,28 +30,7 @@ namespace Assets
             ConfigureCameraDefaults(mapManager, factionManger, cameraController);
         }
 
-        private void PopulateMap(IMapManager mapManager, IStructureFactory structureFactory, IFactionManager factionManager)
-        {
-            var natureFaction = factionManager.GetNatureFaction();
-
-            var tree = new StructureFacade("Tree", 1, 1, "Tree", "Pine tree", structureFactory.GetBehaviour<NoBehavior>());
-
-            for (int x = 0; x < mapManager.Width; x++)
-            {
-                for (int z = 0; z < mapManager.Height; z++)
-                {
-                    var cell = mapManager.GetCellAtCoord(new Coord(x, 0, z));
-
-                    if (cell.Terrain.Name == "Forrest")
-                    {
-                        if (UnityEngine.Random.value > 0.5f)
-                        {
-                            natureFaction.StructureManager.AddStructure(tree, cell.Coord);
-                        }
-                    }
-                }
-            }
-        }
+       
 
         private static void ConfigureCameraDefaults(IMapManager mapManager, IFactionManager factionManger, ICameraController cameraController)
         {
@@ -80,10 +59,11 @@ namespace Assets
             factionManager.AddFaction(new AIFaction("Enemy", locator));
         }
 
-        private void GenerateMap(IMapManager mapManager, int size)
+        private void GenerateMap(IMapManager mapManager, int size, IStructureFactory structureFactory, IFactionManager factionManger)
         {
             _mapGen = new MapGenerator(mapManager, size, new DefaultTerrainDefinition());
             _mapGen.GenerateMap();
+            _mapGen.PopulateMap(mapManager, structureFactory, factionManger);
         }
     }
 }

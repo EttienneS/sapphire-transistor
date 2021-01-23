@@ -16,6 +16,7 @@ namespace Assets.Structures
 
             Width = facade.Width;
             Height = facade.Height;
+            Description = facade.Description;
 
             var coords = new List<ICoord>();
             for (int x = 0; x < Width; x++)
@@ -36,6 +37,8 @@ namespace Assets.Structures
         public bool Built { get; set; }
 
         public string Address { get; }
+
+        public string Description { get; }
 
         public ICoord[] OccupiedCoords { get; }
 
@@ -101,7 +104,7 @@ namespace Assets.Structures
 
         public string GetStatus()
         {
-            return $"Location: {GetOrigin()}\nBuilt: {ElapsedTurnsToBuild}/{TotalTurnsToBuild}";
+            return $"Location: {GetOrigin()}\n{Description}\nBuilt: {ElapsedTurnsToBuild}/{TotalTurnsToBuild}";
         }
     }
 }

@@ -55,7 +55,8 @@ namespace Assets
             var poolConfigs = new List<(string pool, int size)>
             {
                 ("Tree", 1000),
-                ("Road", 100),
+                ("Rock", 500),
+                ("Road", 200),
                 ("BellTower", 10),
                 ("Barn", 20),
                 ("House", 100),

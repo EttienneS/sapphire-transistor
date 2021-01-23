@@ -1,9 +1,9 @@
-﻿using Terrain = Assets.Map.Terrain;
+﻿using Assets.Map;
 
 namespace Assets.MapGeneration
 {
     public interface ITerrainDefinition
     {
-        Terrain GetTerrainTypeForHeight(float cellHeight);
+        ITerrain GetTerrainTypeForHeight(float cellHeight);
     }
 }

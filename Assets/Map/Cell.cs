@@ -31,7 +31,7 @@ namespace Assets.Map
 
         public override string ToString()
         {
-            return $"{Coord}: {Terrain.Name}";
+            return $"{Coord}: {Terrain.Type}";
         }
     }
 }

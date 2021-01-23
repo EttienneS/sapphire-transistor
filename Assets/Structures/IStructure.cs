@@ -12,6 +12,7 @@ namespace Assets.Structures
 
         string Name { get; }
         string Address { get; }
+        string Description { get; }
 
         int Width { get; }
         int Height { get; }

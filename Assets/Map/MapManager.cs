@@ -178,7 +178,7 @@ namespace Assets.Map
             var zstart = Mathf.Max(0, currentChunk.Z - offset);
             var zend = Mathf.Min(chunkHeight, currentChunk.Z + offset);
 
-
+            var p = new string[12];
             try
             {
                 var deactivate = _chunkRenderers.Flatten().ToList();

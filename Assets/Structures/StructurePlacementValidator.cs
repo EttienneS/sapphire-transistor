@@ -57,16 +57,16 @@ namespace Assets.Structures
             var defaultPlacement = CanPlaceDefault(origin, width, height);
             if (defaultPlacement.CanPlace)
             {
-                if (!GetCellsForPlacementCoords(origin, width, height).All(c => c.Terrain.Name == "Grass"))
+                if (!GetCellsForPlacementCoords(origin, width, height).All(c => c.Terrain.Type == TerrainType.Grass))
                 {
-                    return GetInvalidTerrainResult(origin.Terrain.Name, "Grass");
+                    return GetInvalidTerrainResult(origin.Terrain.Type, TerrainType.Grass);
                 }
                 return _validResult;
             }
             return defaultPlacement;
         }
 
-        private InvalidPlacementResult GetInvalidTerrainResult(string current, string required)
+        private InvalidPlacementResult GetInvalidTerrainResult(TerrainType current, TerrainType required)
         {
             return new InvalidPlacementResult($"Incorrect terrain: {current} != '{required}'");
         }
