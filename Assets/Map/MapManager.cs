@@ -73,16 +73,20 @@ namespace Assets.Map
             }
         }
 
-        public Cell GetCellAtCoord(ICoord coord)
+        public bool TryGetCellAtCoord(ICoord coord, out Cell cell)
         {
-            return GetCellAtCoord(coord.X, coord.Z);
+            return TryGetCellAtCoord(coord.X, coord.Z, out cell);
         }
 
-        public Cell GetCellAtCoord(int x, int z)
+        public bool TryGetCellAtCoord(int x, int z, out Cell cell)
         {
-            var lookupX = Mathf.Clamp(x, 0, Width);
-            var lookupZ = Mathf.Clamp(z, 0, Height);
-            return _cellLookup[(lookupX, lookupZ)];
+            cell = null;
+            if (x >= Width || x < 0 || z >= Height || z < 0)
+            {
+                return false;
+            }
+            cell = _cellLookup[(x, z)];
+            return true;
         }
 
         public Cell GetCenter()
@@ -151,13 +155,15 @@ namespace Assets.Map
         {
             if (_lastActiveChunk == null || _lastZoomLevel == -1)
             {
-                _lastActiveChunk = GetChunkForcell(GetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z));
+                TryGetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z, out Cell cell);
+                _lastActiveChunk = GetChunkForcell(cell);
                 _lastZoomLevel = -1;
                 ActivateChunks(_lastActiveChunk, cameraLocation.y);
             }
             else
             {
-                var currentChunk = GetChunkForcell(GetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z));
+                TryGetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z, out Cell cell);
+                var currentChunk = GetChunkForcell(cell);
                 if (_lastActiveChunk != currentChunk || _lastZoomLevel != cameraLocation.y)
                 {
                     ActivateChunks(currentChunk, cameraLocation.y);
@@ -296,5 +302,28 @@ namespace Assets.Map
 
             return renderer;
         }
+
+        public List<Cell> GetRectangle(ICoord coord, int width, int height)
+        {
+            var xstart = Mathf.Min(coord.X, coord.X + width);
+            var xend = Mathf.Max(coord.X, coord.X + width);
+            var zstart = Mathf.Min(coord.Z, coord.Z + width);
+            var zend = Mathf.Max(coord.Z, coord.Z + width);
+
+            var cells = new List<Cell>();
+            for (var x = xstart; x < xend; x++)
+            {
+                for (var z = zstart; z < zend; z++)
+                {
+                    if (TryGetCellAtCoord(x, z, out Cell cell))
+                    {
+                        cells.Add(cell);
+                    }
+                }
+            }
+
+            return cells;
+        }
+
     }
 }

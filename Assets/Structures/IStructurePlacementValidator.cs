@@ -4,6 +4,7 @@ namespace Assets.Structures
 {
     public interface IStructurePlacementValidator
     {
+        bool AreaEmpty(Cell cell, int width, int height);
         IStructurePlacementResult CanPlaceRoad(Cell cell, int width, int height);
         IStructurePlacementResult CanPlaceFarm(Cell cell, int width, int height);
         IStructurePlacementResult CanPlaceDefault(Cell cell, int width, int height);

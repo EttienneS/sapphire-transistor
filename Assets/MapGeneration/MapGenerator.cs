@@ -4,6 +4,7 @@ using Assets.Map;
 using Assets.Structures;
 using Assets.Structures.Behaviors;
 using System;
+using UnityEngine;
 
 namespace Assets.MapGeneration
 {
@@ -54,28 +55,34 @@ namespace Assets.MapGeneration
             {
                 for (int z = 0; z < mapManager.Height; z++)
                 {
-                    var cell = mapManager.GetCellAtCoord(new Coord(x, 0, z));
-
-                    if (cell.Terrain.Type == TerrainType.Forrest)
+                    if (mapManager.TryGetCellAtCoord(new Coord(x, 0, z), out Cell cell))
                     {
-                        if (UnityEngine.Random.value > 0.75f)
+                        if (cell.Terrain.Type == TerrainType.Forrest)
                         {
-                            natureFaction.StructureManager.AddStructure(natureFacadeManager.GetTree(), cell.Coord);
+                            if (UnityEngine.Random.value > 0.75f)
+                            {
+                                natureFaction.StructureManager.AddStructure(natureFacadeManager.GetTree(), cell.Coord);
+                            }
+                        }
+                        if (cell.Terrain.Type == TerrainType.Stone)
+                        {
+                            if (UnityEngine.Random.value > 0.75f)
+                            {
+                                natureFaction.StructureManager.AddStructure(natureFacadeManager.GetRock(), cell.Coord);
+                            }
+                        }
+                        if (cell.Terrain.Type == TerrainType.Grass)
+                        {
+                            if (UnityEngine.Random.value > 0.99f)
+                            {
+                                natureFaction.StructureManager.AddStructure(natureFacadeManager.GetTree(), cell.Coord);
+                            }
                         }
                     }
-                    if (cell.Terrain.Type == TerrainType.Stone)
+                    else
                     {
-                        if (UnityEngine.Random.value > 0.75f)
-                        {
-                            natureFaction.StructureManager.AddStructure(natureFacadeManager.GetRock(), cell.Coord);
-                        }
-                    }
-                    if (cell.Terrain.Type == TerrainType.Grass)
-                    {
-                        if (UnityEngine.Random.value > 0.99f)
-                        {
-                            natureFaction.StructureManager.AddStructure(natureFacadeManager.GetTree(), cell.Coord);
-                        }
+                        Debug.LogError("Unable to find cell");
+                        throw new IndexOutOfRangeException();
                     }
                 }
             }

@@ -46,7 +46,10 @@ namespace Assets.Structures
 
             foreach (var coord in StructureExtensions.GetPlacementCoords(origin.Coord, width, height))
             {
-                cells.Add(_mapManager.GetCellAtCoord(coord));
+                if (_mapManager.TryGetCellAtCoord(coord, out Cell cell))
+                {
+                    cells.Add(cell);
+                }
             }
 
             return cells;
@@ -118,6 +121,16 @@ namespace Assets.Structures
             return false;
         }
 
-       
+        public bool AreaEmpty(Cell origin, int width, int height)
+        {
+            foreach (var cell in GetCellsForPlacementCoords(origin, width, height))
+            {
+                if (!CellEmpty(cell))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

@@ -5,6 +5,7 @@ using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using Assets.Structures;
 using Assets.Structures.Behaviors;
+using System.Linq;
 
 namespace Assets
 {
@@ -22,15 +23,13 @@ namespace Assets
 
             GenerateMap(mapManager, size: 10, structureFactory, factionManger);
 
-
-
             MakeFactionCores(structureFactory, mapManager, factionManger);
 
             var cameraController = Locate<ICameraController>();
             ConfigureCameraDefaults(mapManager, factionManger, cameraController);
         }
 
-       
+
 
         private static void ConfigureCameraDefaults(IMapManager mapManager, IFactionManager factionManger, ICameraController cameraController)
         {
@@ -38,13 +37,21 @@ namespace Assets
             cameraController.MoveToPosition(factionManger.GetPlayerFaction().StructureManager.GetStructures()[0].GetOrigin().ToAdjustedVector3());
         }
 
-        private static void MakeFactionCores(IStructureFactory structureFactory, IMapManager mapManager, IFactionManager factionManager)
+        private void MakeFactionCores(IStructureFactory structureFactory, IMapManager mapManager, IFactionManager factionManager)
         {
+            var placementValidator = Locate<IStructurePlacementValidator>();
             var core = new StructureFacade("SettlementCore", 2, 2, "BellTower", "The heart of this settlement", structureFactory.GetBehaviour<SettlementCore>());
+            var road = new StructureFacade("Road", 1, 1, "Road", "Road", structureFactory.GetBehaviour<NoBehavior>());
             foreach (var faction in factionManager.GetAllFactions())
             {
-                var coreCell = mapManager.GetRandomCell((cell) => cell.GetTravelCost() > 0);
+                var coreCell = mapManager.GetRandomCell((cell) => cell.Terrain.Type == TerrainType.Grass);
                 faction.StructureManager.AddStructure(core, coreCell.Coord);
+
+                var rect = mapManager.GetRectangle(coreCell.Coord, 2, 2);
+                foreach (var cell in rect.SelectMany(c => c.NonNullNeighbors).Except(rect))
+                {
+                    faction.StructureManager.AddStructure(road, cell.Coord);
+                }
             }
 
             factionManager.MoveToNextTurn();
