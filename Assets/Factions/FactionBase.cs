@@ -15,9 +15,7 @@ namespace Assets.Factions
 
             Name = name;
 
-            StructureManager = new StructureManager(serviceLocator.Find<ISpawnManager>(),
-                                                    serviceLocator.Find<IStructureFactory>(),
-                                                    serviceLocator.Find<IStructurePlacementValidator>());
+            StructureManager = new StructureManager(serviceLocator.Find<IStructureFactory>());
         }
 
         public event FactionDelegates.OnResourceChanged OnResourcesUpdated;

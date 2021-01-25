@@ -20,11 +20,6 @@ namespace Assets.Structures
             return GetPlacementCoords(coord, structure.Height, structure.Width);
         }
 
-        public static ICoord[] GetPlacementCoords(this IStructureFacade facade, ICoord coord)
-        {
-            return GetPlacementCoords(coord, facade.Height, facade.Width);
-        }
-
         public static ICoord[] GetPlacementCoords(ICoord coord, int width, int height)
         {
             var coords = new List<ICoord>();
@@ -37,17 +32,6 @@ namespace Assets.Structures
             }
 
             return coords.ToArray();
-        }
-
-        public static int GetTotalBuildTime(this IStructureFacade facade)
-        {
-            var total = 0;
-            foreach (var cost in facade.Cost)
-            {
-                total += cost.Item2;
-            }
-
-            return total;
         }
     }
 }

@@ -57,6 +57,7 @@ namespace Assets
                 ("Tree", 1000),
                 ("Rock", 500),
                 ("Road", 200),
+                ("RoadAnchorPoint", 200),
                 ("BellTower", 10),
                 ("Barn", 20),
                 ("House", 100),
@@ -156,7 +157,7 @@ namespace Assets
         {
             // never invoke this directly, this should invoke when the spawn manager decides its required
             var placement = StructureExtensions.CalculatePlacementPosition(structure.GetOrigin(), structure.Width, structure.Height);
-            SpawnModel(structure.Address, placement, (obj) =>
+            SpawnModel(structure.AssetAddress, placement, (obj) =>
             {
                 if (!_structureObjectLookup.ContainsKey(structure))
                 {
@@ -186,7 +187,7 @@ namespace Assets
             var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(structure.GetOrigin()));
             _chunkStructureLookup[renderer].Remove(structure);
 
-            RecyleItem(structure.Address, _structureObjectLookup[structure]);
+            RecyleItem(structure.AssetAddress, _structureObjectLookup[structure]);
         }
 
         private void StructureEventManager_OnStructurePlanned(IStructure structure)

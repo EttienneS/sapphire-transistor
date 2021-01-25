@@ -11,7 +11,7 @@ namespace Assets.Structures
         ICoord[] OccupiedCoords { get; }
 
         string Name { get; }
-        string Address { get; }
+        string AssetAddress { get; }
         string Description { get; }
 
         int Width { get; }

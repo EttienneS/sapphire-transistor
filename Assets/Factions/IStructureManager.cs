@@ -7,14 +7,11 @@ namespace Assets.Factions
 {
     public interface IStructureManager
     {
-        void AddStructure(IStructureFacade selectedFacade, ICoord coord);
+        void AddStructure(StructureType type, ICoord coord);
 
         void RemoveStructure(IStructure structure);
 
-        List<IStructureFacade> GetBuildableStructures();
-
         List<IStructure> GetStructures();
-
 
         void DoTurnEndActions();
 

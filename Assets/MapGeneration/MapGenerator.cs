@@ -44,12 +44,11 @@ namespace Assets.MapGeneration
                 }
             }
             _mapManager.Create(map);
-        }     
+        }
 
         internal void PopulateMap(IMapManager mapManager, IStructureFactory structureFactory, IFactionManager factionManager)
         {
             var natureFaction = factionManager.GetNatureFaction();
-            var natureFacadeManager = new NatureFacadeManager(structureFactory);
 
             for (int x = 0; x < mapManager.Width; x++)
             {
@@ -61,21 +60,21 @@ namespace Assets.MapGeneration
                         {
                             if (UnityEngine.Random.value > 0.75f)
                             {
-                                natureFaction.StructureManager.AddStructure(natureFacadeManager.GetTree(), cell.Coord);
+                                natureFaction.StructureManager.AddStructure(StructureType.Tree, cell.Coord);
                             }
                         }
                         if (cell.Terrain.Type == TerrainType.Stone)
                         {
                             if (UnityEngine.Random.value > 0.75f)
                             {
-                                natureFaction.StructureManager.AddStructure(natureFacadeManager.GetRock(), cell.Coord);
+                                natureFaction.StructureManager.AddStructure(StructureType.Rock, cell.Coord);
                             }
                         }
                         if (cell.Terrain.Type == TerrainType.Grass)
                         {
                             if (UnityEngine.Random.value > 0.99f)
                             {
-                                natureFaction.StructureManager.AddStructure(natureFacadeManager.GetTree(), cell.Coord);
+                                natureFaction.StructureManager.AddStructure(StructureType.Tree, cell.Coord);
                             }
                         }
                     }

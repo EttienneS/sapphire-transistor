@@ -35,10 +35,6 @@ namespace Assets.Factions
             {
                 ShowStructureInfo(structure);
             }
-            else
-            {
-                ShowBuildRadialMenu(cell);
-            }
         }
 
         private void ShowStructureInfo(IStructure structure)
@@ -64,41 +60,23 @@ namespace Assets.Factions
             _uiManager.MessageManager.HideAll();
         }
 
-        private void ShowBuildRadialMenu(Cell cell)
-        {
-            var radialMenuOptions = new List<RadialMenuOptionFacade>();
+        //private void PlaceFacadeIfPossible(Cell cell, IStructureFacade facade)
+        //{
+        //    if (facade.CheckCellPlacement(cell).CanPlace && CanAfford(facade.Cost))
+        //    {
+        //        StructureManager.AddStructure(facade, cell.Coord);
+        //        foreach (var cost in facade.Cost)
+        //        {
+        //            ModifyResource(cost.Item1, -cost.Item2);
+        //        }
+        //    }
+        //}
 
-            foreach (var facade in StructureManager.GetBuildableStructures())
-            {
-                radialMenuOptions.Add(new RadialMenuOptionFacade(
-                                            text: $"{facade.Name}",
-                                            onClick: () => ShowFacadeFootprintOutline(cell, facade),
-                                            onConfirm: () => PlaceFacadeIfPossible(cell, facade),
-                                            enabled: CanAfford(facade.Cost)));
-            }
-
-            _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
-                                                        onMenuClose: () => ResetUI(),
-                                                        radialMenuOptions);
-        }
-
-        private void PlaceFacadeIfPossible(Cell cell, IStructureFacade facade)
-        {
-            if (facade.CheckCellPlacement(cell).CanPlace && CanAfford(facade.Cost))
-            {
-                StructureManager.AddStructure(facade, cell.Coord);
-                foreach (var cost in facade.Cost)
-                {
-                    ModifyResource(cost.Item1, -cost.Item2);
-                }
-            }
-        }
-
-        private void ShowFacadeFootprintOutline(Cell cell, IStructureFacade structure)
-        {
-            var placementCheck = structure.CheckCellPlacement(cell);
-            var color = placementCheck.CanPlace ? Color.green : Color.red;
-            _uiManager.HighlightCells(structure.GetPlacementCoords(cell.Coord), color);
-        }
+        //private void ShowFacadeFootprintOutline(Cell cell, IStructureFacade structure)
+        //{
+        //    var placementCheck = structure.CheckCellPlacement(cell);
+        //    var color = placementCheck.CanPlace ? Color.green : Color.red;
+        //    _uiManager.HighlightCells(structure.GetPlacementCoords(cell.Coord), color);
+        //}
     }
 }

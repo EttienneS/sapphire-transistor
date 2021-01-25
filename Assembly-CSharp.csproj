@@ -94,7 +94,6 @@
     <Compile Include="Assets\Factions\FactionDelegates.cs" />
     <Compile Include="Assets\Factions\PlayerFaction.cs" />
     <Compile Include="Assets\Helpers\CellExtensions.cs" />
-    <Compile Include="Assets\Structures\IStructureFacade.cs" />
     <Compile Include="Assets\StrategyCamera\MoveCommand.cs" />
     <Compile Include="Assets\Factions\AIFaction.cs" />
     <Compile Include="Assets\StrategyCamera\CameraEventManager.cs" />
@@ -123,7 +122,6 @@
     <Compile Include="Assets\Resources\ResourceType.cs" />
     <Compile Include="Assets\Map\ChunkRendererFactory.cs" />
     <Compile Include="Assets\Map\IMapManager.cs" />
-    <Compile Include="Assets\Structures\StructureFacade.cs" />
     <Compile Include="Assets\Map\MapManager.cs" />
     <Compile Include="Assets\SpawnManager.cs" />
     <Compile Include="Assets\MapGeneration\MapGenerator.cs" />
@@ -148,7 +146,6 @@
     <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
-    <Compile Include="Assets\MapGeneration\NatureFacadeManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
