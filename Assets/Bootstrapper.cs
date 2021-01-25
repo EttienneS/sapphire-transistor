@@ -3,6 +3,7 @@ using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using Assets.Structures;
+using Assets.Structures.Cards;
 using Assets.UI;
 using UnityEngine;
 
@@ -30,8 +31,12 @@ namespace Assets
 
             _locator.Register<IStructureFactory>(new StructureFactory());
             _locator.Register<IFactionManager>(new FactionManager());
-            _locator.Register<IStructurePlacementValidator>(new StructurePlacementValidator());
+            _locator.Register<IPlacementValidator>(new PlacementValidator());
+
+            _locator.Register<ICardManager>(new CardManager());
+
             _locator.Register<NewGameManager>(new NewGameManager());
+            
 
             _locator.Register<IUIManager>(FindObjectOfType<UIManager>());
         }

@@ -6,9 +6,9 @@ namespace Assets.Structures
 {
     public class Structure : IStructure
     {
-        public Structure(string name, int width, int height, string assetAddress, string description, IStructureBehaviour behaviour, ICoord coord)
+        public Structure(StructureType type, int width, int height, string assetAddress, string description, IStructureBehaviour behaviour, ICoord coord)
         {
-            Name = name;
+            Type = type;
             Behaviour = behaviour;
 
             AssetAddress = assetAddress;
@@ -31,7 +31,7 @@ namespace Assets.Structures
         }
 
         public IStructureBehaviour Behaviour { get; }
-        public string Name { get; }
+        public StructureType Type { get; }
 
         public string AssetAddress { get; }
 
@@ -61,7 +61,7 @@ namespace Assets.Structures
 
         public override string ToString()
         {
-            return $"{Name}: {GetOrigin()}";
+            return $"{Type}: {GetOrigin()}";
         }
 
         public ICoord GetOrigin()

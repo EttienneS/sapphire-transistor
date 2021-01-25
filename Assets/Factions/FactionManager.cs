@@ -1,6 +1,8 @@
 ﻿using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
+using Assets.Structures.Cards;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,6 +14,7 @@ namespace Assets.Factions
         private Queue<IFaction> _factionQueue;
         private IFaction _natureFaction;
         private IFaction _playerFaction;
+        private Lazy<ICardManager> _cardManager;
 
         public event FactionDelegates.OnTurnEnded OnTurnEnded;
 
@@ -75,6 +78,7 @@ namespace Assets.Factions
         public override void Initialize()
         {
             _factionQueue = new Queue<IFaction>();
+            _cardManager = new Lazy<ICardManager>(() => Locate<ICardManager>());
         }
 
         public void MoveToNextTurn()
@@ -88,6 +92,8 @@ namespace Assets.Factions
             OnTurnStarted?.Invoke(_activeFaction);
 
             _activeFaction.DoTurnStartActions();
+
+            _cardManager.Value.DealCards(_activeFaction);
             _activeFaction.TakeTurn();
         }
 

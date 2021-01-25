@@ -12,6 +12,6 @@ namespace Assets.Structures
 
         public delegate void StructureDestroyedDelegate(IStructure structure);
 
-        public delegate IStructurePlacementResult StructurePlacementValidationDelegate(Cell cell, int width, int height);
+        public delegate IPlacementResult StructurePlacementValidationDelegate(Cell cell, int width, int height);
     }
 }

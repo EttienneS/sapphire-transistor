@@ -56,7 +56,7 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Structures\StructurePlacementValidator.cs" />
+    <Compile Include="Assets\Structures\PlacementValidator.cs" />
     <Compile Include="Assets\Map\Pathing\DirectionExtensions.cs" />
     <Compile Include="Assets\Structures\IStructureBehaviour.cs" />
     <Compile Include="Assets\Factions\IFaction.cs" />
@@ -105,7 +105,7 @@
     <Compile Include="Assets\Structures\StructureDelegates.cs" />
     <Compile Include="Assets\UI\UIManager.cs" />
     <Compile Include="Assets\Map\Pathing\InvalidPathException.cs" />
-    <Compile Include="Assets\Structures\IStructurePlacementValidator.cs" />
+    <Compile Include="Assets\Structures\IPlacementValidator.cs" />
     <Compile Include="Assets\Factions\StructureManager.cs" />
     <Compile Include="Assets\Structures\StructureFactory.cs" />
     <Compile Include="Assets\Map\MapDelegates.cs" />
@@ -146,6 +146,12 @@
     <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
+    <Compile Include="Assets\Structures\Cards\CardEventManager.cs" />
+    <Compile Include="Assets\Factions\NatureFaction.cs" />
+    <Compile Include="Assets\Structures\Cards\ICardManager.cs" />
+    <Compile Include="Assets\Structures\Cards\CardManager.cs" />
+    <Compile Include="Assets\Structures\Cards\Card.cs" />
+    <Compile Include="Assets\Structures\Cards\ICard.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

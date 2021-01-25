@@ -1,4 +1,6 @@
-﻿using Assets.Resources;
+﻿using Assets.Map;
+using Assets.Resources;
+using Assets.Structures.Cards;
 using System.Collections.Generic;
 
 namespace Assets.Factions
@@ -26,5 +28,11 @@ namespace Assets.Factions
         void ModifyResource(ResourceType resource, int amount);
 
         void TakeTurn();
+
+        int GetHandSize();
+
+        void AddCard(ICard card);
+
+        void PlayCard(ICard card, ICoord anchor);
     }
 }

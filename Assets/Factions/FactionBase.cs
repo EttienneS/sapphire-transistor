@@ -1,16 +1,33 @@
-﻿using Assets.Resources;
+﻿using Assets.Map;
+using Assets.Resources;
 using Assets.ServiceLocator;
 using Assets.Structures;
+using Assets.Structures.Cards;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Factions
 {
+    public static class FactionExtensions
+    {
+        public static List<ICoord> GetOpenAnchorPoints(this IFaction faction)
+        {
+            return faction.StructureManager.GetStructures()
+                                           .Where(s => s.Type == StructureType.Anchor)
+                                           .Select(s => s.GetOrigin())
+                                           .ToList();
+        }
+    }
+
     public abstract class FactionBase : IFaction
     {
         private readonly Dictionary<ResourceType, int> _resources;
 
-        public FactionBase(string name, IServiceLocator serviceLocator)
+        internal List<ICard> _cards;
+
+        protected FactionBase(string name, IServiceLocator serviceLocator)
         {
+            _cards = new List<ICard>();
             _resources = new Dictionary<ResourceType, int>();
 
             Name = name;
@@ -27,6 +44,12 @@ namespace Assets.Factions
         public string Name { get; }
 
         public IStructureManager StructureManager { get; }
+
+        public void AddCard(ICard card)
+        {
+            _cards.Add(card);
+            CardEventManager.CardReceived(card, this);
+        }
 
         public bool CanAfford((ResourceType resource, int amount)[] cost)
         {
@@ -63,6 +86,11 @@ namespace Assets.Factions
             TurnEnded?.Invoke(this);
         }
 
+        public int GetHandSize()
+        {
+            return 5;
+        }
+
         public Dictionary<ResourceType, int> GetResources()
         {
             return _resources;
@@ -77,6 +105,12 @@ namespace Assets.Factions
             _resources[resource] += amount;
 
             OnResourcesUpdated?.Invoke(resource, _resources[resource]);
+        }
+
+        public void PlayCard(ICard card, ICoord anchor)
+        {
+            CardEventManager.CardPlayed(card, this, anchor);
+            _cards.Remove(card);
         }
 
         public abstract void TakeTurn();

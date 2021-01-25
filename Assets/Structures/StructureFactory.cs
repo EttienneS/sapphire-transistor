@@ -31,11 +31,11 @@ namespace Assets.Structures
             AddBehavior(new SettlementCore(map));
             AddBehavior(new NoBehavior(map));
 
-            _structureBuilderLookup.Add(StructureType.Tree, (coord) => new Structure("Tree", 1, 1, "Tree", "Pine tree", GetBehaviour<NoBehavior>(), coord));
-            _structureBuilderLookup.Add(StructureType.Rock, (coord) => new Structure("Rock", 1, 1, "Rock", "A rock", GetBehaviour<NoBehavior>(), coord));
-            _structureBuilderLookup.Add(StructureType.Core, (coord) => new Structure("Core", 2, 2, "BellTower", "The heart of this settlement", GetBehaviour<SettlementCore>(), coord));
-            _structureBuilderLookup.Add(StructureType.Road, (coord) => new Structure("Road", 1, 1, "Road", "Road", GetBehaviour<NoBehavior>(), coord));
-            _structureBuilderLookup.Add(StructureType.Anchor, (coord) => new Structure("Anchor", 1, 1, "RoadAnchorPoint", "Place where other structures can be placed", GetBehaviour<NoBehavior>(), coord));
+            _structureBuilderLookup.Add(StructureType.Tree, (coord) => new Structure(StructureType.Tree, 1, 1, "Tree", "Pine tree", GetBehaviour<NoBehavior>(), coord));
+            _structureBuilderLookup.Add(StructureType.Rock, (coord) => new Structure(StructureType.Rock, 1, 1, "Rock", "A rock", GetBehaviour<NoBehavior>(), coord));
+            _structureBuilderLookup.Add(StructureType.Core, (coord) => new Structure(StructureType.Core, 2, 2, "BellTower", "The heart of this settlement", GetBehaviour<SettlementCore>(), coord));
+            _structureBuilderLookup.Add(StructureType.Road, (coord) => new Structure(StructureType.Road, 1, 1, "Road", "Road", GetBehaviour<NoBehavior>(), coord));
+            _structureBuilderLookup.Add(StructureType.Anchor, (coord) => new Structure(StructureType.Anchor, 1, 1, "RoadAnchorPoint", "Place where other structures can be placed", GetBehaviour<NoBehavior>(), coord));
         }
 
         private void AddBehavior(IStructureBehaviour behavior)

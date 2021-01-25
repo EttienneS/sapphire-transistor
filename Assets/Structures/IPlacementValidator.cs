@@ -2,22 +2,19 @@
 
 namespace Assets.Structures
 {
-    public interface IStructurePlacementValidator
+    public interface IPlacementValidator
     {
-        bool AreaEmpty(Cell cell, int width, int height);
-        IStructurePlacementResult CanPlaceRoad(Cell cell, int width, int height);
-        IStructurePlacementResult CanPlaceFarm(Cell cell, int width, int height);
-        IStructurePlacementResult CanPlaceDefault(Cell cell, int width, int height);
+        IPlacementResult CanPlace(ICoord coord, StructureType? structureType);
     }
 
-    public interface IStructurePlacementResult
+    public interface IPlacementResult
     {
         bool CanPlace { get; }
 
         string Message { get; }
     }
 
-    public class InvalidPlacementResult : IStructurePlacementResult
+    public class InvalidPlacementResult : IPlacementResult
     {
         public InvalidPlacementResult(string message)
         {
@@ -30,7 +27,7 @@ namespace Assets.Structures
         public string Message { get; }
     }
 
-    public class ValidPlacementResult : IStructurePlacementResult
+    public class ValidPlacementResult : IPlacementResult
     {
         public ValidPlacementResult()
         {

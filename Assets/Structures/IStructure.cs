@@ -6,11 +6,12 @@ namespace Assets.Structures
 {
     public interface IStructure
     {
+        StructureType Type { get; }
+
         IStructureBehaviour Behaviour { get; }
 
         ICoord[] OccupiedCoords { get; }
 
-        string Name { get; }
         string AssetAddress { get; }
         string Description { get; }
 

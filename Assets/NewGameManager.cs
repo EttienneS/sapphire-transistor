@@ -40,7 +40,7 @@ namespace Assets
 
         private void MakeFactionCores(IMapManager mapManager, IFactionManager factionManager)
         {
-            var placementValidator = Locate<IStructurePlacementValidator>();
+            var placementValidator = Locate<IPlacementValidator>();
 
             var faction = factionManager.GetPlayerFaction();
 
