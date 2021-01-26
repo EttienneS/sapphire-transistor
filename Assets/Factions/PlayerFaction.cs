@@ -39,6 +39,10 @@ namespace Assets.Factions
                     ShowStructureInfo(structure);
                 }
             }
+            else
+            {
+                _uiManager.MessageManager.HideAll();
+            }
         }
 
         public void ResetUI()
@@ -54,18 +58,17 @@ namespace Assets.Factions
         private void ShowStructureInfo(IStructure structure)
         {
             Debug.Log($"{structure.Type}: {structure.OccupiedCoords[0]}");
-
-            var radialMenuOptions = new List<RadialMenuOptionFacade>();
-
-            if (StructureManager.GetStructures().Contains(structure))
-            {
-                radialMenuOptions.Add(new RadialMenuOptionFacade($"Remove {structure.Type}", () => { },
-                                                                                             () => StructureManager.RemoveStructure(structure)));
-            }
             _uiManager.MessageManager.ShowMessage(structure.Type.ToString(), structure.GetStatus());
-            _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
-                                                        onMenuClose: () => ResetUI(),
-                                                        radialMenuOptions);
+
+            //var radialMenuOptions = new List<RadialMenuOptionFacade>();
+            //if (StructureManager.GetStructures().Contains(structure))
+            //{
+            //    radialMenuOptions.Add(new RadialMenuOptionFacade($"Remove {structure.Type}", () => { },
+            //                                                                                 () => StructureManager.RemoveStructure(structure)));
+            //}
+            //_uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
+            //                                            onMenuClose: () => ResetUI(),
+            //                                            radialMenuOptions);
         }
     }
 }

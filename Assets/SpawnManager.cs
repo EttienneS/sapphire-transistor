@@ -57,7 +57,8 @@ namespace Assets
                 ("Tree", 1000),
                 ("Rock", 500),
                 ("Road", 200),
-                ("RoadAnchorPoint", 200),
+                ("Anchor", 200),
+                ("Base", 200),
                 ("BellTower", 10),
                 ("Barn", 20),
                 ("House", 100),
@@ -94,10 +95,13 @@ namespace Assets
             }
             if (_objectPools.ContainsKey(pool))
             {
+                Debug.Log($"Recyle: {pool} >> {gameObject.name}");
                 _objectPools[pool].Enqueue(gameObject);
+                gameObject.SetActive(false);
             }
             else
             {
+                Debug.Log($"Destroy: {pool} >> {gameObject.name}");
                 AddItemToDestroy(gameObject);
             }
         }

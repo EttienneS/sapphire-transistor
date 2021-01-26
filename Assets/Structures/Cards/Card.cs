@@ -1,4 +1,5 @@
 ﻿using Assets.Map;
+using UnityEngine;
 
 namespace Assets.Structures.Cards
 {
@@ -9,9 +10,8 @@ namespace Assets.Structures.Cards
         private StructureType?[,] _rotatedStructures;
         private IPlacementValidator _structurePlacementValidator;
 
-        public Card((int anchorX, int anchorZ) anchorPoint, IPlacementValidator structurePlacementValidator, StructureType?[,] structures)
+        public Card(IPlacementValidator structurePlacementValidator, StructureType?[,] structures)
         {
-            _anchorPoint = anchorPoint;
             _originalStructures = structures;
             _rotatedStructures = _originalStructures;
             _structurePlacementValidator = structurePlacementValidator;
@@ -19,7 +19,17 @@ namespace Assets.Structures.Cards
 
         public (int x, int z) GetAnchorPoint()
         {
-            return _anchorPoint;
+            for (var x = 0; x < _rotatedStructures.GetLength(0); x++)
+            {
+                for (var z = 0; z < _rotatedStructures.GetLength(1); z++)
+                {
+                    if (_rotatedStructures[x, z] == StructureType.Base)
+                    {
+                        return (x, z);
+                    }
+                }
+            }
+            throw new System.IndexOutOfRangeException();
         }
 
         public StructureType?[,] GetStructures()
@@ -62,8 +72,10 @@ namespace Assets.Structures.Cards
             {
                 for (int z = 0; z < matrix.GetLength(1); z++)
                 {
-                    if (!_structurePlacementValidator.CanPlace(new Coord(coord.X + x, coord.Y, coord.Z + z), matrix[x, z]).CanPlace)
+                    var placementResult = _structurePlacementValidator.CanPlace(new Coord(coord.X + x, coord.Y, coord.Z + z), matrix[x, z]);
+                    if (!placementResult.CanPlace)
                     {
+                        Debug.Log($"{coord} > {x}:{z} '{placementResult.Message}'");
                         return false;
                     }
                 }

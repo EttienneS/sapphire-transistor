@@ -1,6 +1,6 @@
-﻿using Assets.Helpers;
+﻿using Assets.Factions;
+using Assets.Helpers;
 using Assets.Map;
-using Assets.Resources;
 using System.Collections.Generic;
 using System.Linq;
 using Terrain = Assets.Map.Terrain;

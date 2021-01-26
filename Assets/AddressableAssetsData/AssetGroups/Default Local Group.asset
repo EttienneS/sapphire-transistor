@@ -33,7 +33,8 @@ MonoBehaviour:
   - m_GUID: 64cc72e929df461479021326c8fac7db
     m_Address: Road
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Structures
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
   - m_GUID: d2fbab6347d84fd41a2717b9146bb5fc
@@ -100,9 +101,17 @@ MonoBehaviour:
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
   - m_GUID: 7909315f33ee30d44be5d3da5f36098b
-    m_Address: RoadAnchorPoint
+    m_Address: Anchor
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Structures
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e65b934bc75c9b9488631b5f81b841c7
+    m_Address: Base
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Structures
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0

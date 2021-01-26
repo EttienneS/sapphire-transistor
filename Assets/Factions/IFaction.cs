@@ -1,5 +1,4 @@
 ﻿using Assets.Map;
-using Assets.Resources;
 using Assets.Structures.Cards;
 using System.Collections.Generic;
 

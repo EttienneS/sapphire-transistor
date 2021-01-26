@@ -61,6 +61,7 @@
     <Compile Include="Assets\Structures\IStructureBehaviour.cs" />
     <Compile Include="Assets\Factions\IFaction.cs" />
     <Compile Include="Assets\NewGameManager.cs" />
+    <Compile Include="Assets\Structures\Cards\ICardManager.cs" />
     <Compile Include="Assets\Map\CellEventManager.cs" />
     <Compile Include="Assets\MapGeneration\DefaultTerrainDefinition.cs" />
     <Compile Include="Assets\Map\GridMesh.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Assets\Map\ICoord.cs" />
     <Compile Include="Assets\ServiceLocator\IServiceLocator.cs" />
     <Compile Include="Assets\Map\ITerrain.cs" />
+    <Compile Include="Assets\Structures\Cards\ICard.cs" />
     <Compile Include="Assets\Factions\FactionDelegates.cs" />
     <Compile Include="Assets\Factions\PlayerFaction.cs" />
     <Compile Include="Assets\Helpers\CellExtensions.cs" />
@@ -118,10 +120,12 @@
     <Compile Include="Assets\StrategyCamera\ZoomCommand.cs" />
     <Compile Include="Assets\Helpers\RandomExtensions.cs" />
     <Compile Include="Assets\UI\RadialMenuElement.cs" />
+    <Compile Include="Assets\Factions\NatureFaction.cs" />
     <Compile Include="Assets\Map\Pathing\Pathfinder.cs" />
-    <Compile Include="Assets\Resources\ResourceType.cs" />
+    <Compile Include="Assets\Factions\ResourceType.cs" />
     <Compile Include="Assets\Map\ChunkRendererFactory.cs" />
     <Compile Include="Assets\Map\IMapManager.cs" />
+    <Compile Include="Assets\Structures\Cards\CardManager.cs" />
     <Compile Include="Assets\Map\MapManager.cs" />
     <Compile Include="Assets\SpawnManager.cs" />
     <Compile Include="Assets\MapGeneration\MapGenerator.cs" />
@@ -131,6 +135,7 @@
     <Compile Include="Assets\Map\Coord.cs" />
     <Compile Include="Assets\Map\Constants.cs" />
     <Compile Include="Assets\UI\RadialMenuOptionFacade.cs" />
+    <Compile Include="Assets\Structures\Cards\Card.cs" />
     <Compile Include="Assets\Helpers\ColorExtensions.cs" />
     <Compile Include="Assets\MapGeneration\ITerrainDefinition.cs" />
     <Compile Include="Assets\Structures\StructureEventManager.cs" />
@@ -145,13 +150,8 @@
     <Compile Include="Assets\Map\Pathing\PathableCell.cs" />
     <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
-    <Compile Include="Assets\UI\ResourcePanel.cs" />
     <Compile Include="Assets\Structures\Cards\CardEventManager.cs" />
-    <Compile Include="Assets\Factions\NatureFaction.cs" />
-    <Compile Include="Assets\Structures\Cards\ICardManager.cs" />
-    <Compile Include="Assets\Structures\Cards\CardManager.cs" />
-    <Compile Include="Assets\Structures\Cards\Card.cs" />
-    <Compile Include="Assets\Structures\Cards\ICard.cs" />
+    <Compile Include="Assets\UI\ResourcePanel.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -169,6 +169,7 @@
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+     <None Include="Assets\Resources\Cards\Corner.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />

@@ -26,6 +26,9 @@ namespace Assets.Structures
                 var type = structureType.Value;
                 switch (type)
                 {
+                    case StructureType.Base:
+                        // for validation purposes treat the base the same as an anchor as they match
+                        return CellEmptyOrSame(cell, StructureType.Anchor);
                     case StructureType.Road:
                     case StructureType.Anchor:
                         return CellEmptyOrSame(cell, type);

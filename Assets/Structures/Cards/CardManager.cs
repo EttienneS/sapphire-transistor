@@ -3,6 +3,8 @@ using Assets.Map;
 using Assets.ServiceLocator;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Assets.Structures.Cards
 {
@@ -10,7 +12,8 @@ namespace Assets.Structures.Cards
     {
         private List<ICard> _options;
         private IPlacementValidator _structurePlacementValidator;
-        
+        private IMapManager _mapManager;
+        private IFactionManager _factionManager;
 
         public ICard GetRandomCard()
         {
@@ -19,22 +22,12 @@ namespace Assets.Structures.Cards
 
         public ICard FromString(string input, IPlacementValidator placementValidator)
         {
-            // example:
-            // R=Road
-            // A=Anchor
-            // =======
-            // ...R...
-            // ...R...
-            // ...RRR.
-            // ...R...
-            // ...A...
             var lines = input.Split('\n');
 
             var legend = new Dictionary<char, StructureType>();
             var mapmode = false;
 
             StructureType?[,] structures = null;
-            (int x, int y)? anchorPoint = default;
 
             var x = 0;
             var y = 0;
@@ -43,16 +36,12 @@ namespace Assets.Structures.Cards
                 var trimmedLine = line.Trim();
                 if (mapmode)
                 {
+
                     foreach (var character in trimmedLine)
                     {
                         if (character != '.')
                         {
                             structures[x, y] = legend[character];
-
-                            if (!anchorPoint.HasValue && legend[character] == StructureType.Anchor)
-                            {
-                                anchorPoint = (x, y);
-                            }
                         }
                         x++;
                     }
@@ -74,23 +63,22 @@ namespace Assets.Structures.Cards
                 }
             }
 
-            return new Card(anchorPoint.Value, placementValidator, structures);
+            return new Card(placementValidator, structures);
         }
 
         public override void Initialize()
         {
             _structurePlacementValidator = Locate<IPlacementValidator>();
-            _options = new List<ICard>()
+            _factionManager = Locate<IFactionManager>();
+            _mapManager = Locate<IMapManager>();
+            _options = new List<ICard>();
+
+            foreach (var cardObject in Resources.LoadAll<TextAsset>("Cards"))
             {
-                FromString(@"R=Road
-                             A=Anchor
-                             =====
-                             ARRRA
-                             R....
-                             R....
-                             R....
-                             A....",_structurePlacementValidator)
-            };
+                Debug.Log($"Card Loaded: {cardObject.name}");
+                _options.Add(FromString(cardObject.text, _structurePlacementValidator));
+                Addressables.Release(cardObject);
+            }
 
             CardEventManager.OnCardPlayed += HandleCardPlayed;
         }
@@ -105,7 +93,18 @@ namespace Assets.Structures.Cards
                     if (matrix[x, z].HasValue)
                     {
                         var adjustedCoord = new Coord(coord.X + x, coord.Y, coord.Z + z);
-                        faction.StructureManager.AddStructure(matrix[x, z].Value, adjustedCoord);
+
+                        if (_mapManager.TryGetCellAtCoord(adjustedCoord, out Cell cell))
+                        {
+                            if (_factionManager.TryGetStructureInCell(cell, out IStructure structure))
+                            {
+                                _factionManager.GetOwnerOfStructure(structure)
+                                               .StructureManager
+                                               .RemoveStructure(structure);
+                            }
+                            faction.StructureManager.AddStructure(matrix[x, z].Value, adjustedCoord);
+                        }
+
                     }
                 }
             }

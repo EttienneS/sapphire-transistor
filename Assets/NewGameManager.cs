@@ -30,8 +30,6 @@ namespace Assets
             ConfigureCameraDefaults(mapManager, factionManger, cameraController);
         }
 
-
-
         private static void ConfigureCameraDefaults(IMapManager mapManager, IFactionManager factionManger, ICameraController cameraController)
         {
             cameraController.ConfigureBounds(0, mapManager.Width, 0, mapManager.Height);

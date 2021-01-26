@@ -1,6 +1,4 @@
-﻿using Assets.Resources;
-
-namespace Assets.Factions
+﻿namespace Assets.Factions
 {
     public static class FactionDelegates
     {

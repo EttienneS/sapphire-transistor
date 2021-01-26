@@ -1,5 +1,4 @@
 ﻿using Assets.Factions;
-using Assets.Resources;
 using Assets.ServiceLocator;
 using System;
 using System.Collections.Generic;

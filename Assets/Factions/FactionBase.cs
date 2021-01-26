@@ -1,5 +1,4 @@
 ﻿using Assets.Map;
-using Assets.Resources;
 using Assets.ServiceLocator;
 using Assets.Structures;
 using Assets.Structures.Cards;

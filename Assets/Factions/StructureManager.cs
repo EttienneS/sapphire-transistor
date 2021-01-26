@@ -1,5 +1,4 @@
 ﻿using Assets.Map;
-using Assets.Resources;
 using Assets.Structures;
 using System.Collections.Generic;
 
@@ -14,11 +13,15 @@ namespace Assets.Factions
         {
             _structures = new List<IStructure>();
             _structureFactory = structureFactory;
-            StructureEventManager.OnStructureDestroyed += RemoveStructure;
         }
 
         public void AddStructure(StructureType type, ICoord coord)
         {
+            if (type == StructureType.Base)
+            {
+                type = StructureType.Road;
+            }
+
             _structures.Add(_structureFactory.GetStructure(type, coord));
         }
 
@@ -62,6 +65,7 @@ namespace Assets.Factions
             if (_structures.Contains(structure))
             {
                 _structures.Remove(structure);
+                StructureEventManager.StructureDestroyed(structure);
             }
         }
     }

@@ -37,7 +37,6 @@ namespace Assets
 
             _locator.Register<NewGameManager>(new NewGameManager());
             
-
             _locator.Register<IUIManager>(FindObjectOfType<UIManager>());
         }
 
