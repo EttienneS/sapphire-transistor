@@ -10,14 +10,14 @@ namespace Assets.Structures.Cards
 {
     public class CardManager : GameServiceBase, ICardManager
     {
-        private List<ICard> _options;
+        private List<string> _rawOptions;
         private IPlacementValidator _structurePlacementValidator;
         private IMapManager _mapManager;
         private IFactionManager _factionManager;
 
         public ICard GetRandomCard()
         {
-            return _options[0];
+            return FromString(_rawOptions[0], _structurePlacementValidator);
         }
 
         public ICard FromString(string input, IPlacementValidator placementValidator)
@@ -71,12 +71,12 @@ namespace Assets.Structures.Cards
             _structurePlacementValidator = Locate<IPlacementValidator>();
             _factionManager = Locate<IFactionManager>();
             _mapManager = Locate<IMapManager>();
-            _options = new List<ICard>();
+            _rawOptions = new List<string>();
 
             foreach (var cardObject in Resources.LoadAll<TextAsset>("Cards"))
             {
                 Debug.Log($"Card Loaded: {cardObject.name}");
-                _options.Add(FromString(cardObject.text, _structurePlacementValidator));
+                _rawOptions.Add(cardObject.text);
                 Addressables.Release(cardObject);
             }
 

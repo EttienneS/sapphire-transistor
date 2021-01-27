@@ -1,7 +1,8 @@
 R=Road
 A=Anchor
 B=Base
-===
-BRA
-R..
-A..
+====
+BRRA
+R...
+R...
+A...

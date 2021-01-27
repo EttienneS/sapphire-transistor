@@ -1,4 +1,5 @@
-﻿using Assets.ServiceLocator;
+﻿using Assets.InputManager;
+using Assets.ServiceLocator;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,9 +19,9 @@ namespace Assets.StrategyCamera
 
         public Vector3 zoomAmount;
 
-        private readonly Queue<CameraCommand> _commands = new Queue<CameraCommand>();
+        private readonly Queue<InputCommand> _commands = new Queue<InputCommand>();
 
-        private CameraInputHandler _cameraInputHandler;
+        private IInputHandler _cameraInputHandler;
 
         private int _maxX;
 
@@ -38,7 +39,7 @@ namespace Assets.StrategyCamera
 
         private bool _ready;
 
-        public void AddCameraCommand(CameraCommand command)
+        public void AddCameraCommand(InputCommand command)
         {
             _commands.Enqueue(command);
         }
@@ -90,7 +91,7 @@ namespace Assets.StrategyCamera
 
                 while (_commands.Count > 0)
                 {
-                    _commands.Dequeue().Execute(this);
+                    _commands.Dequeue().Execute();
                     CameraEventManager.CameraPositionChanged(new Vector3(_newPosition.x, _newZoom.y, _newPosition.z));
                 }
                 UpdateCameraAndEnsureBounds();

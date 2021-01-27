@@ -2,8 +2,8 @@
 using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
+using Assets.Structures.Cards;
 using Assets.UI;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Factions
@@ -18,6 +18,35 @@ namespace Assets.Factions
             _uiManager = serviceLocator.Find<IUIManager>();
             _factionManager = serviceLocator.Find<IFactionManager>();
             CellEventManager.OnCellClicked += CellClicked;
+            InputEventManager.OnRotateCardCW += RotateCardCW;
+            InputEventManager.OnRotateCardCCW += RotateCardCCW;
+        }
+
+        private void RotateCardCW()
+        {
+            if (TryGetActiveCard(out ICard activecard))
+            {
+                activecard.RotateRight();
+            }
+        }
+
+        private void RotateCardCCW()
+        {
+            if (TryGetActiveCard(out ICard activecard))
+            {
+                activecard.RotateLeft();
+            }
+        }
+
+        public bool TryGetActiveCard(out ICard card)
+        {
+            card = null;
+            if (_cards.Count == 0)
+            {
+                return false;
+            }
+            card = _cards[0];
+            return true;
         }
 
         public void CellClicked(Cell cell)
@@ -29,7 +58,8 @@ namespace Assets.Factions
 
             if (_factionManager.TryGetStructureInCell(cell, out IStructure structure))
             {
-                var activeCard = _cards[0];
+                if (!TryGetActiveCard(out ICard activeCard)) return;
+
                 if (structure.Type == StructureType.Anchor && activeCard.CanPlay(cell.Coord))
                 {
                     PlayCard(activeCard, cell.Coord);

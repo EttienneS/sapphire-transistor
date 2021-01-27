@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Assets.StrategyCamera;
+using System;
 using UnityEngine;
 
-namespace Assets.StrategyCamera
+namespace Assets.InputManager
 {
-    public class TouchScreenHandler : CameraInputHandler
+    public class TouchScreenHandler : IInputHandler
     {
         private Vector3 _dragCurrentPosition;
         private Vector3 _dragStartPosition;
@@ -17,7 +18,7 @@ namespace Assets.StrategyCamera
             _cameraController = cameraController;
         }
 
-        public override void HandleInput()
+        public void HandleInput()
         {
             throw new NotImplementedException();
             if (Input.touchCount >= 2)
@@ -28,7 +29,7 @@ namespace Assets.StrategyCamera
                 touch1 = Input.GetTouch(1).position;
                 distance = Vector2.Distance(touch0, touch1);
 
-                _cameraController.AddCameraCommand(new ZoomCommand(_cameraController.zoomAmount * distance));
+                _cameraController.AddCameraCommand(new ZoomCommand(_cameraController, _cameraController.zoomAmount * distance));
             }
         }
     }

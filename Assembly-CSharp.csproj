@@ -67,14 +67,13 @@
     <Compile Include="Assets\Map\GridMesh.cs" />
     <Compile Include="Assets\Factions\IFactionManager.cs" />
     <Compile Include="Assets\Structures\IStructure.cs" />
-    <Compile Include="Assets\StrategyCamera\TouchScreenHandler.cs" />
     <Compile Include="Assets\UI\RadialMenuController.cs" />
     <Compile Include="Assets\Helpers\FastNoiseExtension.cs" />
     <Compile Include="Assets\Map\Pathing\IPathFindableCell.cs" />
     <Compile Include="Assets\Map\ChunkRenderer.cs" />
     <Compile Include="Assets\StrategyCamera\ICameraController.cs" />
     <Compile Include="Assets\Structures\Behaviors\HouseBehavior.cs" />
-    <Compile Include="Assets\StrategyCamera\MouseAndKeyboardInputHandler.cs" />
+    <Compile Include="Assets\InputManager\MouseAndKeyboardInputHandler.cs" />
     <Compile Include="Assets\Structures\Structure.cs" />
     <Compile Include="Assets\Helpers\Instrumenter.cs" />
     <Compile Include="Assets\Map\Pathing\CellPriorityQueue.cs" />
@@ -86,7 +85,6 @@
     <Compile Include="Assets\ISpawnManager.cs" />
     <Compile Include="Assets\Map\Cell.cs" />
     <Compile Include="Assets\UI\EndTurnButton.cs" />
-    <Compile Include="Assets\StrategyCamera\RotationCommand.cs" />
     <Compile Include="Assets\UI\MessageManager.cs" />
     <Compile Include="Assets\UI\IUIManager.cs" />
     <Compile Include="Assets\Map\ICoord.cs" />
@@ -96,7 +94,6 @@
     <Compile Include="Assets\Factions\FactionDelegates.cs" />
     <Compile Include="Assets\Factions\PlayerFaction.cs" />
     <Compile Include="Assets\Helpers\CellExtensions.cs" />
-    <Compile Include="Assets\StrategyCamera\MoveCommand.cs" />
     <Compile Include="Assets\Factions\AIFaction.cs" />
     <Compile Include="Assets\StrategyCamera\CameraEventManager.cs" />
     <Compile Include="Assets\Map\CoordExtension.cs" />
@@ -117,7 +114,6 @@
     <Compile Include="Assets\Factions\FactionManager.cs" />
     <Compile Include="Assets\Structures\IStructureFactory.cs" />
     <Compile Include="Assets\Map\MapEventManager.cs" />
-    <Compile Include="Assets\StrategyCamera\ZoomCommand.cs" />
     <Compile Include="Assets\Helpers\RandomExtensions.cs" />
     <Compile Include="Assets\UI\RadialMenuElement.cs" />
     <Compile Include="Assets\Factions\NatureFaction.cs" />
@@ -142,16 +138,21 @@
     <Compile Include="Assets\Structures\Behaviors\SettlementCore.cs" />
     <Compile Include="Assets\Helpers\UIHelper.cs" />
     <Compile Include="Assets\UI\RadialMenuDelegates.cs" />
-    <Compile Include="Assets\StrategyCamera\CameraInputHandler.cs" />
     <Compile Include="Assets\Structures\Behaviors\NoBehavior.cs" />
     <Compile Include="Assets\Map\Pathing\Direction.cs" />
-    <Compile Include="Assets\StrategyCamera\CameraCommand.cs" />
+    <Compile Include="Assets\InputManager\InputCommand.cs" />
     <Compile Include="Assets\Structures\Behaviors\FarmBehavior.cs" />
     <Compile Include="Assets\Map\Pathing\PathableCell.cs" />
     <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\Structures\Cards\CardEventManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
+    <Compile Include="Assets\InputManager\ZoomCommand.cs" />
+    <Compile Include="Assets\InputManager\MoveCameraCommand.cs" />
+    <Compile Include="Assets\InputManager\IInputHandler.cs" />
+    <Compile Include="Assets\InputManager\TouchScreenHandler.cs" />
+    <Compile Include="Assets\InputManager\RotationCommand.cs" />
+    <Compile Include="Assets\InputEventManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
