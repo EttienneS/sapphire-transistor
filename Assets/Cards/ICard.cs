@@ -11,9 +11,9 @@ namespace Assets.Cards
 
         bool CanPlay(ICoord coord);
 
-        void RotateLeft();
+        void RotateCCW();
 
-        void RotateRight();
+        void RotateCW();
 
         ICoord GetRelativeAnchorPoint(ICoord coord);
     }

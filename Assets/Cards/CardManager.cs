@@ -4,7 +4,6 @@ using Assets.ServiceLocator;
 using Assets.Structures;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Assets.Cards
 {
@@ -17,7 +16,8 @@ namespace Assets.Cards
 
         public ICard GetRandomCard()
         {
-            return CardLoader.FromString(_rawOptions[0], _structurePlacementValidator);
+            var opt = _rawOptions[Random.Range(0, _rawOptions.Count)];
+            return CardLoader.FromString(opt, _structurePlacementValidator);
         }
 
         public override void Initialize()
@@ -31,7 +31,6 @@ namespace Assets.Cards
             {
                 Debug.Log($"Card Loaded: {cardObject.name}");
                 _rawOptions.Add(cardObject.text);
-                Addressables.Release(cardObject);
             }
 
             CardEventManager.OnCardPlayed += HandleCardPlayed;
@@ -61,11 +60,6 @@ namespace Assets.Cards
                     }
                 }
             }
-        }
-
-        public void DealCards(IFaction faction)
-        {
-            faction.AddCard(GetRandomCard());
         }
     }
 }

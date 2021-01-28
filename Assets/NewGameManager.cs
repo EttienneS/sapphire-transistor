@@ -1,11 +1,11 @@
-﻿using Assets.Factions;
+﻿using Assets.Cards;
+using Assets.Factions;
 using Assets.Helpers;
 using Assets.Map;
 using Assets.MapGeneration;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using Assets.Structures;
-using Assets.Structures.Behaviors;
 using System.Linq;
 
 namespace Assets
@@ -64,9 +64,26 @@ namespace Assets
         {
             var locator = GetLocator();
 
-            factionManager.AddFaction(new PlayerFaction("Player", locator));
-            factionManager.AddFaction(new NatureFaction("Nature", locator));
-            factionManager.AddFaction(new AIFaction("Enemy", locator));
+            var player = new PlayerFaction("Player", locator);
+            DealCards(player);
+            var nature = new NatureFaction("Nature", locator);
+            DealCards(nature);
+            var enemy = new AIFaction("Enemy", locator);
+            DealCards(enemy);
+
+
+            factionManager.AddFaction(player);
+            factionManager.AddFaction(nature);
+            factionManager.AddFaction(enemy);
+        }
+
+        private void DealCards(IFaction faction)
+        {
+            var cardMan = Locate<ICardManager>();
+            for (int i = 0; i < 10; i++)
+            {
+                faction.Deck.AddCard(cardMan.GetRandomCard());
+            }
         }
 
         private void GenerateMap(IMapManager mapManager, int size, IStructureFactory structureFactory, IFactionManager factionManger)

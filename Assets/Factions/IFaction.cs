@@ -14,6 +14,10 @@ namespace Assets.Factions
 
         string Name { get; }
 
+        IDeck Deck { get; }
+
+        List<ICard> Hand { get; }
+
         IStructureManager StructureManager { get; }
 
         bool CanAfford((ResourceType resource, int amount)[] cost);
@@ -28,10 +32,12 @@ namespace Assets.Factions
 
         void TakeTurn();
 
-        int GetHandSize();
+        int GetMaxHandSize();
 
-        void AddCard(ICard card);
+        void DrawCard(ICard card);
 
         void PlayCard(ICard card, ICoord anchor);
+
+        void Draw();
     }
 }

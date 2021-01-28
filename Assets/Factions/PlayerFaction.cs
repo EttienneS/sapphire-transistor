@@ -24,31 +24,21 @@ namespace Assets.Factions
 
         private void RotateCardCW()
         {
-            if (TryGetActiveCard(out ICard activecard))
-            {
-                activecard.RotateRight();
-                Debug.Log(activecard.ToString());
-            }
+            var card = GetActiveCard();
+            card.RotateCW();
+            Debug.Log(card.ToString());
         }
 
         private void RotateCardCCW()
         {
-            if (TryGetActiveCard(out ICard activecard))
-            {
-                activecard.RotateLeft();
-                Debug.Log(activecard.ToString());
-            }
+            var card = GetActiveCard();
+            card.RotateCCW();
+            Debug.Log(card.ToString());
         }
 
-        public bool TryGetActiveCard(out ICard card)
+        public ICard GetActiveCard()
         {
-            card = null;
-            if (_cards.Count == 0)
-            {
-                return false;
-            }
-            card = _cards[0];
-            return true;
+            return Hand[0];
         }
 
         public void CellClicked(Cell cell)
@@ -60,12 +50,12 @@ namespace Assets.Factions
 
             if (_factionManager.TryGetStructureInCell(cell, out IStructure structure))
             {
-                if (!TryGetActiveCard(out ICard activeCard)) return;
+                var activeCard = GetActiveCard();
 
                 Debug.Log(activeCard.ToString());
 
                 var anchor = activeCard.GetRelativeAnchorPoint(cell.Coord);
-                
+
                 if (structure.Type == StructureType.Anchor && activeCard.CanPlay(anchor))
                 {
                     PlayCard(activeCard, anchor);

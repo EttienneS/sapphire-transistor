@@ -37,16 +37,16 @@ namespace Assets.Cards
             return _rotatedStructures;
         }
 
-        public void RotateLeft()
+        public void RotateCCW()
         {
             _rotatedStructures = RotateMatrix(_rotatedStructures);
         }
 
-        public void RotateRight()
+        public void RotateCW()
         {
-            RotateLeft();
-            RotateLeft();
-            RotateLeft();
+            RotateCCW();
+            RotateCCW();
+            RotateCCW();
         }
 
         private static StructureType?[,] RotateMatrix(StructureType?[,] matrix)

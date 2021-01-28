@@ -29,6 +29,9 @@ namespace Assets.Structures
                     case StructureType.Base:
                         // for validation purposes treat the base the same as an anchor as they match
                         return CellEmptyOrSame(cell, StructureType.Anchor);
+
+                    case StructureType.House:
+                    case StructureType.Tree:
                     case StructureType.Road:
                     case StructureType.Anchor:
                         return CellEmptyOrSame(cell, type);

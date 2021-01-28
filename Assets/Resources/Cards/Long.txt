@@ -1,0 +1,9 @@
+R=Road
+A=Anchor
+B=Base
+=====
+..B..
+..R..
+.AR..
+..R..
+..RA.

@@ -37,6 +37,7 @@ namespace Assets.Structures
             _structureBuilderLookup.Add(StructureType.Road, (coord) => new Structure(StructureType.Road, 1, 1, "Road", "Road", GetBehaviour<NoBehavior>(), coord));
             _structureBuilderLookup.Add(StructureType.Anchor, (coord) => new Structure(StructureType.Anchor, 1, 1, "Anchor", "Place where other structures can be placed", GetBehaviour<NoBehavior>(), coord));
             _structureBuilderLookup.Add(StructureType.Base, (coord) => new Structure(StructureType.Base, 1, 1, "Base", "Base of a card matrix that gets placed on an anchor", GetBehaviour<NoBehavior>(), coord));
+            _structureBuilderLookup.Add(StructureType.House, (coord) => new Structure(StructureType.House, 1, 1, "House", "A house", GetBehaviour<HouseBehavior>(), coord));
         }
 
         private void AddBehavior(IStructureBehaviour behavior)

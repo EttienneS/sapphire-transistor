@@ -12,7 +12,7 @@ namespace Assets.Factions
 
         public void DoStuff()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Thread.Sleep(100);
                 Debug.Log($"Working {i}...");

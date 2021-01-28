@@ -3,33 +3,20 @@ using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Assets.Factions
 {
-    public static class FactionExtensions
-    {
-        public static List<ICoord> GetOpenAnchorPoints(this IFaction faction)
-        {
-            return faction.StructureManager.GetStructures()
-                                           .Where(s => s.Type == StructureType.Anchor)
-                                           .Select(s => s.GetOrigin())
-                                           .ToList();
-        }
-    }
-
     public abstract class FactionBase : IFaction
     {
         private readonly Dictionary<ResourceType, int> _resources;
 
-        internal List<ICard> _cards;
 
         protected FactionBase(string name, IServiceLocator serviceLocator)
         {
-            _cards = new List<ICard>();
             _resources = new Dictionary<ResourceType, int>();
-
+            Deck = new Deck();
             Name = name;
+            Hand = new List<ICard>();
 
             StructureManager = new StructureManager(serviceLocator.Find<IStructureFactory>());
         }
@@ -40,15 +27,11 @@ namespace Assets.Factions
 
         public event FactionDelegates.OnTurnStarted TurnStarted;
 
+        public IDeck Deck { get; }
+        public List<ICard> Hand { get; }
         public string Name { get; }
 
         public IStructureManager StructureManager { get; }
-
-        public void AddCard(ICard card)
-        {
-            _cards.Add(card);
-            CardEventManager.CardReceived(card, this);
-        }
 
         public bool CanAfford((ResourceType resource, int amount)[] cost)
         {
@@ -80,12 +63,31 @@ namespace Assets.Factions
             TurnStarted?.Invoke(this);
         }
 
+        public void Draw()
+        {
+            var cardsToDraw = GetMaxHandSize() - Hand.Count;
+
+            if (cardsToDraw > 0)
+            {
+                for (int i = 0; i < cardsToDraw; i++)
+                {
+                    DrawCard(Deck.Draw());
+                }
+            }
+        }
+
+        public void DrawCard(ICard card)
+        {
+            Hand.Add(card);
+            CardEventManager.CardReceived(card, this);
+        }
+
         public void EndTurn()
         {
             TurnEnded?.Invoke(this);
         }
 
-        public int GetHandSize()
+        public int GetMaxHandSize()
         {
             return 5;
         }
@@ -109,7 +111,7 @@ namespace Assets.Factions
         public void PlayCard(ICard card, ICoord anchor)
         {
             CardEventManager.CardPlayed(card, this, anchor);
-            _cards.Remove(card);
+            Hand.Remove(card);
         }
 
         public abstract void TakeTurn();

@@ -1,0 +1,11 @@
+R=Road
+A=Anchor
+B=Base
+H=House
+T=Tree
+=====
+BRRRR
+R.R.R
+R.H.R
+R..TR
+RRRRR
