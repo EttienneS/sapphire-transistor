@@ -61,7 +61,7 @@
     <Compile Include="Assets\Structures\IStructureBehaviour.cs" />
     <Compile Include="Assets\Factions\IFaction.cs" />
     <Compile Include="Assets\NewGameManager.cs" />
-    <Compile Include="Assets\Structures\Cards\ICardManager.cs" />
+    <Compile Include="Assets\Cards\ICardManager.cs" />
     <Compile Include="Assets\Map\CellEventManager.cs" />
     <Compile Include="Assets\MapGeneration\DefaultTerrainDefinition.cs" />
     <Compile Include="Assets\Map\GridMesh.cs" />
@@ -90,7 +90,7 @@
     <Compile Include="Assets\Map\ICoord.cs" />
     <Compile Include="Assets\ServiceLocator\IServiceLocator.cs" />
     <Compile Include="Assets\Map\ITerrain.cs" />
-    <Compile Include="Assets\Structures\Cards\ICard.cs" />
+    <Compile Include="Assets\Cards\ICard.cs" />
     <Compile Include="Assets\Factions\FactionDelegates.cs" />
     <Compile Include="Assets\Factions\PlayerFaction.cs" />
     <Compile Include="Assets\Helpers\CellExtensions.cs" />
@@ -121,7 +121,7 @@
     <Compile Include="Assets\Factions\ResourceType.cs" />
     <Compile Include="Assets\Map\ChunkRendererFactory.cs" />
     <Compile Include="Assets\Map\IMapManager.cs" />
-    <Compile Include="Assets\Structures\Cards\CardManager.cs" />
+    <Compile Include="Assets\Cards\CardManager.cs" />
     <Compile Include="Assets\Map\MapManager.cs" />
     <Compile Include="Assets\SpawnManager.cs" />
     <Compile Include="Assets\MapGeneration\MapGenerator.cs" />
@@ -131,7 +131,7 @@
     <Compile Include="Assets\Map\Coord.cs" />
     <Compile Include="Assets\Map\Constants.cs" />
     <Compile Include="Assets\UI\RadialMenuOptionFacade.cs" />
-    <Compile Include="Assets\Structures\Cards\Card.cs" />
+    <Compile Include="Assets\Cards\Card.cs" />
     <Compile Include="Assets\Helpers\ColorExtensions.cs" />
     <Compile Include="Assets\MapGeneration\ITerrainDefinition.cs" />
     <Compile Include="Assets\Structures\StructureEventManager.cs" />
@@ -145,7 +145,7 @@
     <Compile Include="Assets\Map\Pathing\PathableCell.cs" />
     <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
-    <Compile Include="Assets\Structures\Cards\CardEventManager.cs" />
+    <Compile Include="Assets\Cards\CardEventManager.cs" />
     <Compile Include="Assets\UI\ResourcePanel.cs" />
     <Compile Include="Assets\InputManager\ZoomCommand.cs" />
     <Compile Include="Assets\InputManager\MoveCameraCommand.cs" />
@@ -153,6 +153,7 @@
     <Compile Include="Assets\InputManager\TouchScreenHandler.cs" />
     <Compile Include="Assets\InputManager\RotationCommand.cs" />
     <Compile Include="Assets\InputEventManager.cs" />
+    <Compile Include="Assets\Cards\CardLoader.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

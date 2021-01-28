@@ -1,7 +1,7 @@
-﻿using Assets.Map;
+﻿using Assets.Cards;
+using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
-using Assets.Structures.Cards;
 using System.Collections.Generic;
 using System.Linq;
 

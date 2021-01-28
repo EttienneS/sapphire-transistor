@@ -1,9 +1,9 @@
-﻿using Assets.Factions;
+﻿using Assets.Cards;
+using Assets.Factions;
 using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using Assets.Structures;
-using Assets.Structures.Cards;
 using Assets.UI;
 using UnityEngine;
 

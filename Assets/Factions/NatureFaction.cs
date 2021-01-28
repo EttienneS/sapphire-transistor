@@ -1,6 +1,4 @@
-﻿using Assets.Structures.Cards;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Assets.Factions
 {

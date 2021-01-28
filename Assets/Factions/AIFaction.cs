@@ -1,7 +1,4 @@
-﻿using Assets.Structures;
-using Assets.Structures.Cards;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 

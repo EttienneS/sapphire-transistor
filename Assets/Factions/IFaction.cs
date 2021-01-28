@@ -1,5 +1,5 @@
-﻿using Assets.Map;
-using Assets.Structures.Cards;
+﻿using Assets.Cards;
+using Assets.Map;
 using System.Collections.Generic;
 
 namespace Assets.Factions

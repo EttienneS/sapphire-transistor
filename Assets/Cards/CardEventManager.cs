@@ -2,7 +2,7 @@
 using Assets.Map;
 using UnityEngine;
 
-namespace Assets.Structures.Cards
+namespace Assets.Cards
 {
     public static class CardDelegates
     {

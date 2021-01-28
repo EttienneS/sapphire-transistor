@@ -1,8 +1,8 @@
-﻿using Assets.Helpers;
+﻿using Assets.Cards;
+using Assets.Helpers;
 using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
-using Assets.Structures.Cards;
 using Assets.UI;
 using UnityEngine;
 
@@ -27,6 +27,7 @@ namespace Assets.Factions
             if (TryGetActiveCard(out ICard activecard))
             {
                 activecard.RotateRight();
+                Debug.Log(activecard.ToString());
             }
         }
 
@@ -35,6 +36,7 @@ namespace Assets.Factions
             if (TryGetActiveCard(out ICard activecard))
             {
                 activecard.RotateLeft();
+                Debug.Log(activecard.ToString());
             }
         }
 
@@ -60,9 +62,13 @@ namespace Assets.Factions
             {
                 if (!TryGetActiveCard(out ICard activeCard)) return;
 
-                if (structure.Type == StructureType.Anchor && activeCard.CanPlay(cell.Coord))
+                Debug.Log(activeCard.ToString());
+
+                var anchor = activeCard.GetRelativeAnchorPoint(cell.Coord);
+                
+                if (structure.Type == StructureType.Anchor && activeCard.CanPlay(anchor))
                 {
-                    PlayCard(activeCard, cell.Coord);
+                    PlayCard(activeCard, anchor);
                 }
                 else
                 {

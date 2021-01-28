@@ -1,12 +1,12 @@
 ﻿using Assets.Factions;
 using Assets.Map;
 using Assets.ServiceLocator;
-using System;
+using Assets.Structures;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace Assets.Structures.Cards
+namespace Assets.Cards
 {
     public class CardManager : GameServiceBase, ICardManager
     {
@@ -17,53 +17,7 @@ namespace Assets.Structures.Cards
 
         public ICard GetRandomCard()
         {
-            return FromString(_rawOptions[0], _structurePlacementValidator);
-        }
-
-        public ICard FromString(string input, IPlacementValidator placementValidator)
-        {
-            var lines = input.Split('\n');
-
-            var legend = new Dictionary<char, StructureType>();
-            var mapmode = false;
-
-            StructureType?[,] structures = null;
-
-            var x = 0;
-            var y = 0;
-            foreach (var line in lines)
-            {
-                var trimmedLine = line.Trim();
-                if (mapmode)
-                {
-
-                    foreach (var character in trimmedLine)
-                    {
-                        if (character != '.')
-                        {
-                            structures[x, y] = legend[character];
-                        }
-                        x++;
-                    }
-                    x = 0;
-                    y++;
-                }
-                else
-                {
-                    if (trimmedLine.StartsWith("="))
-                    {
-                        mapmode = true;
-                        structures = new StructureType?[trimmedLine.Length, trimmedLine.Length];
-                    }
-                    else
-                    {
-                        var parts = trimmedLine.Split('=');
-                        legend.Add(parts[0][0], (StructureType)Enum.Parse(typeof(StructureType), parts[1]));
-                    }
-                }
-            }
-
-            return new Card(placementValidator, structures);
+            return CardLoader.FromString(_rawOptions[0], _structurePlacementValidator);
         }
 
         public override void Initialize()
@@ -104,7 +58,6 @@ namespace Assets.Structures.Cards
                             }
                             faction.StructureManager.AddStructure(matrix[x, z].Value, adjustedCoord);
                         }
-
                     }
                 }
             }

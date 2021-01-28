@@ -1,11 +1,11 @@
-﻿using Assets.Factions;
-using Assets.Map;
+﻿using Assets.Map;
+using Assets.Structures;
 
-namespace Assets.Structures.Cards
+namespace Assets.Cards
 {
     public interface ICard
     {
-        (int x, int z) GetAnchorPoint();
+        (int x, int z) GetBasePoint();
 
         StructureType?[,] GetStructures();
 
@@ -14,5 +14,7 @@ namespace Assets.Structures.Cards
         void RotateLeft();
 
         void RotateRight();
+
+        ICoord GetRelativeAnchorPoint(ICoord coord);
     }
 }
