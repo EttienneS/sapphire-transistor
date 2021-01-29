@@ -20,6 +20,21 @@ namespace Assets.Factions
             CellEventManager.OnCellClicked += CellClicked;
             InputEventManager.OnRotateCardCW += RotateCardCW;
             InputEventManager.OnRotateCardCCW += RotateCardCCW;
+            CardEventManager.OnSetPlayerCardActive += OnPlayerCardActive;
+        }
+
+        private ICard _activeCard;
+
+        private void OnPlayerCardActive(ICard card)
+        {
+            if (Hand.Contains(card))
+            {
+                _activeCard = card;
+            }
+            else
+            {
+                throw new System.Exception($"Card not in hand!: {card}");
+            }
         }
 
         private void RotateCardCW()
@@ -38,7 +53,11 @@ namespace Assets.Factions
 
         public ICard GetActiveCard()
         {
-            return Hand[0];
+            if (_activeCard == null)
+            {
+                _activeCard = Hand[0];
+            }
+            return _activeCard;
         }
 
         public void CellClicked(Cell cell)

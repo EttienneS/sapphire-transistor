@@ -1,3 +1,5 @@
+Name=House
+-
 R=Road
 A=Anchor
 B=Base
@@ -7,5 +9,5 @@ T=Tree
 BRRRR
 R.R.R
 R.H.R
-R..TR
+R...R
 RRRRR

@@ -19,6 +19,7 @@ namespace Assets.Cards
 
         public static ICard FromString(string input, IPlacementValidator placementValidator)
         {
+            var name = GetName(input);
             var lenght = GetLenght(input);
             var structures = new StructureType?[lenght, lenght];
 
@@ -33,21 +34,26 @@ namespace Assets.Cards
                 }
             }
 
-            return new Card(placementValidator, structures);
+            return new Card(name, placementValidator, structures);
+        }
+
+        private static string GetName(string input)
+        {
+            return SplitCard(input).First(l => l.StartsWith("Name=")).Split('=')[1];
         }
 
         private static List<string> GetCardMapLines(string card)
         {
             var lines = SplitCard(card);
             var mapLines = new List<string>();
-            var map = false;
+            var mapMode = false;
             foreach (var line in lines)
             {
                 if (line.StartsWith("="))
                 {
-                    map = true;
+                    mapMode = true;
                 }
-                else if (map)
+                else if (mapMode)
                 {
                     mapLines.Add(line);
                 }
@@ -61,16 +67,25 @@ namespace Assets.Cards
             var lines = SplitCard(card);
             var legend = new Dictionary<char, StructureType?>();
 
+            var legendMode = false;
+
             foreach (var line in lines)
             {
-                if (line.StartsWith("="))
+                if (line.StartsWith("-"))
+                {
+                    legendMode = true;
+                }
+                else if (line.StartsWith("="))
                 {
                     break;
                 }
                 else
                 {
-                    var parts = line.Split('=');
-                    legend.Add(parts[0][0], (StructureType)Enum.Parse(typeof(StructureType), parts[1]));
+                    if (legendMode)
+                    {
+                        var parts = line.Split('=');
+                        legend.Add(parts[0][0], (StructureType)Enum.Parse(typeof(StructureType), parts[1]));
+                    }
                 }
             }
 

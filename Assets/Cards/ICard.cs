@@ -5,6 +5,8 @@ namespace Assets.Cards
 {
     public interface ICard
     {
+        string Name { get; }
+
         (int x, int z) GetBasePoint();
 
         StructureType?[,] GetStructures();

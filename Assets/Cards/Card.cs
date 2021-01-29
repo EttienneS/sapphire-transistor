@@ -10,8 +10,11 @@ namespace Assets.Cards
         private StructureType?[,] _rotatedStructures;
         private IPlacementValidator _structurePlacementValidator;
 
-        public Card(IPlacementValidator structurePlacementValidator, StructureType?[,] structures)
+        public string Name { get; }
+
+        public Card(string name, IPlacementValidator structurePlacementValidator, StructureType?[,] structures)
         {
+            Name = name;
             _originalStructures = structures;
             _rotatedStructures = _originalStructures;
             _structurePlacementValidator = structurePlacementValidator;
