@@ -1,6 +1,5 @@
 ﻿using Assets.Factions;
 using Assets.Map;
-using System;
 using UnityEngine;
 
 namespace Assets.Cards
@@ -12,15 +11,33 @@ namespace Assets.Cards
         public delegate void CardPlayed(ICard card, IFaction player, ICoord coord);
 
         public delegate void CardReceived(ICard card, IFaction player);
+
+        public delegate void RotateCards();
     }
 
     public static class CardEventManager
     {
         public static event CardDelegates.SetPlayerCardActive OnSetPlayerCardActive;
 
+        public static event CardDelegates.RotateCards OnRotateCardsCW;
+
+        public static event CardDelegates.RotateCards OnRotateCardsCCW;
+
         public static event CardDelegates.CardPlayed OnCardPlayed;
 
         public static event CardDelegates.CardReceived OnCardReceived;
+
+        public static void RotateCardsCW()
+        {
+            Debug.Log($"Rotate Cards CW ");
+            OnRotateCardsCW?.Invoke();
+        }
+
+        public static void RotateCardsCCW()
+        {
+            Debug.Log($"Rotate Cards CCW ");
+            OnRotateCardsCCW?.Invoke();
+        }
 
         public static void CardPlayed(ICard card, IFaction player, ICoord coord)
         {

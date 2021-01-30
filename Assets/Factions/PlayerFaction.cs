@@ -18,9 +18,10 @@ namespace Assets.Factions
             _uiManager = serviceLocator.Find<IUIManager>();
             _factionManager = serviceLocator.Find<IFactionManager>();
             CellEventManager.OnCellClicked += CellClicked;
-            InputEventManager.OnRotateCardCW += RotateCardCW;
-            InputEventManager.OnRotateCardCCW += RotateCardCCW;
+
             CardEventManager.OnSetPlayerCardActive += OnPlayerCardActive;
+            CardEventManager.OnRotateCardsCW += RotateCardCW;
+            CardEventManager.OnRotateCardsCCW += RotateCardCCW;
         }
 
         private ICard _activeCard;
@@ -39,16 +40,18 @@ namespace Assets.Factions
 
         private void RotateCardCW()
         {
-            var card = GetActiveCard();
-            card.RotateCW();
-            Debug.Log(card.ToString());
+            foreach (var card in Hand)
+            {
+                card.RotateCW();
+            }
         }
 
         private void RotateCardCCW()
         {
-            var card = GetActiveCard();
-            card.RotateCCW();
-            Debug.Log(card.ToString());
+            foreach (var card in Hand)
+            {
+                card.RotateCCW();
+            }
         }
 
         public ICard GetActiveCard()

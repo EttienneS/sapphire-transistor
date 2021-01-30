@@ -11,6 +11,7 @@ namespace Assets.UI
     public class HandView : MonoBehaviour
     {
         public CardView CardViewPrefab;
+        public GameObject CardContainer;
 
         private Dictionary<ICard, CardView> _handLookup = new Dictionary<ICard, CardView>();
 
@@ -33,13 +34,23 @@ namespace Assets.UI
             };
         }
 
+        public void RotateActiveCW()
+        {
+            CardEventManager.RotateCardsCCW();
+        }
+
+        public void RotateActiveCCW()
+        {
+            CardEventManager.RotateCardsCW();
+        }
+
         public void Update()
         {
             foreach (var card in _handLookup.Keys.ToList())
             {
                 if (_handLookup[card] == null)
                 {
-                    var cardView = Instantiate(CardViewPrefab, transform);
+                    var cardView = Instantiate(CardViewPrefab, CardContainer.transform);
                     cardView.Load(card);
                     _handLookup[card] = cardView;
                 }

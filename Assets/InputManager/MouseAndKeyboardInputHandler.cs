@@ -1,4 +1,5 @@
-﻿using Assets.StrategyCamera;
+﻿using Assets.Cards;
+using Assets.StrategyCamera;
 using UnityEngine;
 
 namespace Assets.InputManager
@@ -111,13 +112,13 @@ namespace Assets.InputManager
 
         private void HandleRotateCard()
         {
-            if (Input.GetKeyUp(KeyCode.Q))
-            {
-                InputEventManager.RotateCardCCW();
-            }
             if (Input.GetKeyUp(KeyCode.E))
             {
-                InputEventManager.RotateCardCW();
+                CardEventManager.RotateCardsCCW();
+            }
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                CardEventManager.RotateCardsCW();
             }
         }
 
