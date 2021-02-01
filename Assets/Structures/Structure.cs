@@ -6,12 +6,10 @@ namespace Assets.Structures
 {
     public class Structure : IStructure
     {
-        public Structure(StructureType type, int width, int height, string assetAddress, string description, IStructureBehaviour behaviour, ICoord coord)
+        public Structure(StructureType type, int width, int height, string description, IStructureBehaviour behaviour, ICoord coord)
         {
             Type = type;
             Behaviour = behaviour;
-
-            AssetAddress = assetAddress;
 
             Width = width;
             Height = height;
@@ -32,8 +30,6 @@ namespace Assets.Structures
 
         public IStructureBehaviour Behaviour { get; }
         public StructureType Type { get; }
-
-        public string AssetAddress { get; }
 
         public string Description { get; }
 

@@ -1,12 +1,9 @@
 Name=Houses
+Cost=3W,2S,1G
 -
 R=Road
-A=Anchor
-B=Base
 H=House
-=====
-BRRRR
-.HRHR
-.HRHR
-.HRHR
-..H.A
+===
+RRR
+.H.
+RRR

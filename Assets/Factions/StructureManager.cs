@@ -9,19 +9,17 @@ namespace Assets.Factions
         private readonly List<IStructure> _structures;
         private IStructureFactory _structureFactory;
 
-        public StructureManager(IStructureFactory structureFactory)
+        public StructureManager(IStructureFactory structureFactory, IFactionManager factionManager, IMapManager mapManager)
         {
             _structures = new List<IStructure>();
             _structureFactory = structureFactory;
+            PlacementValidator = new PlacementValidator(factionManager, mapManager);
         }
+
+        public IPlacementValidator PlacementValidator { get; }
 
         public void AddStructure(StructureType type, ICoord coord)
         {
-            if (type == StructureType.Base)
-            {
-                type = StructureType.Road;
-            }
-
             _structures.Add(_structureFactory.GetStructure(type, coord));
         }
 

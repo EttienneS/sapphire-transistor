@@ -28,8 +28,6 @@ namespace Assets.InputManager
             HandleArrowMovement();
 
             HandleKeyboardZoom();
-
-            HandleRotateCard();
         }
 
         private void FollowPlaneDrag()
@@ -107,18 +105,6 @@ namespace Assets.InputManager
             if (Input.GetMouseButton(1))
             {
                 FollowPlaneDrag();
-            }
-        }
-
-        private void HandleRotateCard()
-        {
-            if (Input.GetKeyUp(KeyCode.E))
-            {
-                CardEventManager.RotateCardsCCW();
-            }
-            if (Input.GetKeyUp(KeyCode.Q))
-            {
-                CardEventManager.RotateCardsCW();
             }
         }
 

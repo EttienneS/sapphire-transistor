@@ -7,10 +7,11 @@ namespace Assets.Structures
         IStructureBehaviour GetBehaviour<T>() where T : IStructureBehaviour;
 
         IStructure GetStructure(StructureType type, ICoord coord);
+
     }
 
     public enum StructureType
     {
-        Base, Tree, Rock, Core, Road, Anchor, House, Farm
+        Tree, Rock, Core, Road, House, Farm
     }
 }

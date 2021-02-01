@@ -38,8 +38,6 @@ namespace Assets
 
         private void MakeFactionCores(IMapManager mapManager, IFactionManager factionManager)
         {
-            var placementValidator = Locate<IPlacementValidator>();
-
             var faction = factionManager.GetPlayerFaction();
 
             var coreCell = mapManager.GetRandomCell((cell) => cell.Terrain.Type == TerrainType.Grass);
@@ -52,9 +50,9 @@ namespace Assets
                 faction.StructureManager.AddStructure(StructureType.Road, cell.Coord);
             }
 
-            foreach (var anchorPoint in CellExtensions.GetCardinalsOutsideRectangle(roadRect))
+            foreach (var roadStub in CellExtensions.GetCardinalsOutsideRectangle(roadRect))
             {
-                faction.StructureManager.AddStructure(StructureType.Anchor, anchorPoint.Coord);
+                faction.StructureManager.AddStructure(StructureType.Road, roadStub.Coord);
             }
 
             factionManager.MoveToNextTurn();
@@ -82,7 +80,7 @@ namespace Assets
             var cardMan = Locate<ICardManager>();
             for (int i = 0; i < 10; i++)
             {
-                faction.Deck.AddCard(cardMan.GetRandomCard());
+                faction.Deck.AddCard(faction.CardLoader.Load(cardMan.GetRandomRawCard()));
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using Assets.Map;
-using Assets.Structures;
 
 namespace Assets.Cards
 {
@@ -7,16 +6,14 @@ namespace Assets.Cards
     {
         string Name { get; }
 
-        (int x, int z) GetBasePoint();
-
-        StructureType?[,] GetStructures();
+        ICardAction[,] GetActions();
 
         bool CanPlay(ICoord coord);
 
-        void RotateCCW();
+        void Play(ICoord coord);
 
-        void RotateCW();
+        void Preview(ICoord coord);
 
-        ICoord GetRelativeAnchorPoint(ICoord coord);
+        void ClearPreview();
     }
 }

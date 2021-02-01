@@ -1,4 +1,5 @@
-﻿using Assets.Map;
+﻿using Assets.Helpers;
+using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
 using System;
@@ -12,10 +13,16 @@ namespace Assets
 {
     public class SpawnManager : LocatableMonoBehaviorBase, ISpawnManager
     {
+        public Material InvalidPreviewMaterial;
+        public Material PreviewMaterial;
+
+        private readonly List<ChunkRenderer> _activeChunks = new List<ChunkRenderer>();
         private readonly Dictionary<ChunkRenderer, List<IStructure>> _chunkStructureLookup = new Dictionary<ChunkRenderer, List<IStructure>>();
         private readonly List<GameObject> _destroyCache = new List<GameObject>();
-
-        private Dictionary<string, Queue<GameObject>> _objectPools = new Dictionary<string, Queue<GameObject>>();
+        private readonly Dictionary<GameObject, Material[]> _materialBackup = new Dictionary<GameObject, Material[]>();
+        private readonly Dictionary<string, Queue<GameObject>> _objectPools = new Dictionary<string, Queue<GameObject>>();
+        private readonly Dictionary<IStructure, GameObject> _structureObjectLookup = new Dictionary<IStructure, GameObject>();
+        private readonly Dictionary<StructureType, string> _typeAssetLookup = new Dictionary<StructureType, string>();
 
         public delegate void SpawnCallback(GameObject spawnedObject);
 
@@ -79,6 +86,12 @@ namespace Assets
                 _objectPools.Add(pool, queue);
             }
 
+            _typeAssetLookup.Add(StructureType.Tree, "Tree");
+            _typeAssetLookup.Add(StructureType.Rock, "Rock");
+            _typeAssetLookup.Add(StructureType.Core, "BellTower");
+            _typeAssetLookup.Add(StructureType.Road, "Road");
+            _typeAssetLookup.Add(StructureType.House, "House");
+
             MapEventManager.OnChunkRenderCreated += MapEventManager_OnChunkRenderCreated;
             MapEventManager.OnChunkRenderActivated += MapEventManager_OnChunkRenderActivated;
             MapEventManager.OnChunkRenderDeactivated += MapEventManager_OnChunkRenderDeactivated;
@@ -95,6 +108,8 @@ namespace Assets
             }
             if (_objectPools.ContainsKey(pool))
             {
+                RestoreMaterials(gameObject);
+
                 Debug.Log($"Recyle: {pool} >> {gameObject.name}");
                 _objectPools[pool].Enqueue(gameObject);
                 gameObject.SetActive(false);
@@ -104,6 +119,11 @@ namespace Assets
                 Debug.Log($"Destroy: {pool} >> {gameObject.name}");
                 AddItemToDestroy(gameObject);
             }
+        }
+
+        public void RecyleItem(StructureType type, GameObject gameObject)
+        {
+            RecyleItem(type.ToString(), gameObject);
         }
 
         public void SpawnModel(string address, Vector3 position, SpawnCallback callback)
@@ -118,6 +138,26 @@ namespace Assets
                 var obj = ActivatePoolObject(address, position, transform);
                 callback.Invoke(obj);
             }
+        }
+
+        public void SpawnModel(StructureType type, Vector3 position, SpawnCallback callback)
+        {
+            SpawnModel(GetAssetNameForStructureType(type), position, callback);
+        }
+
+        public void SpawnPreviewModel(string meshName, Vector3 position, bool valid, SpawnCallback callback)
+        {
+            SpawnModel(meshName, position, (obj) =>
+            {
+                BackupMaterials(obj);
+                obj.GetComponent<MeshRenderer>().SetAllMaterial(valid ? PreviewMaterial : InvalidPreviewMaterial);
+                callback.Invoke(obj);
+            });
+        }
+
+        public void SpawnPreviewModel(StructureType type, Vector3 position, bool valid, SpawnCallback callback)
+        {
+            SpawnPreviewModel(GetAssetNameForStructureType(type), position, valid, callback);
         }
 
         public void SpawnUIElement(string name, Transform parent, SpawnCallback callback)
@@ -142,33 +182,30 @@ namespace Assets
             return obj;
         }
 
-        private List<ChunkRenderer> _activeChunks = new List<ChunkRenderer>();
-
-        private void MapEventManager_OnChunkRenderActivated(ChunkRenderer renderer)
+        private void BackupMaterials(GameObject go)
         {
-            foreach (var structure in _chunkStructureLookup[renderer])
+            if (!_materialBackup.ContainsKey(go))
             {
-                SpawnStructure(structure);
-            }
-
-            if (!_activeChunks.Contains(renderer))
-            {
-                _activeChunks.Add(renderer);
+                _materialBackup.Add(go, go.GetComponent<MeshRenderer>().materials);
             }
         }
 
-        private void SpawnStructure(IStructure structure)
+        private string GetAssetNameForStructureType(StructureType type)
         {
-            // never invoke this directly, this should invoke when the spawn manager decides its required
-            var placement = StructureExtensions.CalculatePlacementPosition(structure.GetOrigin(), structure.Width, structure.Height);
-            SpawnModel(structure.AssetAddress, placement, (obj) =>
+            return _typeAssetLookup[type];
+        }
+
+        private void MapEventManager_OnChunkRenderActivated(ChunkRenderer renderer)
+        {
+            if (!_activeChunks.Contains(renderer))
             {
-                if (!_structureObjectLookup.ContainsKey(structure))
+                Debug.Log($"Activate chunk {renderer.X}:{renderer.Z}");
+                foreach (var structure in _chunkStructureLookup[renderer])
                 {
-                    _structureObjectLookup.Add(structure, obj);
+                    SpawnStructure(structure);
                 }
-                _structureObjectLookup[structure] = obj;
-            });
+                _activeChunks.Add(renderer);
+            }
         }
 
         private void MapEventManager_OnChunkRenderCreated(ChunkRenderer renderer)
@@ -180,18 +217,42 @@ namespace Assets
         {
             if (_activeChunks.Contains(renderer))
             {
+                Debug.Log($"Deactivate chunk {renderer.X}:{renderer.Z}");
                 _activeChunks.Remove(renderer);
             }
         }
 
-        private Dictionary<IStructure, GameObject> _structureObjectLookup = new Dictionary<IStructure, GameObject>();
+        private void RestoreMaterials(GameObject go)
+        {
+            if (_materialBackup.ContainsKey(go))
+            {
+                go.GetComponent<MeshRenderer>().SetMeshMaterial(_materialBackup[go]);
+                _materialBackup.Remove(go);
+            }
+        }
+
+        private void SpawnStructure(IStructure structure)
+        {
+            // never invoke this directly, this should invoke when the spawn manager decides its required
+            var placement = StructureExtensions.CalculatePlacementPosition(structure.GetOrigin(), structure.Width, structure.Height);
+            var address = GetAssetNameForStructureType(structure.Type);
+            SpawnModel(address, placement, (obj) =>
+            {
+                if (!_structureObjectLookup.ContainsKey(structure))
+                {
+                    _structureObjectLookup.Add(structure, obj);
+                }
+                _structureObjectLookup[structure] = obj;
+            });
+        }
 
         private void StructureEventManager_OnStructureDestroyed(IStructure structure)
         {
             var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(structure.GetOrigin()));
             _chunkStructureLookup[renderer].Remove(structure);
 
-            RecyleItem(structure.AssetAddress, _structureObjectLookup[structure]);
+            var pool = GetAssetNameForStructureType(structure.Type);
+            RecyleItem(pool, _structureObjectLookup[structure]);
         }
 
         private void StructureEventManager_OnStructurePlanned(IStructure structure)
@@ -207,7 +268,7 @@ namespace Assets
                     chunkStructures.Add(structure);
                 }
 
-                // draw this structure if the current chunk is active, 
+                // draw this structure if the current chunk is active,
                 // otherwise it will draw when the chunk activates later
                 if (_activeChunks.Contains(renderer) && !drawnOnce)
                 {
@@ -215,8 +276,6 @@ namespace Assets
                     drawnOnce = true;
                 }
             }
-
-            
         }
     }
 }

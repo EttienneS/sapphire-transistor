@@ -1,12 +1,20 @@
-﻿using Assets.Structures;
+﻿using Assets.Factions;
+using Assets.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Assets.Cards
 {
-    public static class CardLoader
+    public class CardLoader : ICardLoader
     {
+        private IFaction _owner;
+
+        public CardLoader(IFaction owner)
+        {
+            _owner = owner;
+        }
+
         // example card:
         // R=Road
         // A=Anchor
@@ -17,12 +25,14 @@ namespace Assets.Cards
         // R...
         // A...
 
-        public static ICard FromString(string input, IPlacementValidator placementValidator)
+        public delegate ICardAction MakeCardActionDelegate();
+
+        public ICard Load(string input)
         {
             var name = GetName(input);
             var lenght = GetLenght(input);
-            var structures = new StructureType?[lenght, lenght];
-
+            var actions = new ICardAction[lenght, lenght];
+            var basePoint = GetBasePoint(input);
             var legend = GetLegend(input);
             var map = GetCardMapLines(input);
 
@@ -30,19 +40,26 @@ namespace Assets.Cards
             {
                 for (int x = 0; x < lenght; x++)
                 {
-                    structures[x, z] = legend[map[z][x]];
+                    actions[x, z] = legend[map[z][x]]?.Invoke();
                 }
             }
 
-            return new Card(name, placementValidator, structures);
+            return new Card(name, basePoint, actions);
         }
 
-        private static string GetName(string input)
+        private (int x, int z) GetBasePoint(string input)
         {
-            return SplitCard(input).First(l => l.StartsWith("Name=")).Split('=')[1];
+            var value = SplitCard(input).Find(l => l.StartsWith("Base="));
+            if (value == null)
+            {
+                return (0, 0);
+            }
+
+            var parts = value.Split('=')[0].Split(',');
+            return (int.Parse(parts[0]), int.Parse(parts[1]));
         }
 
-        private static List<string> GetCardMapLines(string card)
+        private List<string> GetCardMapLines(string card)
         {
             var lines = SplitCard(card);
             var mapLines = new List<string>();
@@ -62,10 +79,10 @@ namespace Assets.Cards
             return mapLines;
         }
 
-        private static Dictionary<char, StructureType?> GetLegend(string card)
+        private Dictionary<char, MakeCardActionDelegate> GetLegend(string card)
         {
             var lines = SplitCard(card);
-            var legend = new Dictionary<char, StructureType?>();
+            var legend = new Dictionary<char, MakeCardActionDelegate>();
 
             var legendMode = false;
 
@@ -84,7 +101,7 @@ namespace Assets.Cards
                     if (legendMode)
                     {
                         var parts = line.Split('=');
-                        legend.Add(parts[0][0], (StructureType)Enum.Parse(typeof(StructureType), parts[1]));
+                        legend.Add(parts[0][0], () => new BuildAction((StructureType)Enum.Parse(typeof(StructureType), parts[1]), _owner));
                     }
                 }
             }
@@ -95,12 +112,16 @@ namespace Assets.Cards
             return legend;
         }
 
-        private static int GetLenght(string card)
+        private int GetLenght(string card)
         {
             return SplitCard(card).First(line => line.StartsWith("=")).Length;
         }
 
-        private static List<string> SplitCard(string card)
+        private string GetName(string input)
+        {
+            return SplitCard(input).First(l => l.StartsWith("Name=")).Split('=')[1];
+        }
+        private List<string> SplitCard(string card)
         {
             return card.Split('\n').Select(s => s.Trim()).ToList();
         }

@@ -1,11 +1,10 @@
 Name=Long Road
+Cost=1G,1S
 -
 R=Road
-A=Anchor
-B=Base
 =====
-..B..
-..R..
-..R..
-..R..
-..A..
+R....
+R....
+RR...
+R....
+R....

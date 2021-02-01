@@ -4,6 +4,6 @@ namespace Assets.Cards
 {
     public interface ICardManager
     {
-        ICard GetRandomCard();
+        string GetRandomRawCard();
     }
 }

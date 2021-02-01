@@ -10,7 +10,6 @@ namespace Assets.Factions
     {
         private readonly Dictionary<ResourceType, int> _resources;
 
-
         protected FactionBase(string name, IServiceLocator serviceLocator)
         {
             _resources = new Dictionary<ResourceType, int>();
@@ -18,7 +17,10 @@ namespace Assets.Factions
             Name = name;
             Hand = new List<ICard>();
 
-            StructureManager = new StructureManager(serviceLocator.Find<IStructureFactory>());
+            CardLoader = new CardLoader(this);
+            StructureManager = new StructureManager(serviceLocator.Find<IStructureFactory>(),
+                                                    serviceLocator.Find<IFactionManager>(),
+                                                    serviceLocator.Find<IMapManager>());
         }
 
         public event FactionDelegates.OnResourceChanged OnResourcesUpdated;
@@ -32,6 +34,8 @@ namespace Assets.Factions
         public string Name { get; }
 
         public IStructureManager StructureManager { get; }
+
+        public ICardLoader CardLoader { get; }
 
         public bool CanAfford((ResourceType resource, int amount)[] cost)
         {
@@ -108,13 +112,7 @@ namespace Assets.Factions
             OnResourcesUpdated?.Invoke(resource, _resources[resource]);
         }
 
-        public void PlayCard(ICard card, ICoord anchor)
-        {
-            CardEventManager.CardPlayed(card, this, anchor);
-            Hand.Remove(card);
-        }
-
-        public abstract void TakeTurn();
+               public abstract void TakeTurn();
 
         private void AddResources(List<(ResourceType resouceType, int amount)> resouces)
         {

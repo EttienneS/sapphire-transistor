@@ -13,7 +13,7 @@ namespace Assets.Factions
         private IFaction _activeFaction;
         private Queue<IFaction> _factionQueue;
         private IFaction _natureFaction;
-        private IFaction _playerFaction;
+        private PlayerFaction _playerFaction;
         private Lazy<ICardManager> _cardManager;
 
         public event FactionDelegates.OnTurnEnded OnTurnEnded;
@@ -23,9 +23,9 @@ namespace Assets.Factions
         {
             _factionQueue.Enqueue(faction);
 
-            if (faction is PlayerFaction)
+            if (faction is PlayerFaction player)
             {
-                _playerFaction = faction;
+                _playerFaction = player;
             }
 
             if (faction is NatureFaction)
@@ -69,7 +69,7 @@ namespace Assets.Factions
             throw new KeyNotFoundException($"{structure} owner not found!");
         }
 
-        public IFaction GetPlayerFaction()
+        public PlayerFaction GetPlayerFaction()
         {
             return _playerFaction;
         }

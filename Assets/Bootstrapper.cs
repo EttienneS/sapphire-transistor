@@ -31,7 +31,6 @@ namespace Assets
 
             _locator.Register<IStructureFactory>(new StructureFactory());
             _locator.Register<IFactionManager>(new FactionManager());
-            _locator.Register<IPlacementValidator>(new PlacementValidator());
 
             _locator.Register<ICardManager>(new CardManager());
 

@@ -6,7 +6,7 @@ using System;
 
 namespace Assets.Structures
 {
-    public class PlacementValidator : GameServiceBase, IPlacementValidator
+    public class PlacementValidator : IPlacementValidator
     {
         private IFactionManager _factionManager;
         private IMapManager _mapManager;
@@ -14,6 +14,12 @@ namespace Assets.Structures
         private readonly InvalidPlacementResult _noRoadResult = new InvalidPlacementResult("Cell does not have a neighbouring road!");
         private readonly InvalidPlacementResult _notEmptyResult = new InvalidPlacementResult("Cell is not empty!");
         private readonly ValidPlacementResult _validResult = new ValidPlacementResult();
+
+        public PlacementValidator(IFactionManager factionManager, IMapManager mapManager)
+        {
+            _factionManager = factionManager;
+            _mapManager = mapManager;
+        }
 
         public IPlacementResult CanPlace(ICoord coord, StructureType? structureType)
         {
@@ -26,14 +32,9 @@ namespace Assets.Structures
                 var type = structureType.Value;
                 switch (type)
                 {
-                    case StructureType.Base:
-                        // for validation purposes treat the base the same as an anchor as they match
-                        return CellEmptyOrSame(cell, StructureType.Anchor);
-
                     case StructureType.House:
                     case StructureType.Tree:
                     case StructureType.Road:
-                    case StructureType.Anchor:
                         return CellEmptyOrSame(cell, type);
 
                     default:
@@ -85,11 +86,7 @@ namespace Assets.Structures
         }
 
 
-        public override void Initialize()
-        {
-            _factionManager = Locate<IFactionManager>();
-            _mapManager = Locate<IMapManager>();
-        }
+       
 
         private IPlacementResult CellEmptyOrSame(Cell cell, StructureType structureToPlace)
         {

@@ -2,9 +2,7 @@
 using Assets.Helpers;
 using Assets.Map;
 using Assets.ServiceLocator;
-using Assets.Structures;
 using Assets.UI;
-using UnityEngine;
 
 namespace Assets.Factions
 {
@@ -13,54 +11,21 @@ namespace Assets.Factions
         private readonly IFactionManager _factionManager;
         private readonly IUIManager _uiManager;
 
+        private ICard _activeCard;
+
+        private (ICard card, ICoord coord)? _activePreview;
+
         public PlayerFaction(string name, IServiceLocator serviceLocator) : base(name, serviceLocator)
         {
             _uiManager = serviceLocator.Find<IUIManager>();
             _factionManager = serviceLocator.Find<IFactionManager>();
             CellEventManager.OnCellClicked += CellClicked;
-
             CardEventManager.OnSetPlayerCardActive += OnPlayerCardActive;
-            CardEventManager.OnRotateCardsCW += RotateCardCW;
-            CardEventManager.OnRotateCardsCCW += RotateCardCCW;
         }
 
-        private ICard _activeCard;
-
-        private void OnPlayerCardActive(ICard card)
+        public void CancelCard()
         {
-            if (Hand.Contains(card))
-            {
-                _activeCard = card;
-            }
-            else
-            {
-                throw new System.Exception($"Card not in hand!: {card}");
-            }
-        }
-
-        private void RotateCardCW()
-        {
-            foreach (var card in Hand)
-            {
-                card.RotateCW();
-            }
-        }
-
-        private void RotateCardCCW()
-        {
-            foreach (var card in Hand)
-            {
-                card.RotateCCW();
-            }
-        }
-
-        public ICard GetActiveCard()
-        {
-            if (_activeCard == null)
-            {
-                _activeCard = Hand[0];
-            }
-            return _activeCard;
+            ClearPreview();
         }
 
         public void CellClicked(Cell cell)
@@ -70,27 +35,47 @@ namespace Assets.Factions
                 return;
             }
 
-            if (_factionManager.TryGetStructureInCell(cell, out IStructure structure))
+            if (TryGetActiveCard(out ICard activeCard))
             {
-                var activeCard = GetActiveCard();
-
-                Debug.Log(activeCard.ToString());
-
-                var anchor = activeCard.GetRelativeAnchorPoint(cell.Coord);
-
-                if (structure.Type == StructureType.Anchor && activeCard.CanPlay(anchor))
+                if (_activePreview.HasValue && _activePreview.Value.coord == cell.Coord && _activePreview.Value.card == activeCard)
                 {
-                    PlayCard(activeCard, anchor);
+                    ConfirmCard();
                 }
                 else
                 {
-                    ShowStructureInfo(structure);
+                    PreviewCard(activeCard, cell.Coord);
                 }
             }
-            else
+        }
+
+        public void ConfirmCard()
+        {
+            var card = _activePreview.Value.card;
+            var coord = _activePreview.Value.coord;
+            if (card.CanPlay(coord))
             {
-                _uiManager.MessageManager.HideAll();
+                card.Play(coord);
             }
+            ClearPreview();
+            Hand.Remove(_activeCard);
+            _activeCard = null;
+        }
+
+        public bool TryGetActiveCard(out ICard card)
+        {
+            card = _activeCard;
+            if (_activeCard == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void PreviewCard(ICard card, ICoord coord)
+        {
+            ClearPreview();
+            _activePreview = (card, coord);
+            _activePreview.Value.card.Preview(_activePreview.Value.coord);
         }
 
         public void ResetUI()
@@ -103,20 +88,26 @@ namespace Assets.Factions
         {
         }
 
-        private void ShowStructureInfo(IStructure structure)
+        private void ClearPreview()
         {
-            Debug.Log($"{structure.Type}: {structure.OccupiedCoords[0]}");
-            _uiManager.MessageManager.ShowMessage(structure.Type.ToString(), structure.GetStatus());
+            if (_activePreview.HasValue)
+            {
+                _activePreview.Value.card.ClearPreview();
+                _activePreview = null;
+            }
+        }
 
-            //var radialMenuOptions = new List<RadialMenuOptionFacade>();
-            //if (StructureManager.GetStructures().Contains(structure))
-            //{
-            //    radialMenuOptions.Add(new RadialMenuOptionFacade($"Remove {structure.Type}", () => { },
-            //                                                                                 () => StructureManager.RemoveStructure(structure)));
-            //}
-            //_uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
-            //                                            onMenuClose: () => ResetUI(),
-            //                                            radialMenuOptions);
+        private void OnPlayerCardActive(ICard card)
+        {
+            if (Hand.Contains(card))
+            {
+                ClearPreview();
+                _activeCard = card;
+            }
+            else
+            {
+                throw new System.Exception($"Card not in hand!: {card}");
+            }
         }
     }
 }

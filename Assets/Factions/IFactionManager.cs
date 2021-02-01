@@ -14,7 +14,7 @@ namespace Assets.Factions
 
         void MoveToNextTurn();
 
-        IFaction GetPlayerFaction();
+        PlayerFaction GetPlayerFaction();
 
         event FactionDelegates.OnTurnEnded OnTurnEnded;
 

@@ -8,41 +8,31 @@ namespace Assets.Cards
     {
         public delegate void SetPlayerCardActive(ICard card);
 
-        public delegate void CardPlayed(ICard card, IFaction player, ICoord coord);
+        public delegate void CardPlayed(ICard card, ICoord coord);
 
         public delegate void CardReceived(ICard card, IFaction player);
-
-        public delegate void RotateCards();
     }
 
     public static class CardEventManager
     {
         public static event CardDelegates.SetPlayerCardActive OnSetPlayerCardActive;
 
-        public static event CardDelegates.RotateCards OnRotateCardsCW;
-
-        public static event CardDelegates.RotateCards OnRotateCardsCCW;
-
         public static event CardDelegates.CardPlayed OnCardPlayed;
+
+        public static event CardDelegates.CardPlayed OnCardPreviewed;
 
         public static event CardDelegates.CardReceived OnCardReceived;
 
-        public static void RotateCardsCW()
+        public static void CardPreviewed(ICard card, ICoord coord)
         {
-            Debug.Log($"Rotate Cards CW ");
-            OnRotateCardsCW?.Invoke();
+            Debug.Log($"Card preview: {card}");
+            OnCardPreviewed?.Invoke(card, coord);
         }
 
-        public static void RotateCardsCCW()
-        {
-            Debug.Log($"Rotate Cards CCW ");
-            OnRotateCardsCCW?.Invoke();
-        }
-
-        public static void CardPlayed(ICard card, IFaction player, ICoord coord)
+        public static void CardPlayed(ICard card, ICoord coord)
         {
             Debug.Log($"Card played {card}");
-            OnCardPlayed?.Invoke(card, player, coord);
+            OnCardPlayed?.Invoke(card, coord);
         }
 
         public static void SetPlayerCardActive(ICard card)

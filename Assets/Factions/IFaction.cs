@@ -20,6 +20,8 @@ namespace Assets.Factions
 
         IStructureManager StructureManager { get; }
 
+        ICardLoader CardLoader { get; }
+
         bool CanAfford((ResourceType resource, int amount)[] cost);
 
         void DoTurnEndActions();
@@ -35,8 +37,6 @@ namespace Assets.Factions
         int GetMaxHandSize();
 
         void DrawCard(ICard card);
-
-        void PlayCard(ICard card, ICoord anchor);
 
         void Draw();
     }

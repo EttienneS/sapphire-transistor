@@ -343,3 +343,4 @@ healthchecksdb
 /Temp
 /UserSettings
 *.apk
+/Assets/StreamingAssets/aa

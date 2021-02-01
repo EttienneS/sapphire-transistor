@@ -2,6 +2,7 @@
 using Assets.Factions;
 using Assets.Map;
 using Assets.ServiceLocator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,10 +11,20 @@ namespace Assets.UI
 {
     public class HandView : MonoBehaviour
     {
-        public CardView CardViewPrefab;
         public GameObject CardContainer;
+        public CardView CardViewPrefab;
+        private readonly Dictionary<ICard, CardView> _handLookup = new Dictionary<ICard, CardView>();
+        private readonly Lazy<PlayerFaction> _playerFaction = new Lazy<PlayerFaction>(() => Locator.Instance.Find<IFactionManager>().GetPlayerFaction());
 
-        private Dictionary<ICard, CardView> _handLookup = new Dictionary<ICard, CardView>();
+        public void CancelCard()
+        {
+            _playerFaction.Value.CancelCard();
+        }
+
+        public void ConfirmCard()
+        {
+            _playerFaction.Value.ConfirmCard();
+        }
 
         public void Start()
         {
@@ -25,23 +36,13 @@ namespace Assets.UI
                 }
             };
 
-            CardEventManager.OnCardPlayed += (ICard card, IFaction faction, ICoord _) =>
+            CardEventManager.OnCardPlayed += (ICard card, ICoord _) =>
             {
-                if (faction is PlayerFaction)
+                if (_handLookup.ContainsKey(card))
                 {
                     OnCardPlayed(card);
                 }
             };
-        }
-
-        public void RotateActiveCW()
-        {
-            CardEventManager.RotateCardsCCW();
-        }
-
-        public void RotateActiveCCW()
-        {
-            CardEventManager.RotateCardsCW();
         }
 
         public void Update()
