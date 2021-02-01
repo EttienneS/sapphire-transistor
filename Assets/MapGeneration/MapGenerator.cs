@@ -1,6 +1,10 @@
-﻿using Assets.Helpers;
+﻿using Assets.Factions;
+using Assets.Helpers;
 using Assets.Map;
+using Assets.Structures;
+using Assets.Structures.Behaviors;
 using System;
+using UnityEngine;
 
 namespace Assets.MapGeneration
 {
@@ -34,25 +38,53 @@ namespace Assets.MapGeneration
             {
                 for (var z = 0; z < mapSize; z++)
                 {
-                    var cellHeight = GetAdjustedCellHeight(height[x, z]);
+                    var cellHeight = height[x, z];
                     var terrrain = _terrainDefinition.GetTerrainTypeForHeight(cellHeight);
-                    map[x, z] = new Cell(x, z, 0, terrrain);
+                    map[x, z] = new Cell(x, z, terrrain.Type == TerrainType.Water ? -0.25f : 0, terrrain);
                 }
             }
-
             _mapManager.Create(map);
         }
 
-        private float GetAdjustedCellHeight(float height)
+        internal void PopulateMap(IMapManager mapManager, IStructureFactory structureFactory, IFactionManager factionManager)
         {
-            var cellHeight = height * 10f;
+            var natureFaction = factionManager.GetNatureFaction();
 
-            if (cellHeight <= 0)
+            for (int x = 0; x < mapManager.Width; x++)
             {
-                cellHeight = 0;
+                for (int z = 0; z < mapManager.Height; z++)
+                {
+                    if (mapManager.TryGetCellAtCoord(new Coord(x, 0, z), out Cell cell))
+                    {
+                        if (cell.Terrain.Type == TerrainType.Forrest)
+                        {
+                            if (UnityEngine.Random.value > 0.75f)
+                            {
+                                natureFaction.StructureManager.AddStructure(StructureType.Tree, cell.Coord);
+                            }
+                        }
+                        if (cell.Terrain.Type == TerrainType.Stone)
+                        {
+                            if (UnityEngine.Random.value > 0.75f)
+                            {
+                                natureFaction.StructureManager.AddStructure(StructureType.Rock, cell.Coord);
+                            }
+                        }
+                        if (cell.Terrain.Type == TerrainType.Grass)
+                        {
+                            if (UnityEngine.Random.value > 0.99f)
+                            {
+                                natureFaction.StructureManager.AddStructure(StructureType.Tree, cell.Coord);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Unable to find cell");
+                        throw new IndexOutOfRangeException();
+                    }
+                }
             }
-
-            return cellHeight;
         }
     }
 }

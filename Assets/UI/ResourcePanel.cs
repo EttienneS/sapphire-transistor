@@ -1,5 +1,4 @@
 ﻿using Assets.Factions;
-using Assets.Resources;
 using Assets.ServiceLocator;
 using System;
 using System.Collections.Generic;
@@ -10,44 +9,52 @@ namespace Assets.UI
 {
     public class ResourcePanel : MonoBehaviour
     {
+        private Dictionary<ResourceType, TMP_Text> _labelLookup;
         private IFaction _playerFaction;
+        private bool _ready;
         private ISpawnManager _spawnManager;
 
-        private Dictionary<ResourceType, TMP_Text> _labelLookup;
-
-        private void Start()
+        public void Update()
         {
-            _labelLookup = new Dictionary<ResourceType, TMP_Text>();
+            if (_ready)
+            {
+                foreach (var res in _playerFaction.GetResources())
+                {
+                    if (_labelLookup.ContainsKey(res.Key))
+                    {
+                        _labelLookup[res.Key].text = $"{res.Key}: {res.Value}";
+                    }
+                }
+            }
+            else
+            {
+                LoadPanel();
+            }
+        }
 
-            _playerFaction = Locator.Instance.Find<IFactionManager>().GetPlayerFaction();
+        private void LoadPanel()
+        {
+            if (!Locator.Instance.ServicesReady(typeof(ISpawnManager), typeof(IFactionManager)))
+            {
+                return;
+            }
+
             _spawnManager = Locator.Instance.Find<ISpawnManager>();
+            _playerFaction = Locator.Instance.Find<IFactionManager>().GetPlayerFaction();
+
+            if (_playerFaction == null)
+            {
+                return;
+            }
+
+            _labelLookup = new Dictionary<ResourceType, TMP_Text>();
 
             foreach (var resourceType in Enum.GetValues(typeof(ResourceType)))
             {
                 SpawnResourceLabel((ResourceType)resourceType, 0);
             }
 
-            _playerFaction.OnResourcesUpdated += OnPlayerResoucesUpdated;
-        }
-
-        private bool _updateResouces;
-
-        private void OnPlayerResoucesUpdated(ResourceType resourceType, int newValue)
-        {
-            _updateResouces = true;
-        }
-
-        public void Update()
-        {
-            if (_updateResouces)
-            {
-                _updateResouces = false;
-
-                foreach (var res in _playerFaction.GetResources())
-                {
-                    _labelLookup[res.Key].text = $"{res.Key}: {res.Value}";
-                }
-            }
+            _ready = true;
         }
 
         private void SpawnResourceLabel(ResourceType resourceType, int newValue)

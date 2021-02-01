@@ -1,4 +1,4 @@
-﻿using Assets.Resources;
+﻿using Assets.Factions;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,10 +8,15 @@ namespace Assets.Map
     {
         Color Color { get; }
 
-        string Name { get; }
+        TerrainType Type { get; }
 
         Dictionary<ResourceType, int> ResourceValue { get; }
 
         int TravelCost { get; }
+    }
+
+    public enum TerrainType
+    {
+        Water, Sand, Grass, Forrest, Snow, Stone
     }
 }

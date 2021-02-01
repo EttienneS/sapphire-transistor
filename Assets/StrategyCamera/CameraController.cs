@@ -1,4 +1,5 @@
-﻿using Assets.ServiceLocator;
+﻿using Assets.InputManager;
+using Assets.ServiceLocator;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,22 +12,34 @@ namespace Assets.StrategyCamera
         public float minZoom;
         public float movementSpeed;
         public float movementTime;
+
         public float normalSpeed;
+
         public float rotationAmount;
+
         public Vector3 zoomAmount;
 
-        internal Vector3 newPosition;
-        internal Quaternion newRotation;
-        internal Vector3 newZoom;
+        private readonly Queue<InputCommand> _commands = new Queue<InputCommand>();
 
-        private readonly Queue<CameraCommand> _commands = new Queue<CameraCommand>();
-        private CameraInputHandler _cameraInputHandler;
+        private IInputHandler _cameraInputHandler;
+
         private int _maxX;
+
         private int _maxZ;
+
         private int _minX;
+
         private int _minZ;
 
-        public void AddCameraCommand(CameraCommand command)
+        private Vector3 _newPosition;
+
+        private Quaternion _newRotation;
+
+        private Vector3 _newZoom;
+
+        private bool _ready;
+
+        public void AddCameraCommand(InputCommand command)
         {
             _commands.Enqueue(command);
         }
@@ -37,6 +50,11 @@ namespace Assets.StrategyCamera
             _maxX = maxx;
             _minZ = minz;
             _maxZ = maxz;
+        }
+
+        public Camera GetCamera()
+        {
+            return Camera;
         }
 
         public override void Initialize()
@@ -51,30 +69,69 @@ namespace Assets.StrategyCamera
 #else
             _cameraInputHandler = new MouseAndKeyboardInputHandler(this);
 #endif
-        }
-
-        public void Update()
-        {
-            _cameraInputHandler.HandleInput();
-
-            while (_commands.Count > 0)
-            {
-                _commands.Dequeue().Execute(this);
-            }
-            UpdateCameraAndEnsureBounds();
-        }
-
-        internal float GetPerpendicularRotation()
-        {
-            return 90 + transform.rotation.eulerAngles.y;
+            _ready = true;
         }
 
         public void MoveToPosition(Vector3 position)
         {
+            Debug.Log($"Move to: {position}");
             transform.position = position;
 
-            newPosition = transform.position;
-            newZoom = new Vector3(0, minZoom, -minZoom);
+            _newPosition = transform.position;
+            _newZoom = new Vector3(0, minZoom, -minZoom);
+
+            CameraEventManager.CameraPositionChanged(new Vector3(_newPosition.x, _newZoom.y, _newPosition.z));
+        }
+
+        public void Update()
+        {
+            if (_ready)
+            {
+                _cameraInputHandler.HandleInput();
+
+                while (_commands.Count > 0)
+                {
+                    _commands.Dequeue().Execute();
+                    CameraEventManager.CameraPositionChanged(new Vector3(_newPosition.x, _newZoom.y, _newPosition.z));
+                }
+                UpdateCameraAndEnsureBounds();
+            }
+        }
+
+        public Vector3 GetNewPosition()
+        {
+            return _newPosition;
+        }
+
+        public Quaternion GetNewRotation()
+        {
+            return _newRotation;
+        }
+
+        public Vector3 GetNewZoom()
+        {
+            return _newZoom;
+        }
+
+        public float GetPerpendicularRotation()
+        {
+            return 90 + transform.rotation.eulerAngles.y;
+        }
+
+        public void SetNewPosition(Vector3 vector3)
+        {
+            _newPosition = vector3;
+            CameraEventManager.CameraPositionChanged(new Vector3(_newPosition.x, _newZoom.y, _newPosition.z));
+        }
+
+        public void SetNewRotation(Quaternion value)
+        {
+            _newRotation = value;
+        }
+
+        public void SetNewZoom(Vector3 value)
+        {
+            _newZoom = value;
         }
 
         private Vector3 ClampPosition(Vector3 position)
@@ -99,23 +156,21 @@ namespace Assets.StrategyCamera
 
         private void ResetDeltas()
         {
-            newPosition = transform.position;
-            newRotation = transform.rotation;
-            newZoom = Camera.transform.localPosition;
+            _newPosition = transform.position;
+            _newRotation = transform.rotation;
+            _newZoom = Camera.transform.localPosition;
         }
 
         private void UpdateCameraAndEnsureBounds()
         {
-            transform.position = ClampPosition(Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime));
-            transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * movementTime);
-            Camera.transform.localPosition = ClampZoom(Vector3.Lerp(Camera.transform.localPosition, newZoom, Time.deltaTime * movementTime));
+            transform.position = ClampPosition(Vector3.Lerp(transform.position, _newPosition, Time.deltaTime * movementTime));
+            transform.rotation = Quaternion.Lerp(transform.rotation, _newRotation, Time.deltaTime * movementTime);
+            Camera.transform.localPosition = ClampZoom(Vector3.Lerp(Camera.transform.localPosition, _newZoom, Time.deltaTime * movementTime));
         }
 
-        public Camera GetCamera()
+        public (float minZoom, float maxZoom) GetMinMaxZoom()
         {
-            return Camera;
+            return (minZoom, maxZoom);
         }
-
-    
     }
 }

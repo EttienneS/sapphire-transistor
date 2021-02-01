@@ -1,5 +1,4 @@
-﻿using Assets.Structures;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -11,14 +10,9 @@ namespace Assets.Factions
         {
         }
 
-        public override void TakeTurn()
-        {
-            Task.Run(() => DoStuff());
-        }
-
         public void DoStuff()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Thread.Sleep(100);
                 Debug.Log($"Working {i}...");
@@ -26,6 +20,11 @@ namespace Assets.Factions
             Debug.Log($"Turn over: {Name}");
 
             EndTurn();
+        }
+
+        public override void TakeTurn()
+        {
+            Task.Run(() => DoStuff());
         }
     }
 }

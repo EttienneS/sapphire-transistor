@@ -1,22 +1,23 @@
-﻿using UnityEngine;
+﻿using Assets.Cards;
+using Assets.StrategyCamera;
+using UnityEngine;
 
-namespace Assets.StrategyCamera
+namespace Assets.InputManager
 {
-    public class MouseAndKeyboardInputHandler : CameraInputHandler
+    public class MouseAndKeyboardInputHandler : IInputHandler
     {
+        private CameraController _cameraController;
         private Vector3 _dragCurrentPosition;
         private Vector3 _dragStartPosition;
         private Vector3 _rotateCurrentPosition;
         private Vector3 _rotateStartPosition;
-
-        private CameraController _cameraController;
 
         public MouseAndKeyboardInputHandler(CameraController cameraController)
         {
             _cameraController = cameraController;
         }
 
-        public override void HandleInput()
+        public void HandleInput()
         {
             HandleMouseWheel();
 
@@ -29,46 +30,6 @@ namespace Assets.StrategyCamera
             HandleKeyboardZoom();
         }
 
-        private void HandleArrowMovement()
-        {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-            {
-                _cameraController.AddCameraCommand(new MoveCommand(_cameraController.transform.forward * _cameraController.movementSpeed));
-            }
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-            {
-                _cameraController.AddCameraCommand(new MoveCommand(_cameraController.transform.forward * -_cameraController.movementSpeed));
-            }
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-            {
-                _cameraController.AddCameraCommand(new MoveCommand(_cameraController.transform.right * _cameraController.movementSpeed));
-            }
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            {
-                _cameraController.AddCameraCommand(new MoveCommand(_cameraController.transform.right * -_cameraController.movementSpeed));
-            }
-        }
-
-        private void HandleKeyboardZoom()
-        {
-            if (Input.GetKey(KeyCode.R))
-            {
-                _cameraController.AddCameraCommand(new ZoomCommand(_cameraController.zoomAmount));
-            }
-            if (Input.GetKey(KeyCode.F))
-            {
-                _cameraController.AddCameraCommand(new ZoomCommand(_cameraController.zoomAmount * -1f));
-            }
-        }
-
-        private void HandleMouseWheel()
-        {
-            if (Input.mouseScrollDelta.y != 0)
-            {
-                _cameraController.AddCameraCommand(new ZoomCommand(Input.mouseScrollDelta.y * _cameraController.zoomAmount));
-            }
-        }
-
         private void FollowPlaneDrag()
         {
             var plane = new Plane(Vector3.up, Vector3.zero);
@@ -77,7 +38,39 @@ namespace Assets.StrategyCamera
             if (plane.Raycast(ray, out float entry))
             {
                 _dragCurrentPosition = ray.GetPoint(entry);
-                _cameraController.newPosition = _cameraController.transform.position + _dragStartPosition - _dragCurrentPosition;
+                _cameraController.SetNewPosition(_cameraController.transform.position + _dragStartPosition - _dragCurrentPosition);
+            }
+        }
+
+        private void HandleArrowMovement()
+        {
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            {
+                _cameraController.AddCameraCommand(new MoveCameraCommand(_cameraController, _cameraController.transform.forward * _cameraController.movementSpeed));
+            }
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            {
+                _cameraController.AddCameraCommand(new MoveCameraCommand(_cameraController, _cameraController.transform.forward * -_cameraController.movementSpeed));
+            }
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                _cameraController.AddCameraCommand(new MoveCameraCommand(_cameraController, _cameraController.transform.right * _cameraController.movementSpeed));
+            }
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                _cameraController.AddCameraCommand(new MoveCameraCommand(_cameraController, _cameraController.transform.right * -_cameraController.movementSpeed));
+            }
+        }
+
+        private void HandleKeyboardZoom()
+        {
+            if (Input.GetKey(KeyCode.R))
+            {
+                _cameraController.AddCameraCommand(new ZoomCommand(_cameraController, _cameraController.zoomAmount));
+            }
+            if (Input.GetKey(KeyCode.F))
+            {
+                _cameraController.AddCameraCommand(new ZoomCommand(_cameraController, _cameraController.zoomAmount * -1f));
             }
         }
 
@@ -91,6 +84,14 @@ namespace Assets.StrategyCamera
             if (Input.GetMouseButton(2))
             {
                 RotateWithMiddleMouse();
+            }
+        }
+
+        private void HandleMouseWheel()
+        {
+            if (Input.mouseScrollDelta.y != 0)
+            {
+                _cameraController.AddCameraCommand(new ZoomCommand(_cameraController, Input.mouseScrollDelta.y * _cameraController.zoomAmount));
             }
         }
 
@@ -114,7 +115,7 @@ namespace Assets.StrategyCamera
             var diff = _rotateStartPosition - _rotateCurrentPosition;
             _rotateStartPosition = _rotateCurrentPosition;
 
-            _cameraController.AddCameraCommand(new RotationCommand(diff));
+            _cameraController.AddCameraCommand(new RotationCommand(_cameraController, diff));
         }
 
         private void StartMiddleMouseRotate()

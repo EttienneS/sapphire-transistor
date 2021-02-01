@@ -1,0 +1,9 @@
+Name=Houses
+Cost=3W,2S,1G
+-
+R=Road
+H=House
+===
+RRR
+.H.
+RRR

@@ -7,16 +7,13 @@ namespace Assets.UI
     public class EndTurnButton : MonoBehaviour
     {
         private PlayerFaction _playerFaction;
-        private IFactionManager _factionManager;
-
-        private void Start()
-        {
-            _factionManager = Locator.Instance.Find<IFactionManager>();
-            _playerFaction = _factionManager.GetPlayerFaction() as PlayerFaction;
-        }
 
         public void EndTurn()
         {
+            if (_playerFaction == null)
+            {
+                _playerFaction = Locator.Instance.Find<IFactionManager>().GetPlayerFaction() as PlayerFaction;
+            }
             _playerFaction.EndTurn();
         }
     }

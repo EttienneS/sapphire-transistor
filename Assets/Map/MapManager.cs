@@ -13,7 +13,7 @@ namespace Assets.Map
     {
         public Material ChunkMaterial;
 
-        private Dictionary<ICoord, Cell> _cellLookup;
+        private Dictionary<(int x, int z), Cell> _cellLookup;
         private Cell[,] _cells;
         private ChunkRendererFactory _chunkRendererFactory;
         private ChunkRenderer[,] _chunkRenderers;
@@ -32,6 +32,39 @@ namespace Assets.Map
             }
         }
 
+        public void Create(Cell[,] cellsToRender)
+        {
+            DestroyChunks();
+
+            _cells = cellsToRender;
+            _flatCells = _cells.Flatten().ToList();
+
+            IndexCells(_cells);
+
+            Width = cellsToRender.GetLength(0);
+            Height = cellsToRender.GetLength(1);
+
+            var chunkWidth = Mathf.FloorToInt(cellsToRender.GetLength(0) / Constants.ChunkSize);
+            var chunkHeight = Mathf.FloorToInt(cellsToRender.GetLength(1) / Constants.ChunkSize);
+
+            _chunkRenderers = new ChunkRenderer[chunkWidth, chunkHeight];
+            for (int x = 0; x < chunkWidth; x++)
+            {
+                for (int z = 0; z < chunkHeight; z++)
+                {
+                    var renderer = MakeChunkRenderer(x, z);
+                    _chunkRenderers[x, z] = renderer;
+
+                    MapEventManager.ChunkRenderCreated(renderer);
+
+                    renderer.Deactivate();
+                }
+            }
+
+            _pathfinder = CreatePathfinder();
+            LinkCellsToNeighbors(_cells, Width, Height);
+        }
+
         public void DestroyChunks()
         {
             foreach (Transform child in transform)
@@ -40,9 +73,20 @@ namespace Assets.Map
             }
         }
 
-        public Cell GetCellAtCoord(ICoord coord)
+        public bool TryGetCellAtCoord(ICoord coord, out Cell cell)
         {
-            return _cellLookup[coord];
+            return TryGetCellAtCoord(coord.X, coord.Z, out cell);
+        }
+
+        public bool TryGetCellAtCoord(int x, int z, out Cell cell)
+        {
+            cell = null;
+            if (x >= Width || x < 0 || z >= Height || z < 0)
+            {
+                return false;
+            }
+            cell = _cellLookup[(x, z)];
+            return true;
         }
 
         public Cell GetCenter()
@@ -100,34 +144,106 @@ namespace Assets.Map
         public override void Initialize()
         {
             _chunkRendererFactory = new ChunkRendererFactory(Locate<ICameraController>().GetCamera());
+
+            CameraEventManager.OnCameraPositionChanged += ActivateChunksNearCamera;
         }
 
-        public void Create(Cell[,] cellsToRender)
+        private float _lastZoomLevel = -1;
+        private ChunkRenderer _lastActiveChunk;
+
+        private void ActivateChunksNearCamera(Vector3 cameraLocation)
         {
-            DestroyChunks();
-
-            _cells = cellsToRender;
-            _flatCells = _cells.Flatten().ToList();
-
-            IndexCells(_cells);
-
-            Width = cellsToRender.GetLength(0);
-            Height = cellsToRender.GetLength(1);
-
-            var chunkWidth = Mathf.FloorToInt(cellsToRender.GetLength(0) / Constants.ChunkSize);
-            var chunkHeight = Mathf.FloorToInt(cellsToRender.GetLength(1) / Constants.ChunkSize);
-
-            _chunkRenderers = new ChunkRenderer[chunkWidth, chunkHeight];
-            for (int x = 0; x < chunkWidth; x++)
+            if (_lastActiveChunk == null || _lastZoomLevel == -1)
             {
-                for (int z = 0; z < chunkHeight; z++)
+                TryGetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z, out Cell cell);
+                _lastActiveChunk = GetChunkForcell(cell);
+                _lastZoomLevel = -1;
+                ActivateChunks(_lastActiveChunk, cameraLocation.y);
+            }
+            else
+            {
+                TryGetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z, out Cell cell);
+                var currentChunk = GetChunkForcell(cell);
+                if (_lastActiveChunk != currentChunk || _lastZoomLevel != cameraLocation.y)
                 {
-                    _chunkRenderers[x, z] = MakeChunkRenderer(x, z);
+                    ActivateChunks(currentChunk, cameraLocation.y);
+                }
+                _lastActiveChunk = currentChunk;
+            }
+            _lastZoomLevel = cameraLocation.y;
+        }
+
+        private void ActivateChunks(ChunkRenderer currentChunk, float zoom)
+        {
+            var offset = 1;
+            var chunkWidth = Mathf.FloorToInt(_cells.GetLength(0) / Constants.ChunkSize) - 1;
+            var chunkHeight = Mathf.FloorToInt(_cells.GetLength(1) / Constants.ChunkSize) - 1;
+
+            var xstart = Mathf.Max(0, currentChunk.X - offset);
+            var xend = Mathf.Min(chunkWidth, currentChunk.X + offset);
+            var zstart = Mathf.Max(0, currentChunk.Z - offset);
+            var zend = Mathf.Min(chunkHeight, currentChunk.Z + offset);
+
+            var p = new string[12];
+            try
+            {
+                var deactivate = _chunkRenderers.Flatten().ToList();
+                for (var x = xstart; x <= xend; x++)
+                {
+                    for (var z = zstart; z <= zend; z++)
+                    {
+                        var chunk = _chunkRenderers[x, z];
+
+                        deactivate.Remove(chunk);
+                        if (chunk == currentChunk)
+                        {
+                            // activate current chunk last
+                            continue;
+                        }
+                        chunk.Activate();
+                    }
+                }
+
+                foreach (var cr in deactivate)
+                {
+                    cr.Deactivate();
+                }
+
+                currentChunk.Activate(true);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"xstart: {xstart}");
+                Debug.LogError($"xend: {xend}");
+                Debug.LogError($"zstart: {zstart}");
+                Debug.LogError($"zend: {zend}");
+            }
+
+        }
+
+        internal ChunkRenderer GetChunkForcell(Cell cell)
+        {
+            var chunkX = cell.Coord.X / Constants.ChunkSize;
+            var chunkZ = cell.Coord.Z / Constants.ChunkSize;
+
+            return _chunkRenderers[chunkX, chunkZ];
+        }
+
+        internal Cell[,] GetCells(int offsetX, int offsetY)
+        {
+            var cells = new Cell[Constants.ChunkSize, Constants.ChunkSize];
+            offsetX *= Constants.ChunkSize;
+            offsetY *= Constants.ChunkSize;
+
+            for (var x = 0; x < Constants.ChunkSize; x++)
+            {
+                for (var y = 0; y < Constants.ChunkSize; y++)
+                {
+                    cells[x, y] = _cells[offsetX + x, offsetY + y];
                 }
             }
 
-            _pathfinder = CreatePathfinder();
-            LinkCellsToNeighbors(_cells, Width, Height);
+            return cells;
         }
 
         internal void LinkCellsToNeighbors(PathableCell[,] cells, int width, int height)
@@ -160,23 +276,6 @@ namespace Assets.Map
             }
         }
 
-        internal Cell[,] GetCells(int offsetX, int offsetY)
-        {
-            var cells = new Cell[Constants.ChunkSize, Constants.ChunkSize];
-            offsetX *= Constants.ChunkSize;
-            offsetY *= Constants.ChunkSize;
-
-            for (var x = 0; x < Constants.ChunkSize; x++)
-            {
-                for (var y = 0; y < Constants.ChunkSize; y++)
-                {
-                    cells[x, y] = _cells[offsetX + x, offsetY + y];
-                }
-            }
-
-            return cells;
-        }
-
         private Pathfinder CreatePathfinder()
         {
             var pf = new GameObject("Pathfinder");
@@ -186,10 +285,10 @@ namespace Assets.Map
 
         private void IndexCells(Cell[,] cells)
         {
-            _cellLookup = new Dictionary<ICoord, Cell>();
+            _cellLookup = new Dictionary<(int x, int z), Cell>();
             foreach (var cell in cells)
             {
-                _cellLookup.Add(cell.Coord, cell);
+                _cellLookup.Add((cell.Coord.X, cell.Coord.Z), cell);
             }
         }
 
@@ -203,5 +302,28 @@ namespace Assets.Map
 
             return renderer;
         }
+
+        public List<Cell> GetRectangle(ICoord coord, int width, int height)
+        {
+            var xstart = Mathf.Min(coord.X, coord.X + width);
+            var xend = Mathf.Max(coord.X, coord.X + width);
+            var zstart = Mathf.Min(coord.Z, coord.Z + width);
+            var zend = Mathf.Max(coord.Z, coord.Z + width);
+
+            var cells = new List<Cell>();
+            for (var x = xstart; x < xend; x++)
+            {
+                for (var z = zstart; z < zend; z++)
+                {
+                    if (TryGetCellAtCoord(x, z, out Cell cell))
+                    {
+                        cells.Add(cell);
+                    }
+                }
+            }
+
+            return cells;
+        }
+
     }
 }

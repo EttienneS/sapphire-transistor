@@ -1,4 +1,5 @@
-﻿using Assets.Factions;
+﻿using Assets.Cards;
+using Assets.Factions;
 using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
@@ -14,26 +15,39 @@ namespace Assets
     /// </summary>
     public class Bootstrapper : MonoBehaviour
     {
+        private IServiceLocator _locator;
+
         /// <summary>
         /// Creates the ServiceLocator and registers MonoBehaviors that already exist in the scene.
         /// Does an optional call to ProcessInitializationQueue to resovle the references in the loded monobehaviors.
         /// </summary>
         public void Awake()
         {
-            var locator = Locator.Create();
+            _locator = Locator.Create();
 
-            locator.Register<ISpawnManager>(FindObjectOfType<SpawnManager>());
-            locator.Register<ICameraController>(FindObjectOfType<CameraController>());
-            locator.Register<IMapManager>(FindObjectOfType<MapManager>());
+            _locator.Register<ISpawnManager>(FindObjectOfType<SpawnManager>());
+            _locator.Register<ICameraController>(FindObjectOfType<CameraController>());
+            _locator.Register<IMapManager>(FindObjectOfType<MapManager>());
 
-            locator.Register<IStructureFactory>(new StructureFactory());
-            locator.Register<IFactionManager>(new FactionManager());
-            locator.Register<IStructurePlacementValidator>(new StructurePlacementValidator());
-            locator.Register<NewGameManager>(new NewGameManager());
+            _locator.Register<IStructureFactory>(new StructureFactory());
+            _locator.Register<IFactionManager>(new FactionManager());
 
-            locator.Register<IUIManager>(FindObjectOfType<UIManager>());
+            _locator.Register<ICardManager>(new CardManager());
 
-            locator.InitializeServices();
+            _locator.Register<NewGameManager>(new NewGameManager());
+            
+            _locator.Register<IUIManager>(FindObjectOfType<UIManager>());
+        }
+
+        private bool _start = true;
+
+        public void Update()
+        {
+            if (_start)
+            {
+                StartCoroutine(_locator.ProcessServiceList());
+                _start = false;
+            }
         }
     }
 }

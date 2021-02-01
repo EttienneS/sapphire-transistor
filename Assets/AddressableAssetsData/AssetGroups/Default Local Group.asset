@@ -30,7 +30,7 @@ MonoBehaviour:
     - Structures
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
-  - m_GUID: bf694999f60aaee4c8e83f9fbc2ab8cc
+  - m_GUID: 64cc72e929df461479021326c8fac7db
     m_Address: Road
     m_ReadOnly: 0
     m_SerializedLabels:
@@ -77,6 +77,41 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - UI
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: d9a0c4cb0a1bee34ca2332719aa071c8
+    m_Address: Tree
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Structures
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e964d9d005cdad44c8446819e13e234a
+    m_Address: MessagePanel
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: f72bc82972c0c2f48b6cabf16d93b49a
+    m_Address: Rock
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Structures
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7909315f33ee30d44be5d3da5f36098b
+    m_Address: Anchor
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Structures
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e65b934bc75c9b9488631b5f81b841c7
+    m_Address: Base
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Structures
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0

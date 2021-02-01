@@ -1,4 +1,4 @@
-﻿namespace Assets.Resources
+﻿namespace Assets.Factions
 {
     public enum ResourceType
     {

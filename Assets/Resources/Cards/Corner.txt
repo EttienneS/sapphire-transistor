@@ -1,0 +1,8 @@
+Name=Corner
+Cost=1G,1S
+-
+R=Road
+===
+RRR
+R..
+R..

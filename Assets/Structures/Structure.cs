@@ -1,77 +1,73 @@
-﻿using Assets.Map;
-using Assets.Resources;
+﻿using Assets.Factions;
+using Assets.Map;
+using System.Collections.Generic;
 
 namespace Assets.Structures
 {
     public class Structure : IStructure
     {
-        public Structure(IStructureFacade facade, ICoord coord)
+        public Structure(StructureType type, int width, int height, string description, IStructureBehaviour behaviour, ICoord coord)
         {
-            Name = facade.Name;
-            Behaviour = facade.BehaviorPrototype;
+            Type = type;
+            Behaviour = behaviour;
 
-            TotalTurnsToBuild = facade.GetTotalBuildTime();
+            Width = width;
+            Height = height;
+            Description = description;
 
-            Coord = coord;
+            var coords = new List<ICoord>();
+            for (int x = 0; x < Width; x++)
+            {
+                for (int z = 0; z < Height; z++)
+                {
+                    coords.Add(new Coord(coord.X + x, coord.Y, coord.Z + z));
+                }
+            }
+            OccupiedCoords = coords.ToArray();
+
+            StructureEventManager.StructurePlanned(this);
         }
 
         public IStructureBehaviour Behaviour { get; }
-        public int TotalTurnsToBuild { get; set; }
-        public int ElapsedTurnsToBuild { get; set; }
-        public ICoord Coord { get; }
-        public string Name { get; }
+        public StructureType Type { get; }
 
-        public bool Built { get; set; }
+        public string Description { get; }
+
+        public ICoord[] OccupiedCoords { get; }
+
+        public int Width { get; }
+
+        public int Height { get; }
 
         public (ResourceType, int)[] GetYield(IStructure structure)
         {
-            if (Built)
-            {
-                return Behaviour.GetBaseYield(this);
-            }
-            else
-            {
-                return new (ResourceType, int)[0];
-            }
+            return Behaviour.GetBaseYield(this);
         }
 
         public void TurnEnd(IStructure structure)
         {
-            if (Built)
-            {
-                Behaviour.TurnEnd(this);
-            }
+            Behaviour.TurnEnd(this);
+
         }
 
         public void TurnStart(IStructure structure)
         {
-            if (Built)
-            {
-                Behaviour.TurnStart(this);
-            }
-            else
-            {
-                BuildStructure();
-            }
-        }
-
-        private void BuildStructure()
-        {
-            ElapsedTurnsToBuild++;
-            if (ElapsedTurnsToBuild >= TotalTurnsToBuild)
-            {
-                StructureEventManager.StructureBuildCompleted(this);
-                Built = true;
-            }
-            else
-            {
-                StructureEventManager.StructureBuildProgress(this, ElapsedTurnsToBuild, TotalTurnsToBuild);
-            }
+            Behaviour.TurnStart(this);
         }
 
         public override string ToString()
         {
-            return $"{Name}: {Coord}";
+            return $"{Type}: {GetOrigin()}";
+        }
+
+        public ICoord GetOrigin()
+        {
+            return OccupiedCoords[0];
+        }
+
+        public string GetStatus()
+        {
+            return $"Location: {GetOrigin()}\n{Description}";
         }
     }
 }

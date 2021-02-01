@@ -1,10 +1,12 @@
-﻿using Assets.Factions;
+﻿using Assets.Cards;
+using Assets.Factions;
+using Assets.Helpers;
 using Assets.Map;
 using Assets.MapGeneration;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using Assets.Structures;
-using Assets.Structures.Behaviors;
+using System.Linq;
 
 namespace Assets
 {
@@ -18,10 +20,11 @@ namespace Assets
             var mapManager = Locate<IMapManager>();
             var factionManger = Locate<IFactionManager>();
 
-            GenerateMap(mapManager);
-
             RegisterFactions(factionManger);
-            MakeFactionCores(structureFactory, mapManager, factionManger);
+
+            GenerateMap(mapManager, size: 5, structureFactory, factionManger);
+
+            MakeFactionCores(mapManager, factionManger);
 
             var cameraController = Locate<ICameraController>();
             ConfigureCameraDefaults(mapManager, factionManger, cameraController);
@@ -30,21 +33,26 @@ namespace Assets
         private static void ConfigureCameraDefaults(IMapManager mapManager, IFactionManager factionManger, ICameraController cameraController)
         {
             cameraController.ConfigureBounds(0, mapManager.Width, 0, mapManager.Height);
-            cameraController.MoveToPosition(factionManger.GetPlayerFaction().StructureManager.GetFactionCoreLocation().ToAdjustedVector3());
+            cameraController.MoveToPosition(factionManger.GetPlayerFaction().StructureManager.GetStructures()[0].GetOrigin().ToAdjustedVector3());
         }
 
-        private static void MakeFactionCores(IStructureFactory structureFactory, IMapManager mapManager, IFactionManager factionManager)
+        private void MakeFactionCores(IMapManager mapManager, IFactionManager factionManager)
         {
-            var core = new StructureFacade("SettlmentCore", "BellTower", "The heart of this settlement", structureFactory.GetBehaviour<SettlementCore>(), (_) => new InvalidPlacementResult("Invalid"));
-            foreach (var faction in factionManager.GetAllFactions())
-            {
-                var coreCell = mapManager.GetRandomCell((cell) => cell.GetTravelCost() > 0);
-                faction.StructureManager.AddStructure(core, coreCell.Coord);
+            var faction = factionManager.GetPlayerFaction();
 
-                foreach (var cell in coreCell.NonNullNeighbors)
-                {
-                    faction.StructureManager.AddStructure(core, coreCell.Coord);
-                }
+            var coreCell = mapManager.GetRandomCell((cell) => cell.Terrain.Type == TerrainType.Grass);
+            faction.StructureManager.AddStructure(StructureType.Core, coreCell.Coord);
+
+            var coreRect = mapManager.GetRectangle(coreCell.Coord, 2, 2);
+            var roadRect = coreRect.SelectMany(c => c.NonNullNeighbors).Except(coreRect);
+            foreach (var cell in roadRect)
+            {
+                faction.StructureManager.AddStructure(StructureType.Road, cell.Coord);
+            }
+
+            foreach (var roadStub in CellExtensions.GetCardinalsOutsideRectangle(roadRect))
+            {
+                faction.StructureManager.AddStructure(StructureType.Road, roadStub.Coord);
             }
 
             factionManager.MoveToNextTurn();
@@ -53,14 +61,34 @@ namespace Assets
         private void RegisterFactions(IFactionManager factionManager)
         {
             var locator = GetLocator();
-            factionManager.AddFaction(new PlayerFaction("Player", locator));
-            factionManager.AddFaction(new AIFaction("Enemy", locator));
+
+            var player = new PlayerFaction("Player", locator);
+            DealCards(player);
+            var nature = new NatureFaction("Nature", locator);
+            DealCards(nature);
+            var enemy = new AIFaction("Enemy", locator);
+            DealCards(enemy);
+
+
+            factionManager.AddFaction(player);
+            factionManager.AddFaction(nature);
+            factionManager.AddFaction(enemy);
         }
 
-        private void GenerateMap(IMapManager mapManager)
+        private void DealCards(IFaction faction)
         {
-            _mapGen = new MapGenerator(mapManager, 30, new DefaultTerrainDefinition());
+            var cardMan = Locate<ICardManager>();
+            for (int i = 0; i < 10; i++)
+            {
+                faction.Deck.AddCard(faction.CardLoader.Load(cardMan.GetRandomRawCard()));
+            }
+        }
+
+        private void GenerateMap(IMapManager mapManager, int size, IStructureFactory structureFactory, IFactionManager factionManger)
+        {
+            _mapGen = new MapGenerator(mapManager, size, new DefaultTerrainDefinition());
             _mapGen.GenerateMap();
+            _mapGen.PopulateMap(mapManager, structureFactory, factionManger);
         }
     }
 }

@@ -6,7 +6,12 @@ namespace Assets.Structures
     {
         IStructureBehaviour GetBehaviour<T>() where T : IStructureBehaviour;
 
-        IStructure MakeStructure(IStructureFacade facade, ICoord coord);
+        IStructure GetStructure(StructureType type, ICoord coord);
 
+    }
+
+    public enum StructureType
+    {
+        Tree, Rock, Core, Road, House, Farm
     }
 }

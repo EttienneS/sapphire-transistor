@@ -16,6 +16,7 @@ namespace Assets.Map
 
         private List<Color> _colors;
 
+        private GridMesh _gridMesh;
         private Mesh _mesh;
 
         private MeshCollider _meshCollider;
@@ -25,18 +26,38 @@ namespace Assets.Map
         private List<Vector2> _uvs;
 
         private List<Vector3> _vertices;
-
-        private GridMesh _gridMesh;
-
         public int X { get; internal set; }
 
         public int Z { get; internal set; }
+
+        private bool _active = true;
+
+        public void Activate(bool force = false)
+        {
+            if (!_active || force)
+            {
+                gameObject.SetActive(true);
+                MapEventManager.ChunkRendererActivated(this);
+                _active = true;
+            }
+        }
 
         public void AddTriangle(int a, int b, int c)
         {
             _triangles.Add(a);
             _triangles.Add(b);
             _triangles.Add(c);
+        }
+
+        public void Deactivate()
+        {
+            if (_active)
+            {
+                gameObject.SetActive(false);
+                MapEventManager.ChunkRendererDeactivated(this);
+                _active = false;
+            }
+            
         }
 
         public void GenerateMesh()
@@ -52,19 +73,6 @@ namespace Assets.Map
             AssignMesh();
         }
 
-        public void OnMouseUp()
-        {
-            var inputRay = _camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(inputRay, out RaycastHit hit))
-            {
-                var hitX = (int)hit.point.x % Constants.ChunkSize;
-                var hitZ = (int)hit.point.z % Constants.ChunkSize;
-                var cell = _cells[hitX, hitZ];
-
-                CellEventManager.CellClicked(cell);
-            }
-        }
-
         public void OnMouseOver()
         {
             var inputRay = _camera.ScreenPointToRay(Input.mousePosition);
@@ -75,6 +83,19 @@ namespace Assets.Map
                 var cell = _cells[hitX, hitZ];
 
                 CellEventManager.MouseOverCell(cell);
+            }
+        }
+
+        public void OnMouseUp()
+        {
+            var inputRay = _camera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(inputRay, out RaycastHit hit))
+            {
+                var hitX = (int)hit.point.x % Constants.ChunkSize;
+                var hitZ = (int)hit.point.z % Constants.ChunkSize;
+                var cell = _cells[hitX, hitZ];
+
+                CellEventManager.CellClicked(cell);
             }
         }
 
@@ -92,26 +113,7 @@ namespace Assets.Map
         {
             transform.position = GetPosition();
             GenerateMesh();
-
             GenerateGrid();
-        }
-
-        private void GenerateGrid()
-        {
-            var gridObj = new GameObject("Grid");
-            gridObj.transform.SetParent(transform);
-            gridObj.transform.localPosition = new Vector3(-0.5f, 0.01f, -0.5f);
-            gridObj.AddComponent<MeshFilter>();
-            var renderer = gridObj.AddComponent<MeshRenderer>();
-            renderer.shadowCastingMode = ShadowCastingMode.Off;
-            _gridMesh = gridObj.AddComponent<GridMesh>();
-
-            var mat = new Material(Shader.Find("Sprites/Default"))
-            {
-                color = new Color(0, 0, 0, 0.2f)
-            };
-
-            _gridMesh.DrawGrid(GetWidth(), mat);
         }
 
         internal void SetMaterial(Material chunkMaterial)
@@ -141,35 +143,6 @@ namespace Assets.Map
                     {
                         AddTriangle(tVert + 1, zVert + width + 1, zVert);
                     }
-                }
-            }
-        }
-
-        private void OnDrawGizmos()
-        {
-            foreach (var cell in _cells)
-            {
-                var resources = cell.Terrain.ResourceValue;
-                var off = 0.4f;
-                foreach (var res in resources)
-                {
-                    switch (res.Key)
-                    {
-                        case Resources.ResourceType.Food:
-                            Gizmos.color = Color.red;
-                            break;
-
-                        case Resources.ResourceType.Wood:
-                            Gizmos.color = Color.green;
-                            break;
-
-                        case Resources.ResourceType.Stone:
-                            Gizmos.color = Color.gray;
-                            break;
-                    }
-
-                    Gizmos.DrawCube(new Vector3(cell.Coord.X + off, cell.Coord.Y + (0.1f * res.Value), cell.Coord.Z + 0.5f), new Vector3(0.1f, 0.1f * res.Value, 0.1f));
-                    off += 0.1f;
                 }
             }
         }
@@ -273,6 +246,24 @@ namespace Assets.Map
             }
         }
 
+        private void GenerateGrid()
+        {
+            var gridObj = new GameObject("Grid");
+            gridObj.transform.SetParent(transform);
+            gridObj.transform.localPosition = new Vector3(-0.5f, 0.01f, -0.5f);
+            gridObj.AddComponent<MeshFilter>();
+            var renderer = gridObj.AddComponent<MeshRenderer>();
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            _gridMesh = gridObj.AddComponent<GridMesh>();
+
+            var mat = new Material(Shader.Find("Sprites/Default"))
+            {
+                color = new Color(0, 0, 0, 0.2f)
+            };
+
+            _gridMesh.DrawGrid(GetWidth(), mat);
+        }
+
         private void GenerateInternalMap(int width)
         {
             var i = 0;
@@ -322,6 +313,35 @@ namespace Assets.Map
             return Constants.ChunkSize;
         }
 
+        private void OnDrawGizmos()
+        {
+            //foreach (var cell in _cells)
+            //{
+            //    var resources = cell.Terrain.ResourceValue;
+            //    var off = 0.4f;
+            //    foreach (var res in resources)
+            //    {
+            //        switch (res.Key)
+            //        {
+            //            case Resources.ResourceType.Food:
+            //                Gizmos.color = Color.red;
+            //                break;
+
+            //            case Resources.ResourceType.Wood:
+            //                Gizmos.color = Color.green;
+            //                break;
+
+            //            case Resources.ResourceType.Stone:
+            //                Gizmos.color = Color.gray;
+            //                break;
+            //        }
+
+            //        Gizmos.DrawCube(new Vector3(cell.Coord.X + off, cell.Coord.Y + (0.1f * res.Value), cell.Coord.Z + 0.5f), new Vector3(0.1f, 0.1f * res.Value, 0.1f));
+            //        off += 0.1f;
+            //    }
+            //}
+        }
+
         private void ResetMesh()
         {
             _mesh.Clear();
@@ -339,6 +359,18 @@ namespace Assets.Map
                 normals[v] = Vector3.up;
             }
             _mesh.SetNormals(normals);
+        }
+
+        public bool CoordInChunk(ICoord coord)
+        {
+            var maxx = (X + 1) * Constants.ChunkSize;
+            var minx = X * Constants.ChunkSize;
+
+            var maxz = (Z + 1) * Constants.ChunkSize;
+            var minz = Z * Constants.ChunkSize;
+
+            return (coord.X <= maxx) && (coord.X >= minx) &&
+                   (coord.Z <= maxz) && (coord.Z >= minz);
         }
     }
 }

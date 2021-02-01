@@ -14,7 +14,7 @@ namespace Assets.Factions
 
         void MoveToNextTurn();
 
-        IFaction GetPlayerFaction();
+        PlayerFaction GetPlayerFaction();
 
         event FactionDelegates.OnTurnEnded OnTurnEnded;
 
@@ -23,5 +23,8 @@ namespace Assets.Factions
         IFaction GetOwnerOfStructure(IStructure structure);
 
         bool TryGetStructureInCell(Cell cell, out IStructure structure);
+
+        IFaction GetNatureFaction();
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using Assets.Resources;
+﻿using Assets.Factions;
 
 namespace Assets.Structures
 {

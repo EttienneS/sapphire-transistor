@@ -1,27 +1,31 @@
-﻿using Assets.Helpers;
+﻿using Assets.Cards;
+using Assets.Helpers;
 using Assets.Map;
 using Assets.ServiceLocator;
-using Assets.Structures;
 using Assets.UI;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Assets.Factions
 {
     public class PlayerFaction : FactionBase
     {
-        private IUIManager _uiManager;
-        private IFactionManager _factionManager;
+        private readonly IFactionManager _factionManager;
+        private readonly IUIManager _uiManager;
+
+        private ICard _activeCard;
+
+        private (ICard card, ICoord coord)? _activePreview;
 
         public PlayerFaction(string name, IServiceLocator serviceLocator) : base(name, serviceLocator)
         {
             _uiManager = serviceLocator.Find<IUIManager>();
             _factionManager = serviceLocator.Find<IFactionManager>();
             CellEventManager.OnCellClicked += CellClicked;
+            CardEventManager.OnSetPlayerCardActive += OnPlayerCardActive;
         }
 
-        public override void TakeTurn()
+        public void CancelCard()
         {
+            ClearPreview();
         }
 
         public void CellClicked(Cell cell)
@@ -31,53 +35,79 @@ namespace Assets.Factions
                 return;
             }
 
-            if (_factionManager.TryGetStructureInCell(cell, out IStructure structure))
+            if (TryGetActiveCard(out ICard activeCard))
             {
-                ShowStructureInfo(structure);
-            }
-            else
-            {
-                ShowBuildRadialMenu(cell);
-            }
-        }
-
-        private void ShowStructureInfo(IStructure structure)
-        {
-            Debug.Log($"{structure.Name}: {structure.Coord}");
-            var radialMenuOptions = new List<RadialMenuOptionFacade>
-            {
-                new RadialMenuOptionFacade($"Remove {structure.Name}", () => StructureManager.RemoveStructure(structure))
-            };
-
-            HighlightAndShowRadialMenu(structure.Coord, Color.blue, radialMenuOptions);
-        }
-
-        private void HighlightAndShowRadialMenu(ICoord coord, Color color, List<RadialMenuOptionFacade> radialMenuOptions)
-        {
-            _uiManager.HighlightCell(coord, color);
-            _uiManager.RadialMenuManager.ShowRadialMenu(closeOnSelect: true,
-                                                        onMenuClose: () => _uiManager.DisableHighlight(),
-                                                        radialMenuOptions);
-        }
-
-        private void ShowBuildRadialMenu(Cell cell)
-        {
-            var radialMenuOptions = new List<RadialMenuOptionFacade>();
-
-            foreach (var structure in StructureManager.GetBuildableStructures())
-            {
-                var placementCheck = structure.CanBePlacedInCell(cell);
-                if (placementCheck.CanPlace)
+                if (_activePreview.HasValue && _activePreview.Value.coord == cell.Coord && _activePreview.Value.card == activeCard)
                 {
-                    radialMenuOptions.Add(new RadialMenuOptionFacade($"{structure.Name}", () => StructureManager.AddStructure(structure, cell.Coord)));
+                    ConfirmCard();
                 }
                 else
                 {
-                    radialMenuOptions.Add(new RadialMenuOptionFacade($"Can't place: {structure.Name} {placementCheck.Message}", () => { }, false));
+                    PreviewCard(activeCard, cell.Coord);
                 }
             }
+        }
 
-            HighlightAndShowRadialMenu(cell.Coord, Color.red, radialMenuOptions);
+        public void ConfirmCard()
+        {
+            var card = _activePreview.Value.card;
+            var coord = _activePreview.Value.coord;
+            if (card.CanPlay(coord))
+            {
+                card.Play(coord);
+            }
+            ClearPreview();
+            Hand.Remove(_activeCard);
+            _activeCard = null;
+        }
+
+        public bool TryGetActiveCard(out ICard card)
+        {
+            card = _activeCard;
+            if (_activeCard == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void PreviewCard(ICard card, ICoord coord)
+        {
+            ClearPreview();
+            _activePreview = (card, coord);
+            _activePreview.Value.card.Preview(_activePreview.Value.coord);
+        }
+
+        public void ResetUI()
+        {
+            _uiManager.DisableHighlights();
+            _uiManager.MessageManager.HideAll();
+        }
+
+        public override void TakeTurn()
+        {
+        }
+
+        private void ClearPreview()
+        {
+            if (_activePreview.HasValue)
+            {
+                _activePreview.Value.card.ClearPreview();
+                _activePreview = null;
+            }
+        }
+
+        private void OnPlayerCardActive(ICard card)
+        {
+            if (Hand.Contains(card))
+            {
+                ClearPreview();
+                _activeCard = card;
+            }
+            else
+            {
+                throw new System.Exception($"Card not in hand!: {card}");
+            }
         }
     }
 }

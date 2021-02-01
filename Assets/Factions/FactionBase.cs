@@ -1,4 +1,5 @@
-﻿using Assets.Resources;
+﻿using Assets.Cards;
+using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
 using System.Collections.Generic;
@@ -9,16 +10,17 @@ namespace Assets.Factions
     {
         private readonly Dictionary<ResourceType, int> _resources;
 
-
-        public FactionBase(string name, IServiceLocator serviceLocator)
+        protected FactionBase(string name, IServiceLocator serviceLocator)
         {
             _resources = new Dictionary<ResourceType, int>();
-
+            Deck = new Deck();
             Name = name;
+            Hand = new List<ICard>();
 
-            StructureManager = new StructureManager(serviceLocator.Find<ISpawnManager>(), 
-                                                    serviceLocator.Find<IStructureFactory>(), 
-                                                    serviceLocator.Find<IStructurePlacementValidator>());
+            CardLoader = new CardLoader(this);
+            StructureManager = new StructureManager(serviceLocator.Find<IStructureFactory>(),
+                                                    serviceLocator.Find<IFactionManager>(),
+                                                    serviceLocator.Find<IMapManager>());
         }
 
         public event FactionDelegates.OnResourceChanged OnResourcesUpdated;
@@ -27,9 +29,31 @@ namespace Assets.Factions
 
         public event FactionDelegates.OnTurnStarted TurnStarted;
 
+        public IDeck Deck { get; }
+        public List<ICard> Hand { get; }
         public string Name { get; }
 
         public IStructureManager StructureManager { get; }
+
+        public ICardLoader CardLoader { get; }
+
+        public bool CanAfford((ResourceType resource, int amount)[] cost)
+        {
+            var resources = GetResources();
+            foreach (var resource in cost)
+            {
+                if (!resources.ContainsKey(resource.resource))
+                {
+                    return false;
+                }
+                if (resources[resource.resource] < resource.amount)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         public void DoTurnEndActions()
         {
@@ -43,9 +67,33 @@ namespace Assets.Factions
             TurnStarted?.Invoke(this);
         }
 
+        public void Draw()
+        {
+            var cardsToDraw = GetMaxHandSize() - Hand.Count;
+
+            if (cardsToDraw > 0)
+            {
+                for (int i = 0; i < cardsToDraw; i++)
+                {
+                    DrawCard(Deck.Draw());
+                }
+            }
+        }
+
+        public void DrawCard(ICard card)
+        {
+            Hand.Add(card);
+            CardEventManager.CardReceived(card, this);
+        }
+
         public void EndTurn()
         {
             TurnEnded?.Invoke(this);
+        }
+
+        public int GetMaxHandSize()
+        {
+            return 5;
         }
 
         public Dictionary<ResourceType, int> GetResources()
@@ -64,7 +112,7 @@ namespace Assets.Factions
             OnResourcesUpdated?.Invoke(resource, _resources[resource]);
         }
 
-        public abstract void TakeTurn();
+               public abstract void TakeTurn();
 
         private void AddResources(List<(ResourceType resouceType, int amount)> resouces)
         {
