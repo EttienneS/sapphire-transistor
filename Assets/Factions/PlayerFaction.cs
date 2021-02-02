@@ -56,10 +56,11 @@ namespace Assets.Factions
             {
                 card.Play(coord);
                 RemoveResources(cost);
+
+                Hand.Remove(_activeCard);
+                _activeCard = null;
             }
             ClearPreview();
-            Hand.Remove(_activeCard);
-            _activeCard = null;
         }
 
         public void PreviewCard(ICard card, ICoord coord)
