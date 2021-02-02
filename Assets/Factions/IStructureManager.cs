@@ -16,7 +16,7 @@ namespace Assets.Factions
 
         void DoTurnStartActions();
 
-        List<(ResourceType, int)> GetCombinedYield();
+        Dictionary<ResourceType, int> GetCombinedYield();
 
         IPlacementValidator PlacementValidator { get; }
     }

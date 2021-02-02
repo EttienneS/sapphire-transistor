@@ -1,6 +1,4 @@
-﻿using Assets.Factions;
-using Assets.Map;
-using Assets.ServiceLocator;
+﻿using Assets.ServiceLocator;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,7 +23,5 @@ namespace Assets.Cards
                 _rawOptions.Add(cardObject.text);
             }
         }
-
-
     }
 }

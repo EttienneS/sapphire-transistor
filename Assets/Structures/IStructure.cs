@@ -17,12 +17,14 @@ namespace Assets.Structures
         int Width { get; }
         int Height { get; }
 
-        (ResourceType, int)[] GetYield(IStructure structure);
+        Dictionary<ResourceType, int> GetYield(IStructure structure);
 
         void TurnEnd(IStructure structure);
 
         void TurnStart(IStructure structure);
+
         ICoord GetOrigin();
+
         string GetStatus();
     }
 }

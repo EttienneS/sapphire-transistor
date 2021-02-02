@@ -1,6 +1,4 @@
-﻿using Assets.Factions;
-
-namespace Assets.Cards
+﻿namespace Assets.Cards
 {
     public interface ICardManager
     {

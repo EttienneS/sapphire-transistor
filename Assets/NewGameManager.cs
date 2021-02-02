@@ -6,6 +6,7 @@ using Assets.MapGeneration;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using Assets.Structures;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Assets
@@ -39,6 +40,13 @@ namespace Assets
         private void MakeFactionCores(IMapManager mapManager, IFactionManager factionManager)
         {
             var faction = factionManager.GetPlayerFaction();
+            faction.AddResources(new Dictionary<ResourceType, int>()
+            {
+                {  ResourceType.Gold, 10 },
+                {  ResourceType.Food, 10 },
+                {  ResourceType.Stone, 10 },
+                {  ResourceType.Wood, 10 },
+            });
 
             var coreCell = mapManager.GetRandomCell((cell) => cell.Terrain.Type == TerrainType.Grass);
             faction.StructureManager.AddStructure(StructureType.Core, coreCell.Coord);
@@ -68,7 +76,6 @@ namespace Assets
             DealCards(nature);
             var enemy = new AIFaction("Enemy", locator);
             DealCards(enemy);
-
 
             factionManager.AddFaction(player);
             factionManager.AddFaction(nature);

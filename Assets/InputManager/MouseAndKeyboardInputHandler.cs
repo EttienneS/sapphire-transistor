@@ -1,5 +1,4 @@
-﻿using Assets.Cards;
-using Assets.StrategyCamera;
+﻿using Assets.StrategyCamera;
 using UnityEngine;
 
 namespace Assets.InputManager

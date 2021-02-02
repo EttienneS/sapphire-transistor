@@ -8,6 +8,7 @@ namespace Assets.UI
     public class CardView : MonoBehaviour
     {
         public TMP_Text Title;
+        public TMP_Text Cost;
         public TMP_Text Content;
 
         private ICard _card;
@@ -43,6 +44,13 @@ namespace Assets.UI
         {
             // content changes if card is rotated
             Content.text = _card.ToString();
+
+            Cost.text = "";
+            foreach (var costItem in _card.GetCost())
+            {
+                Cost.text += $"{costItem.Value}{costItem.Key.ToString()[0]} ";
+            }
+            Cost.text = Cost.text.Trim();
         }
 
         public void Clicked()

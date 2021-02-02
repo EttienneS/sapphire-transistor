@@ -25,6 +25,5 @@ namespace Assets.Factions
         bool TryGetStructureInCell(Cell cell, out IStructure structure);
 
         IFaction GetNatureFaction();
-
     }
 }

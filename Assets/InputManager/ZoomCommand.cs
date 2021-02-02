@@ -14,7 +14,6 @@ namespace Assets.InputManager
             _amount = amount;
             _camera = camera;
         }
-       
 
         public override void Execute()
         {

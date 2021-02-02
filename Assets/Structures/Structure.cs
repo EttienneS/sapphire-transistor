@@ -39,7 +39,7 @@ namespace Assets.Structures
 
         public int Height { get; }
 
-        public (ResourceType, int)[] GetYield(IStructure structure)
+        public Dictionary<ResourceType, int> GetYield(IStructure structure)
         {
             return Behaviour.GetBaseYield(this);
         }
@@ -47,7 +47,6 @@ namespace Assets.Structures
         public void TurnEnd(IStructure structure)
         {
             Behaviour.TurnEnd(this);
-
         }
 
         public void TurnStart(IStructure structure)

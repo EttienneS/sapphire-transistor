@@ -152,7 +152,5 @@ namespace Assets.Map.Pathing
                 ResolvePaths();
             }
         }
-
-        
     }
 }

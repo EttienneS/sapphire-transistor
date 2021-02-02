@@ -218,7 +218,6 @@ namespace Assets.Map
                 Debug.LogError($"zstart: {zstart}");
                 Debug.LogError($"zend: {zend}");
             }
-
         }
 
         internal ChunkRenderer GetChunkForcell(Cell cell)
@@ -324,6 +323,5 @@ namespace Assets.Map
 
             return cells;
         }
-
     }
 }

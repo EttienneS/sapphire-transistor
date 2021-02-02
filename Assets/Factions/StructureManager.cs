@@ -39,14 +39,18 @@ namespace Assets.Factions
             }
         }
 
-        public List<(ResourceType, int)> GetCombinedYield()
+        public Dictionary<ResourceType, int> GetCombinedYield()
         {
-            var yield = new List<(ResourceType, int)>();
+            var yield = new Dictionary<ResourceType, int>();
             foreach (var structure in GetStructures())
             {
                 foreach (var res in structure.GetYield(structure))
                 {
-                    yield.Add((res.Item1, res.Item2));
+                    if (!yield.ContainsKey(res.Key))
+                    {
+                        yield.Add(res.Key, 0);
+                    }
+                    yield[res.Key] += res.Value;
                 }
             }
 

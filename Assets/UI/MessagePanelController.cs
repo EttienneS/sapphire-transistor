@@ -22,12 +22,14 @@ namespace Assets.UI
         }
 
         public event MessagePanelDelegates.MessagePanelClosedDelegate OnMessagePanelClosed;
+
         public event MessagePanelDelegates.MessagePanelShownDelegate OnMessagePanelShown;
     }
 
     public static class MessagePanelDelegates
     {
         public delegate void MessagePanelClosedDelegate(MessagePanelController messagePanel);
+
         public delegate void MessagePanelShownDelegate(MessagePanelController messagePanel);
     }
 }

@@ -1,10 +1,14 @@
-﻿using Assets.Map;
+﻿using Assets.Factions;
+using Assets.Map;
+using System.Collections.Generic;
 
 namespace Assets.Cards
 {
     public interface ICard
     {
         string Name { get; }
+
+        Dictionary<ResourceType, int> GetCost();
 
         ICardAction[,] GetActions();
 

@@ -29,24 +29,23 @@ namespace Assets.Factions
 
         public event FactionDelegates.OnTurnStarted TurnStarted;
 
+        public ICardLoader CardLoader { get; }
         public IDeck Deck { get; }
         public List<ICard> Hand { get; }
         public string Name { get; }
 
         public IStructureManager StructureManager { get; }
 
-        public ICardLoader CardLoader { get; }
-
-        public bool CanAfford((ResourceType resource, int amount)[] cost)
+        public bool CanAfford(Dictionary<ResourceType, int> cost)
         {
             var resources = GetResources();
             foreach (var resource in cost)
             {
-                if (!resources.ContainsKey(resource.resource))
+                if (!resources.ContainsKey(resource.Key))
                 {
                     return false;
                 }
-                if (resources[resource.resource] < resource.amount)
+                if (resources[resource.Key] < resource.Value)
                 {
                     return false;
                 }
@@ -112,13 +111,21 @@ namespace Assets.Factions
             OnResourcesUpdated?.Invoke(resource, _resources[resource]);
         }
 
-               public abstract void TakeTurn();
+        public abstract void TakeTurn();
 
-        private void AddResources(List<(ResourceType resouceType, int amount)> resouces)
+        internal void AddResources(Dictionary<ResourceType, int> resouces)
         {
             foreach (var resouce in resouces)
             {
-                ModifyResource(resouce.resouceType, resouce.amount);
+                ModifyResource(resouce.Key, resouce.Value);
+            }
+        }
+
+        internal void RemoveResources(Dictionary<ResourceType, int> resouces)
+        {
+            foreach (var resouce in resouces)
+            {
+                ModifyResource(resouce.Key, -resouce.Value);
             }
         }
     }

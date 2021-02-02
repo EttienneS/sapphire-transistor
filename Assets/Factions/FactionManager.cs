@@ -17,6 +17,7 @@ namespace Assets.Factions
         private Lazy<ICardManager> _cardManager;
 
         public event FactionDelegates.OnTurnEnded OnTurnEnded;
+
         public event FactionDelegates.OnTurnStarted OnTurnStarted;
 
         public void AddFaction(IFaction faction)

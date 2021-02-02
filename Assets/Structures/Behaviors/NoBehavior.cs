@@ -1,5 +1,6 @@
 ﻿using Assets.Factions;
 using Assets.Map;
+using System.Collections.Generic;
 
 namespace Assets.Structures.Behaviors
 {
@@ -9,9 +10,9 @@ namespace Assets.Structures.Behaviors
         {
         }
 
-        public override (ResourceType, int)[] GetBaseYield(IStructure structure)
+        public override Dictionary<ResourceType, int> GetBaseYield(IStructure structure)
         {
-            return new (ResourceType, int)[0];
+            return new Dictionary<ResourceType, int>();
         }
 
         public override void TurnEnd(IStructure structure)

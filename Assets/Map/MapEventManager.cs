@@ -1,6 +1,5 @@
 ﻿namespace Assets.Map
 {
-
     public static class MapEventManager
     {
         public static event MapDelegates.OnChunkRenderStatusChangedDelegate OnChunkRenderDeactivated;

@@ -42,7 +42,6 @@ namespace Assets.UI
                     obj.GetComponent<MeshRenderer>().material.color = color;
                 });
             }
-
         }
 
         public override void Initialize()

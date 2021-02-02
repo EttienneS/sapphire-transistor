@@ -1,9 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Map
 {
-
     public static class CoordExtension
     {
         public static Vector3 ToVector3(this ICoord coord)

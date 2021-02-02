@@ -1,5 +1,4 @@
 ﻿using Assets.Cards;
-using Assets.Map;
 using System.Collections.Generic;
 
 namespace Assets.Factions
@@ -22,7 +21,7 @@ namespace Assets.Factions
 
         ICardLoader CardLoader { get; }
 
-        bool CanAfford((ResourceType resource, int amount)[] cost);
+        bool CanAfford(Dictionary<ResourceType, int> cost);
 
         void DoTurnEndActions();
 

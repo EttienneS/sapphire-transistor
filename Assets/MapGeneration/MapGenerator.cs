@@ -2,7 +2,6 @@
 using Assets.Helpers;
 using Assets.Map;
 using Assets.Structures;
-using Assets.Structures.Behaviors;
 using System;
 using UnityEngine;
 

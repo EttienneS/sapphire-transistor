@@ -31,8 +31,6 @@ namespace Assets.Structures
             AddBehavior(new SettlementCore(map));
             AddBehavior(new NoBehavior(map));
 
-          
-
             _structureBuilderLookup.Add(StructureType.Tree, (coord) => new Structure(StructureType.Tree, 1, 1, "A tree", GetBehaviour<NoBehavior>(), coord));
             _structureBuilderLookup.Add(StructureType.Rock, (coord) => new Structure(StructureType.Rock, 1, 1, "A rock", GetBehaviour<NoBehavior>(), coord));
             _structureBuilderLookup.Add(StructureType.Core, (coord) => new Structure(StructureType.Core, 2, 2, "The heart of this settlement", GetBehaviour<SettlementCore>(), coord));
@@ -44,7 +42,5 @@ namespace Assets.Structures
         {
             _behaviorLookup.Add(behavior.GetType().Name, behavior);
         }
-
-    
     }
 }

@@ -8,7 +8,6 @@ namespace Assets.Factions
 {
     public class PlayerFaction : FactionBase
     {
-        private readonly IFactionManager _factionManager;
         private readonly IUIManager _uiManager;
 
         private ICard _activeCard;
@@ -18,7 +17,6 @@ namespace Assets.Factions
         public PlayerFaction(string name, IServiceLocator serviceLocator) : base(name, serviceLocator)
         {
             _uiManager = serviceLocator.Find<IUIManager>();
-            _factionManager = serviceLocator.Find<IFactionManager>();
             CellEventManager.OnCellClicked += CellClicked;
             CardEventManager.OnSetPlayerCardActive += OnPlayerCardActive;
         }
@@ -52,23 +50,16 @@ namespace Assets.Factions
         {
             var card = _activePreview.Value.card;
             var coord = _activePreview.Value.coord;
-            if (card.CanPlay(coord))
+            var cost = card.GetCost();
+
+            if (card.CanPlay(coord) && CanAfford(cost))
             {
                 card.Play(coord);
+                RemoveResources(cost);
             }
             ClearPreview();
             Hand.Remove(_activeCard);
             _activeCard = null;
-        }
-
-        public bool TryGetActiveCard(out ICard card)
-        {
-            card = _activeCard;
-            if (_activeCard == null)
-            {
-                return false;
-            }
-            return true;
         }
 
         public void PreviewCard(ICard card, ICoord coord)
@@ -86,6 +77,16 @@ namespace Assets.Factions
 
         public override void TakeTurn()
         {
+        }
+
+        public bool TryGetActiveCard(out ICard card)
+        {
+            card = _activeCard;
+            if (_activeCard == null)
+            {
+                return false;
+            }
+            return true;
         }
 
         private void ClearPreview()

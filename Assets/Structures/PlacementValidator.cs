@@ -1,7 +1,6 @@
 ﻿using Assets.Factions;
 using Assets.Helpers;
 using Assets.Map;
-using Assets.ServiceLocator;
 using System;
 
 namespace Assets.Structures
@@ -84,9 +83,6 @@ namespace Assets.Structures
         {
             return new InvalidPlacementResult($"Incorrect terrain: {current} != '{required}'");
         }
-
-
-       
 
         private IPlacementResult CellEmptyOrSame(Cell cell, StructureType structureToPlace)
         {

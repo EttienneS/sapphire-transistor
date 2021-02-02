@@ -35,7 +35,7 @@ namespace Assets
             _locator.Register<ICardManager>(new CardManager());
 
             _locator.Register<NewGameManager>(new NewGameManager());
-            
+
             _locator.Register<IUIManager>(FindObjectOfType<UIManager>());
         }
 
