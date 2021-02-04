@@ -85,7 +85,7 @@ namespace Assets
         private void DealCards(IFaction faction)
         {
             var cardMan = Locate<ICardManager>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 25; i++)
             {
                 faction.Deck.AddCard(faction.CardLoader.Load(cardMan.GetRandomRawCard()));
             }

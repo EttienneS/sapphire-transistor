@@ -63,12 +63,13 @@ namespace Assets
             {
                 ("Tree", 1000),
                 ("Rock", 500),
-                ("Road", 200),
+                ("Road", 1000),
                 ("Anchor", 200),
                 ("Base", 200),
                 ("BellTower", 10),
-                ("Barn", 20),
-                ("House", 100),
+                ("Barn", 100),
+                ("House", 200),
+                ("Field", 200),
             };
 
             foreach (var (pool, size) in poolConfigs)
@@ -91,6 +92,8 @@ namespace Assets
             _typeAssetLookup.Add(StructureType.Core, "BellTower");
             _typeAssetLookup.Add(StructureType.Road, "Road");
             _typeAssetLookup.Add(StructureType.House, "House");
+            _typeAssetLookup.Add(StructureType.Barn, "Barn");
+            _typeAssetLookup.Add(StructureType.Field, "Field");
 
             MapEventManager.OnChunkRenderCreated += MapEventManager_OnChunkRenderCreated;
             MapEventManager.OnChunkRenderActivated += MapEventManager_OnChunkRenderActivated;

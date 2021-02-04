@@ -1,9 +1,10 @@
-Name=Houses
+Name=House
 Cost=3W,2S,1G
 -
 R=Road
 H=House
-===
-RRR
-.H.
-RRR
+====
+RRRR
+R..R
+RH.R
+RRRR

@@ -32,10 +32,14 @@ namespace Assets.Structures
                 switch (type)
                 {
                     case StructureType.House:
+                    case StructureType.Rock:
                     case StructureType.Tree:
                     case StructureType.Road:
+                    case StructureType.Barn:
                         return CellEmptyOrSame(cell, type);
 
+                    case StructureType.Field:
+                        return EmptyAndTerrainMatches(cell, type, TerrainType.Grass);
                     default:
                         throw new NotImplementedException();
                 }
@@ -43,45 +47,21 @@ namespace Assets.Structures
             throw new IndexOutOfRangeException();
         }
 
-        //public IPlacementResult CanPlaceDefault(Cell cell, StructureType structureToPlace)
-        //{
-        //    var oneCellHasroad = false;
-        //    if (CellEmptyOrSame(cell, structureToPlace))
-        //    {
-        //        if (HasNeigbourContainingStructure(cell, StructureType.Road))
-        //        {
-        //            oneCellHasroad = true;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return _notEmptyResult;
-        //    }
-
-        //    if (oneCellHasroad)
-        //    {
-        //        return _validResult;
-        //    }
-        //    return _noRoadResult;
-        //}
-
-        //public IPlacementResult CanPlaceFarm(Cell origin)
-        //{
-        //    var defaultPlacement = CanPlaceDefault(origin, StructureType.Farm);
-        //    if (defaultPlacement.CanPlace)
-        //    {
-        //        if (origin.Terrain.Type == TerrainType.Grass)
-        //        {
-        //            return GetInvalidTerrainResult(origin.Terrain.Type, TerrainType.Grass);
-        //        }
-        //        return _validResult;
-        //    }
-        //    return defaultPlacement;
-        //}
-
-        private InvalidPlacementResult GetInvalidTerrainResult(TerrainType current, TerrainType required)
+        private IPlacementResult EmptyAndTerrainMatches(Cell cell, StructureType type, TerrainType required)
         {
-            return new InvalidPlacementResult($"Incorrect terrain: {current} != '{required}'");
+            var empty = CellEmptyOrSame(cell, type);
+            if (empty.CanPlace)
+            {
+                if (cell.Terrain.Type == TerrainType.Grass)
+                {
+                    return _validResult;
+                }
+                else
+                {
+                    return new InvalidPlacementResult($"Incorrect terrain: {cell.Terrain.Type} != '{required}'");
+                }
+            }
+            return empty;
         }
 
         private IPlacementResult CellEmptyOrSame(Cell cell, StructureType structureToPlace)

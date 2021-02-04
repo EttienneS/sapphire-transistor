@@ -58,13 +58,6 @@ MonoBehaviour:
     - Structures
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
-  - m_GUID: 7a559f4af896bb04f8623a9ead315969
-    m_Address: Barn
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Structures
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
   - m_GUID: 52364592654c8b140b7bce3e5d5fc7bd
     m_Address: RadialMenu
     m_ReadOnly: 0
@@ -109,6 +102,20 @@ MonoBehaviour:
     m_TargetAsset: {fileID: 0}
   - m_GUID: e65b934bc75c9b9488631b5f81b841c7
     m_Address: Base
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Structures
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 7a559f4af896bb04f8623a9ead315969
+    m_Address: Barn
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Structures
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2c247df104f8d0043ab2081e65e77df1
+    m_Address: Field
     m_ReadOnly: 0
     m_SerializedLabels:
     - Structures

@@ -6,14 +6,13 @@ namespace Assets.Structures
 {
     public class Structure : IStructure
     {
-        public Structure(StructureType type, int width, int height, string description, IStructureBehaviour behaviour, ICoord coord)
+        public Structure(StructureType type, int width, int height, IStructureBehaviour behaviour, ICoord coord)
         {
             Type = type;
             Behaviour = behaviour;
 
             Width = width;
             Height = height;
-            Description = description;
 
             var coords = new List<ICoord>();
             for (int x = 0; x < Width; x++)
@@ -31,7 +30,6 @@ namespace Assets.Structures
         public IStructureBehaviour Behaviour { get; }
         public StructureType Type { get; }
 
-        public string Description { get; }
 
         public ICoord[] OccupiedCoords { get; }
 
@@ -66,7 +64,7 @@ namespace Assets.Structures
 
         public string GetStatus()
         {
-            return $"Location: {GetOrigin()}\n{Description}";
+            return $"Location: {GetOrigin()}";
         }
     }
 }
