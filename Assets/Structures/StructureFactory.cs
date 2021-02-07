@@ -27,7 +27,7 @@ namespace Assets.Structures
             var map = Locate<IMapManager>();
 
             AddBehavior(new HouseBehavior(map));
-            AddBehavior(new FieldBehaviour(map));
+            AddBehavior(new FarmBehaviour(map));
             AddBehavior(new SettlementCore(map));
             AddBehavior(new NoBehavior(map));
 
@@ -36,8 +36,8 @@ namespace Assets.Structures
             _structureBuilderLookup.Add(StructureType.Core, (coord, type) => new Structure(type, 2, 2, GetBehaviour<SettlementCore>(), coord));
             _structureBuilderLookup.Add(StructureType.Road, (coord, type) => new Structure(type, 1, 1, GetBehaviour<NoBehavior>(), coord));
             _structureBuilderLookup.Add(StructureType.House, (coord, type) => new Structure(type, 1, 1, GetBehaviour<HouseBehavior>(), coord));
-            _structureBuilderLookup.Add(StructureType.Barn, (coord, type) => new Structure(type, 2, 2, GetBehaviour<NoBehavior>(), coord));
-            _structureBuilderLookup.Add(StructureType.Field, (coord, type) => new Structure(type, 1, 1, GetBehaviour<FieldBehaviour>(), coord));
+            _structureBuilderLookup.Add(StructureType.Barn, (coord, type) => new Structure(type, 2, 2, GetBehaviour<FarmBehaviour>(), coord));
+            _structureBuilderLookup.Add(StructureType.Field, (coord, type) => new Structure(type, 1, 1, GetBehaviour<NoBehavior>(), coord));
         }
 
         private void AddBehavior(IStructureBehaviour behavior)

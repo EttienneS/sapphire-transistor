@@ -120,6 +120,9 @@ namespace Assets.Cards
 
             var legendMode = false;
 
+            legend.Add('.', null);
+            legend.Add('#', () => new BuildAction(StructureType.Empty, _owner));
+
             foreach (var line in lines)
             {
                 if (line.StartsWith("-"))
@@ -139,9 +142,6 @@ namespace Assets.Cards
                     }
                 }
             }
-
-            legend.Add('.', null);
-            legend.Add('#', null);
 
             return legend;
         }

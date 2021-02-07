@@ -37,6 +37,8 @@ namespace Assets.Structures
 
         public int Height { get; }
 
+        public bool Connected { get; }
+
         public Dictionary<ResourceType, int> GetYield(IStructure structure)
         {
             return Behaviour.GetBaseYield(this);

@@ -1,26 +1,34 @@
-﻿using Assets.Map;
-using Assets.Structures;
+﻿using Assets.Factions;
+using Assets.Map;
+using Assets.Map.Pathing;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace Assets.Factions
+namespace Assets.Structures
 {
     public class StructureManager : IStructureManager
     {
         private readonly List<IStructure> _structures;
         private IStructureFactory _structureFactory;
+        private IMapManager _mapManager;
 
         public StructureManager(IStructureFactory structureFactory, IFactionManager factionManager, IMapManager mapManager)
         {
             _structures = new List<IStructure>();
             _structureFactory = structureFactory;
-            PlacementValidator = new PlacementValidator(factionManager, mapManager);
+            _mapManager = mapManager;
+            PlacementValidator = new PlacementValidator(factionManager, _mapManager);
         }
+
 
         public IPlacementValidator PlacementValidator { get; }
 
         public void AddStructure(StructureType type, ICoord coord)
         {
-            _structures.Add(_structureFactory.GetStructure(type, coord));
+            if (type != StructureType.Empty)
+            {
+                _structures.Add(_structureFactory.GetStructure(type, coord));
+            }
         }
 
         public void DoTurnEndActions()
@@ -39,27 +47,16 @@ namespace Assets.Factions
             }
         }
 
-        public Dictionary<ResourceType, int> GetCombinedYield()
-        {
-            var yield = new Dictionary<ResourceType, int>();
-            foreach (var structure in GetStructures())
-            {
-                foreach (var res in structure.GetYield(structure))
-                {
-                    if (!yield.ContainsKey(res.Key))
-                    {
-                        yield.Add(res.Key, 0);
-                    }
-                    yield[res.Key] += res.Value;
-                }
-            }
 
-            return yield;
-        }
 
         public List<IStructure> GetStructures()
         {
             return _structures;
+        }
+
+        public List<IStructure> GetStructuresLinkedTo(IStructure structure)
+        {
+            return _structures.Where(s => s.Connected).ToList();
         }
 
         public void RemoveStructure(IStructure structure)

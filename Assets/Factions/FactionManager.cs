@@ -91,7 +91,7 @@ namespace Assets.Factions
 
             OnTurnStarted?.Invoke(_activeFaction);
 
-            _activeFaction.DoTurnStartActions();
+            _activeFaction.DoFixedTurnStartActions();
             _activeFaction.Draw();
             _activeFaction.TakeTurn();
         }

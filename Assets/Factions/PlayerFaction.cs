@@ -63,6 +63,30 @@ namespace Assets.Factions
             ClearPreview();
         }
 
+
+
+        public override void DoTurnStartActions()
+        {
+           // foreach (var structure in StructureManager.GetStructuresLinkedTo(core))
+
+            //AddResources(StructureManager.GetCombinedYield());
+            //var yield = new Dictionary<ResourceType, int>();
+            //foreach (var structure in GetStructures())
+            //{
+            //    foreach (var res in structure.GetYield(structure))
+            //    {
+            //        if (!yield.ContainsKey(res.Key))
+            //        {
+            //            yield.Add(res.Key, 0);
+            //        }
+            //        yield[res.Key] += res.Value;
+            //    }
+            //}
+
+            //return yield;
+        }
+
+       
         public void PreviewCard(ICard card, ICoord coord)
         {
             ClearPreview();

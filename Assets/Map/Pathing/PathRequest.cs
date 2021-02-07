@@ -3,43 +3,62 @@ using UnityEngine;
 
 namespace Assets.Map.Pathing
 {
+    public static class PathfinderDelegates
+    {
+        public delegate void PathCompletedDelegate(List<Cell> path);
+
+        public delegate void PathInvalidDelegate();
+
+        public delegate int CalculateTravelCostForCellDelegate(Cell fromCell, Cell toCell);
+    }
+
     public class PathRequest
     {
-        private bool _invalid;
-        private List<IPathFindableCell> _path;
+        private List<Cell> _path;
 
-        public PathRequest(IPathFindableCell from, IPathFindableCell to)
+        public event PathfinderDelegates.PathCompletedDelegate OnPathCompleted;
+
+        public event PathfinderDelegates.PathInvalidDelegate OnPathInvalid;
+
+        public PathfinderDelegates.CalculateTravelCostForCellDelegate CalculateTravelCost { get; }
+
+        public PathRequest(Cell from,
+                           Cell to,
+                           PathfinderDelegates.CalculateTravelCostForCellDelegate canTraverseCell,
+                           PathfinderDelegates.PathCompletedDelegate onPathCompleted,
+                           PathfinderDelegates.PathInvalidDelegate onPathInvalid)
         {
             From = from;
             To = to;
+            OnPathCompleted += onPathCompleted;
+            OnPathInvalid += onPathInvalid;
+
+            CalculateTravelCost = canTraverseCell;
         }
 
-        public IPathFindableCell From { get; set; }
-        public IPathFindableCell To { get; set; }
+        public Cell From { get; set; }
+        public Cell To { get; set; }
 
-        public List<IPathFindableCell> GetPath()
+        public List<Cell> GetPath()
         {
             return _path;
         }
 
-        public void MarkPathInvalid()
+        public void PathInvalid()
         {
             Debug.LogWarning($"No path found from {From} to {To}");
-            _invalid = true;
+            OnPathInvalid?.Invoke();
         }
 
-        public void PopulatePath(List<IPathFindableCell> path)
+        public void PopulatePath(List<Cell> path)
         {
             _path = path;
         }
 
-        public bool Ready()
+        internal void PathFound()
         {
-            if (_invalid)
-            {
-                throw new InvalidPathException(this);
-            }
-            return _path != null;
+            Debug.Log($"Path found from {From} to {To}");
+            OnPathCompleted?.Invoke(_path);
         }
     }
 }

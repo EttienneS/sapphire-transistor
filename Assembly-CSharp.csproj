@@ -72,7 +72,6 @@
     <Compile Include="Assets\Structures\IStructure.cs" />
     <Compile Include="Assets\UI\RadialMenuController.cs" />
     <Compile Include="Assets\Helpers\FastNoiseExtension.cs" />
-    <Compile Include="Assets\Map\Pathing\IPathFindableCell.cs" />
     <Compile Include="Assets\Map\ChunkRenderer.cs" />
     <Compile Include="Assets\StrategyCamera\ICameraController.cs" />
     <Compile Include="Assets\Structures\Behaviors\HouseBehavior.cs" />
@@ -109,7 +108,7 @@
     <Compile Include="Assets\UI\UIManager.cs" />
     <Compile Include="Assets\Map\Pathing\InvalidPathException.cs" />
     <Compile Include="Assets\Structures\IPlacementValidator.cs" />
-    <Compile Include="Assets\Factions\StructureManager.cs" />
+    <Compile Include="Assets\Structures\StructureManager.cs" />
     <Compile Include="Assets\Structures\StructureFactory.cs" />
     <Compile Include="Assets\Map\MapDelegates.cs" />
     <Compile Include="Assets\ServiceLocator\GameServiceBase.cs" />
@@ -154,8 +153,7 @@
     <Compile Include="Assets\Structures\Behaviors\NoBehavior.cs" />
     <Compile Include="Assets\Map\Pathing\Direction.cs" />
     <Compile Include="Assets\InputManager\InputCommand.cs" />
-    <Compile Include="Assets\Structures\Behaviors\FieldBehaviour.cs" />
-    <Compile Include="Assets\Map\Pathing\PathableCell.cs" />
+    <Compile Include="Assets\Structures\Behaviors\FarmBehaviour.cs" />
     <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\Factions\IStructureManager.cs" />
     <Compile Include="Assets\Cards\CardEventManager.cs" />

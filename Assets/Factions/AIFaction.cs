@@ -22,6 +22,10 @@ namespace Assets.Factions
             EndTurn();
         }
 
+        public override void DoTurnStartActions()
+        {
+        }
+
         public override void TakeTurn()
         {
             Task.Run(() => DoStuff());

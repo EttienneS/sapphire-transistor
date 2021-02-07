@@ -40,11 +40,24 @@ namespace Assets.Structures
 
                     case StructureType.Field:
                         return EmptyAndTerrainMatches(cell, type, TerrainType.Grass);
+
+                    case StructureType.Empty:
+                        return CellEmpty(cell);
+
                     default:
                         throw new NotImplementedException();
                 }
             }
             throw new IndexOutOfRangeException();
+        }
+
+        private IPlacementResult CellEmpty(Cell cell)
+        {
+            if (_factionManager.TryGetStructureInCell(cell, out IStructure structure))
+            {
+                return _notEmptyResult;
+            }
+            return _validResult;
         }
 
         private IPlacementResult EmptyAndTerrainMatches(Cell cell, StructureType type, TerrainType required)

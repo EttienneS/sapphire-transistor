@@ -7,8 +7,8 @@ B=Barn
 F=Field
 ======
 FFFFFF
-FFF##F
-FRRB#F
-FRFFFF
+FF##FF
+FFB#FF
+FRRFFF
 FRHFFF
 RRRRRR

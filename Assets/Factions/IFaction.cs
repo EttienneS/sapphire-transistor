@@ -25,7 +25,7 @@ namespace Assets.Factions
 
         void DoTurnEndActions();
 
-        void DoTurnStartActions();
+        void DoFixedTurnStartActions();
 
         Dictionary<ResourceType, int> GetResources();
 

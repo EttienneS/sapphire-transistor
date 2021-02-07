@@ -7,26 +7,26 @@ namespace Assets.Map.Pathing
 {
     public class Pathfinder : MonoBehaviour
     {
+        private Task _currentTask;
+        private Queue<PathRequest> _pathQueue = new Queue<PathRequest>();
         private CellPriorityQueue _searchFrontier;
         private int _searchFrontierPhase;
 
-        private Queue<PathRequest> _pathQueue = new Queue<PathRequest>();
-        private Task _currentTask;
+        public void AddPathRequest(PathRequest pathRequest)
+        {
+            _pathQueue.Enqueue(pathRequest);
+        }
 
         public void Update()
         {
             ResolvePaths();
         }
 
-        private void ResolvePaths()
+        internal void ResolveAll()
         {
-            if (_currentTask == null || _currentTask.IsCompleted)
+            while (_pathQueue.Count > 0)
             {
-                if (_pathQueue.Count != 0)
-                {
-                    _currentTask = new Task(() => ResolvePathRequest(_pathQueue.Dequeue()));
-                    _currentTask.Start();
-                }
+                ResolvePaths();
             }
         }
 
@@ -40,7 +40,7 @@ namespace Assets.Map.Pathing
                     var toCell = request.To;
                     if (fromCell != null && toCell != null)
                     {
-                        var path = new List<IPathFindableCell> { toCell };
+                        var path = new List<Cell> { toCell };
                         var current = toCell;
                         while (current != fromCell)
                         {
@@ -49,11 +49,12 @@ namespace Assets.Map.Pathing
                         }
                         path.Reverse();
                         request.PopulatePath(path);
+                        request.PathFound();
                     }
                 }
                 else
                 {
-                    request.MarkPathInvalid();
+                    request.PathInvalid();
                 }
             }
             catch (Exception ex)
@@ -63,11 +64,16 @@ namespace Assets.Map.Pathing
             }
         }
 
-        public PathRequest CreatePathRequest(IPathFindableCell source, IPathFindableCell target)
+        private void ResolvePaths()
         {
-            var request = new PathRequest(source, target);
-            _pathQueue.Enqueue(request);
-            return request;
+            if (_currentTask == null || _currentTask.IsCompleted)
+            {
+                if (_pathQueue.Count != 0)
+                {
+                    _currentTask = new Task(() => ResolvePathRequest(_pathQueue.Dequeue()));
+                    _currentTask.Start();
+                }
+            }
         }
 
         private bool SearchForPath(PathRequest request)
@@ -111,7 +117,7 @@ namespace Assets.Map.Pathing
                             continue;
                         }
 
-                        var neighborTravelCost = neighbor.GetTravelCost();
+                        var neighborTravelCost = request.CalculateTravelCost.Invoke(current, neighbor);
                         if (neighborTravelCost < 0)
                         {
                             continue;
@@ -142,14 +148,6 @@ namespace Assets.Map.Pathing
             {
                 Debug.LogWarning("Pathing error: " + ex.ToString());
                 throw;
-            }
-        }
-
-        internal void ResolveAll()
-        {
-            while (_pathQueue.Count > 0)
-            {
-                ResolvePaths();
             }
         }
     }

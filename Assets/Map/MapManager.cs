@@ -245,7 +245,7 @@ namespace Assets.Map
             return cells;
         }
 
-        internal void LinkCellsToNeighbors(PathableCell[,] cells, int width, int height)
+        internal void LinkCellsToNeighbors(Cell[,] cells, int width, int height)
         {
             for (var z = 0; z < height; z++)
             {

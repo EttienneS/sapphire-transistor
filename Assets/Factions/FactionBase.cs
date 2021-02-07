@@ -59,12 +59,13 @@ namespace Assets.Factions
             StructureManager.DoTurnEndActions();
         }
 
-        public void DoTurnStartActions()
+        public void DoFixedTurnStartActions()
         {
             StructureManager.DoTurnStartActions();
-            AddResources(StructureManager.GetCombinedYield());
             TurnStarted?.Invoke(this);
         }
+
+        public abstract void DoTurnStartActions();
 
         public void Draw()
         {

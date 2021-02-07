@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace Assets.Structures.Behaviors
 {
-    public class FieldBehaviour : StructureBehaviorBase
+    public class FarmBehaviour : StructureBehaviorBase
     {
         private readonly Dictionary<ResourceType, int> _baseYield;
 
-        public FieldBehaviour(IMapManager map) : base(map)
+        public FarmBehaviour(IMapManager map) : base(map)
         {
             _baseYield = new Dictionary<ResourceType, int>
             {

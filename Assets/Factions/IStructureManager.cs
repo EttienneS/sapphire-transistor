@@ -16,8 +16,8 @@ namespace Assets.Factions
 
         void DoTurnStartActions();
 
-        Dictionary<ResourceType, int> GetCombinedYield();
-
         IPlacementValidator PlacementValidator { get; }
+
+        List<IStructure> GetStructuresLinkedTo(IStructure structure);
     }
 }

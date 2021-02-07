@@ -4,7 +4,7 @@ namespace Assets.Map.Pathing
 {
     public class CellPriorityQueue
     {
-        private readonly List<IPathFindableCell> list = new List<IPathFindableCell>();
+        private readonly List<Cell> list = new List<Cell>();
         private int minimum = int.MaxValue;
 
         public CellPriorityQueue()
@@ -14,44 +14,7 @@ namespace Assets.Map.Pathing
 
         public int Count { get; private set; }
 
-        public void Enqueue(IPathFindableCell cell)
-        {
-            Count++;
-            var priority = cell.SearchPriority;
-
-            if (priority < minimum)
-            {
-                minimum = priority;
-            }
-
-            while (priority >= list.Count)
-            {
-                list.Add(null);
-            }
-
-            cell.NextWithSamePriority = list[priority];
-
-            list[priority] = cell;
-        }
-
-        public IPathFindableCell Dequeue()
-        {
-            Count--;
-
-            for (; minimum < list.Count; minimum++)
-            {
-                var cell = list[minimum];
-                if (cell != null)
-                {
-                    list[minimum] = cell.NextWithSamePriority;
-                    return cell;
-                }
-            }
-
-            return null;
-        }
-
-        public void Change(IPathFindableCell cell, int oldPriority)
+        public void Change(Cell cell, int oldPriority)
         {
             var current = list[oldPriority];
             var next = current.NextWithSamePriority;
@@ -80,6 +43,43 @@ namespace Assets.Map.Pathing
             list.Clear();
             Count = 0;
             minimum = int.MaxValue;
+        }
+
+        public Cell Dequeue()
+        {
+            Count--;
+
+            for (; minimum < list.Count; minimum++)
+            {
+                var cell = list[minimum];
+                if (cell != null)
+                {
+                    list[minimum] = cell.NextWithSamePriority;
+                    return cell;
+                }
+            }
+
+            return null;
+        }
+
+        public void Enqueue(Cell cell)
+        {
+            Count++;
+            var priority = cell.SearchPriority;
+
+            if (priority < minimum)
+            {
+                minimum = priority;
+            }
+
+            while (priority >= list.Count)
+            {
+                list.Add(null);
+            }
+
+            cell.NextWithSamePriority = list[priority];
+
+            list[priority] = cell;
         }
     }
 }

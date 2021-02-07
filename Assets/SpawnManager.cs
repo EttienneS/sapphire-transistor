@@ -70,6 +70,7 @@ namespace Assets
                 ("Barn", 100),
                 ("House", 200),
                 ("Field", 200),
+                ("Empty", 5),
             };
 
             foreach (var (pool, size) in poolConfigs)
@@ -94,6 +95,7 @@ namespace Assets
             _typeAssetLookup.Add(StructureType.House, "House");
             _typeAssetLookup.Add(StructureType.Barn, "Barn");
             _typeAssetLookup.Add(StructureType.Field, "Field");
+            _typeAssetLookup.Add(StructureType.Empty, "Empty");
 
             MapEventManager.OnChunkRenderCreated += MapEventManager_OnChunkRenderCreated;
             MapEventManager.OnChunkRenderActivated += MapEventManager_OnChunkRenderActivated;

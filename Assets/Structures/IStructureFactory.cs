@@ -11,6 +11,6 @@ namespace Assets.Structures
 
     public enum StructureType
     {
-        Tree, Rock, Core, Road, House, Barn, Field
+        Tree, Rock, Core, Road, House, Barn, Field, Empty
     }
 }
