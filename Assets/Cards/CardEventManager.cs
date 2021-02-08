@@ -25,7 +25,6 @@ namespace Assets.Cards
 
         public static void CardPreviewed(ICard card, ICoord coord)
         {
-            Debug.Log($"Card preview: {card}");
             OnCardPreviewed?.Invoke(card, coord);
         }
 

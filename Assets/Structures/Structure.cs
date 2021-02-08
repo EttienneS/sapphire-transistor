@@ -28,20 +28,30 @@ namespace Assets.Structures
         }
 
         public IStructureBehaviour Behaviour { get; }
-        public StructureType Type { get; }
-
-
-        public ICoord[] OccupiedCoords { get; }
-
-        public int Width { get; }
 
         public int Height { get; }
+        public ICoord[] OccupiedCoords { get; }
+        public StructureType Type { get; }
+        public int Width { get; }
 
-        public bool Connected { get; }
+        public ICoord GetOrigin()
+        {
+            return OccupiedCoords[0];
+        }
+
+        public string GetStatus()
+        {
+            return $"Location: {GetOrigin()}";
+        }
 
         public Dictionary<ResourceType, int> GetYield(IStructure structure)
         {
             return Behaviour.GetBaseYield(this);
+        }
+
+        public override string ToString()
+        {
+            return $"{Type}: {GetOrigin()}";
         }
 
         public void TurnEnd(IStructure structure)
@@ -52,21 +62,6 @@ namespace Assets.Structures
         public void TurnStart(IStructure structure)
         {
             Behaviour.TurnStart(this);
-        }
-
-        public override string ToString()
-        {
-            return $"{Type}: {GetOrigin()}";
-        }
-
-        public ICoord GetOrigin()
-        {
-            return OccupiedCoords[0];
-        }
-
-        public string GetStatus()
-        {
-            return $"Location: {GetOrigin()}";
         }
     }
 }

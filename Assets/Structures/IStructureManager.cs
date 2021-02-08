@@ -1,8 +1,7 @@
 ﻿using Assets.Map;
-using Assets.Structures;
 using System.Collections.Generic;
 
-namespace Assets.Factions
+namespace Assets.Structures
 {
     public interface IStructureManager
     {
@@ -19,5 +18,6 @@ namespace Assets.Factions
         IPlacementValidator PlacementValidator { get; }
 
         List<IStructure> GetStructuresLinkedTo(IStructure structure);
+        IStructure GetCore();
     }
 }

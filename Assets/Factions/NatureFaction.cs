@@ -26,9 +26,5 @@ namespace Assets.Factions
 
             EndTurn();
         }
-
-        public override void DoTurnStartActions()
-        {
-        }
     }
 }

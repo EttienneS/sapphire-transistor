@@ -115,13 +115,11 @@ namespace Assets
             {
                 RestoreMaterials(gameObject);
 
-                Debug.Log($"Recyle: {pool} >> {gameObject.name}");
                 _objectPools[pool].Enqueue(gameObject);
                 gameObject.SetActive(false);
             }
             else
             {
-                Debug.Log($"Destroy: {pool} >> {gameObject.name}");
                 AddItemToDestroy(gameObject);
             }
         }

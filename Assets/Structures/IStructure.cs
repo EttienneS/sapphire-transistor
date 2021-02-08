@@ -13,9 +13,8 @@ namespace Assets.Structures
         ICoord[] OccupiedCoords { get; }
 
         int Width { get; }
-        int Height { get; }
 
-        bool Connected { get; }
+        int Height { get; }
 
         Dictionary<ResourceType, int> GetYield(IStructure structure);
 

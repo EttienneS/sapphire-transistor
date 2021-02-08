@@ -1,4 +1,5 @@
 ﻿using Assets.Cards;
+using Assets.Structures;
 using System.Collections.Generic;
 
 namespace Assets.Factions
@@ -25,7 +26,7 @@ namespace Assets.Factions
 
         void DoTurnEndActions();
 
-        void DoFixedTurnStartActions();
+        void DoTurnStartActions();
 
         Dictionary<ResourceType, int> GetResources();
 
