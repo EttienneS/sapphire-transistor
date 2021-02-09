@@ -24,6 +24,12 @@ namespace Assets
         private readonly Dictionary<IStructure, GameObject> _structureObjectLookup = new Dictionary<IStructure, GameObject>();
         private readonly Dictionary<StructureType, string> _typeAssetLookup = new Dictionary<StructureType, string>();
 
+        private Dictionary<GameObject, Outline> _outlineLookup = new Dictionary<GameObject, Outline>();
+
+        private List<GameObject> _outlinesToDisable = new List<GameObject>();
+
+        private List<GameObject> _outlinesToEnable = new List<GameObject>();
+
         public delegate void SpawnCallback(GameObject spawnedObject);
 
         public void AddItemToDestroy(GameObject gameObject)
@@ -64,8 +70,6 @@ namespace Assets
                 ("Tree", 1000),
                 ("Rock", 500),
                 ("Road", 1000),
-                ("Anchor", 200),
-                ("Base", 200),
                 ("BellTower", 10),
                 ("Barn", 100),
                 ("House", 200),
@@ -81,6 +85,7 @@ namespace Assets
                     SpawnModel(pool, Vector3.zero, (obj) =>
                     {
                         _objectPools[pool].Enqueue(obj);
+                        InitOutline(obj);
                         obj.SetActive(false);
                     });
                 }
@@ -103,6 +108,9 @@ namespace Assets
 
             StructureEventManager.OnStructurePlanned += StructureEventManager_OnStructurePlanned;
             StructureEventManager.OnStructureDestroyed += StructureEventManager_OnStructureDestroyed;
+
+            StructureEventManager.OnShowHighlight += (structure) => SetOutlineOnStructure(structure, true);
+            StructureEventManager.OnHideHighlight += (structure) => SetOutlineOnStructure(structure, false);
         }
 
         public void RecyleItem(string pool, GameObject gameObject)
@@ -129,10 +137,37 @@ namespace Assets
             RecyleItem(type.ToString(), gameObject);
         }
 
+        public void SetOutlineOnStructure(IStructure structure, bool active)
+        {
+            if (_structureObjectLookup.ContainsKey(structure))
+            {
+                var obj = _structureObjectLookup[structure];
+
+                if (obj != null)
+                {
+                    if (active)
+                    {
+                        lock (_outlinesToEnable)
+                        {
+                            _outlinesToEnable.Add(obj);
+                        }
+                    }
+                    else
+                    {
+                        lock (_outlinesToDisable)
+                        {
+                            _outlinesToDisable.Add(obj);
+                        }
+                    }
+                }
+            }
+        }
+
         public void SpawnModel(string address, Vector3 position, SpawnCallback callback)
         {
             if (!_objectPools.ContainsKey(address))
             {
+                Debug.LogWarning($"use a pool! {address}");
                 var op = Addressables.InstantiateAsync(address, position, Quaternion.identity, transform);
                 op.Completed += (AsyncOperationHandle<GameObject> obj) => callback.Invoke(obj.Result);
             }
@@ -172,6 +207,8 @@ namespace Assets
         public void Update()
         {
             DestroyItemsInCache();
+
+            UpdateHighlights();
         }
 
         private GameObject ActivatePoolObject(string address, Vector3 position, Transform parent)
@@ -196,6 +233,19 @@ namespace Assets
         private string GetAssetNameForStructureType(StructureType type)
         {
             return _typeAssetLookup[type];
+        }
+
+        private void InitOutline(GameObject obj)
+        {
+            var outline = obj.AddComponent<Outline>();
+
+            outline.OutlineMode = Outline.Mode.OutlineAll;
+            outline.OutlineColor = Color.red;
+            outline.OutlineWidth = 5f;
+
+            outline.enabled = false;
+
+            _outlineLookup.Add(obj, outline);
         }
 
         private void MapEventManager_OnChunkRenderActivated(ChunkRenderer renderer)
@@ -278,6 +328,27 @@ namespace Assets
                     SpawnStructure(structure);
                     drawnOnce = true;
                 }
+            }
+        }
+
+        private void UpdateHighlights()
+        {
+            lock (_outlinesToEnable)
+            {
+                foreach (var outline in _outlinesToEnable)
+                {
+                    _outlineLookup[outline].enabled = true;
+                }
+                _outlinesToEnable.Clear();
+            }
+
+            lock (_outlinesToDisable)
+            {
+                foreach (var outline in _outlinesToDisable)
+                {
+                    _outlineLookup[outline].enabled = false;
+                }
+                _outlinesToDisable.Clear();
             }
         }
     }

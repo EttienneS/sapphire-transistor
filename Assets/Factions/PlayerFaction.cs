@@ -2,7 +2,9 @@
 using Assets.Helpers;
 using Assets.Map;
 using Assets.ServiceLocator;
+using Assets.Structures;
 using Assets.UI;
+using System.Linq;
 
 namespace Assets.Factions
 {
@@ -63,9 +65,6 @@ namespace Assets.Factions
             ClearPreview();
         }
 
-
-
-       
         public void PreviewCard(ICard card, ICoord coord)
         {
             ClearPreview();
@@ -81,8 +80,18 @@ namespace Assets.Factions
 
         public override void TakeTurn()
         {
+            var connected = StructureManager.GetStructuresLinkedTo(StructureManager.GetCore());
 
-            var network = StructureManager.GetStructuresLinkedTo(StructureManager.GetCore());
+            foreach (var structure in connected)
+            {
+                StructureEventManager.HideHighlight(structure);
+            }
+
+            foreach (var structure in StructureManager.GetStructures().Except(connected))
+            {
+                StructureEventManager.ShowHiglight(structure);
+            }
+
             // foreach (var structure in StructureManager.GetStructuresLinkedTo(core))
 
             //AddResources(StructureManager.GetCombinedYield());

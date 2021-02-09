@@ -8,6 +8,19 @@ namespace Assets.Structures
 
         public static event StructureDelegates.StructurePlannedDelegate OnStructurePlanned;
 
+        public static event StructureDelegates.StructureHighlightDelegate OnShowHighlight;
+        public static event StructureDelegates.StructureHighlightDelegate OnHideHighlight;
+
+        public static void ShowHiglight(IStructure structure)
+        {
+            OnShowHighlight?.Invoke(structure);
+        }
+
+        public static void HideHighlight(IStructure structure)
+        {
+            OnHideHighlight?.Invoke(structure);
+        }
+
         public static void StructureDestroyed(IStructure structure)
         {
             OnStructureDestroyed?.Invoke(structure);
