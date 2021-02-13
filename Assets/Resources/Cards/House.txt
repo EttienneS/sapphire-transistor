@@ -1,8 +1,8 @@
 Name=House
 Cost=3W,2S,1G
 -
-R=Road
-H=House
+R=Build Road
+H=Build House
 ====
 RRRR
 R..R

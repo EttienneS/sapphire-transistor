@@ -18,12 +18,12 @@ namespace Assets.UI
 
         public void CancelCard()
         {
-            _playerFaction.Value.CancelCard();
+            _playerFaction.Value.DeckManager.CancelCard();
         }
 
         public void ConfirmCard()
         {
-            _playerFaction.Value.ConfirmCard();
+            _playerFaction.Value.DeckManager.ConfirmCard();
         }
 
         public void Start()

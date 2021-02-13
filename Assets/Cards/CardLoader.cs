@@ -1,4 +1,5 @@
-﻿using Assets.Factions;
+﻿using Assets.Cards.Actions;
+using Assets.Factions;
 using Assets.Structures;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,6 @@ namespace Assets.Cards
         {
             _owner = owner;
         }
-
-        // example card:
-        // R=Road
-        // A=Anchor
-        // B=Base
-        // ====
-        // BRRA
-        // R...
-        // R...
-        // A...
 
         public delegate ICardAction MakeCardActionDelegate();
 
@@ -48,6 +39,25 @@ namespace Assets.Cards
             var cost = ParseCost(input);
 
             return new Card(name, basePoint, actions, cost);
+        }
+
+        public MakeCardActionDelegate ParseAction(string action)
+        {
+            var actionParts = action.Split(new[] { ' ' }, 2);
+            var verb = actionParts[0];
+            var value = string.Empty;
+
+            if (actionParts.Length > 1)
+            {
+                value = actionParts[1];
+            }
+
+            return (verb.ToLower()) switch
+            {
+                "build" => () => new BuildAction((StructureType)Enum.Parse(typeof(StructureType), value), _owner),
+                "remove" => () => new RemoveAction(),
+                _ => throw new KeyNotFoundException($"Unkown verb: {action}"),
+            };
         }
 
         private List<string> GetCardMapLines(string card)
@@ -138,7 +148,7 @@ namespace Assets.Cards
                     if (legendMode)
                     {
                         var parts = line.Split('=');
-                        legend.Add(parts[0][0], () => new BuildAction((StructureType)Enum.Parse(typeof(StructureType), parts[1]), _owner));
+                        legend.Add(parts[0][0], ParseAction(parts[1]));
                     }
                 }
             }

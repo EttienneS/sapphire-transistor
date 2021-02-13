@@ -4,19 +4,8 @@ using Assets.ServiceLocator;
 using Assets.Structures;
 using UnityEngine;
 
-namespace Assets.Cards
+namespace Assets.Cards.Actions
 {
-    public interface ICardAction
-    {
-        bool CanPlay(ICoord coord);
-
-        void ClearPreview();
-
-        void Play(ICoord coord);
-
-        void Preview(ICoord coord);
-    }
-
     public class BuildAction : ICardAction
     {
         private readonly IFaction _owner;
@@ -49,8 +38,6 @@ namespace Assets.Cards
         public void Play(ICoord coord)
         {
             _owner.StructureManager.AddStructure(_structureType, coord);
-
-            ClearPreview();
         }
 
         public void Preview(ICoord coord)

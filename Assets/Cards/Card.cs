@@ -1,4 +1,5 @@
-﻿using Assets.Factions;
+﻿using Assets.Cards.Actions;
+using Assets.Factions;
 using Assets.Map;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,6 +82,7 @@ namespace Assets.Cards
             foreach (var (cardAction, coord) in GetExecutionList(baseCoord))
             {
                 cardAction.Play(coord);
+                cardAction.ClearPreview();
             }
 
             CardEventManager.CardPlayed(this, baseCoord);

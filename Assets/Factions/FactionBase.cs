@@ -1,5 +1,4 @@
-﻿using Assets.Cards;
-using Assets.Map;
+﻿using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
 using System.Collections.Generic;
@@ -13,11 +12,8 @@ namespace Assets.Factions
         protected FactionBase(string name, IServiceLocator serviceLocator)
         {
             _resources = new Dictionary<ResourceType, int>();
-            Deck = new Deck();
             Name = name;
-            Hand = new List<ICard>();
 
-            CardLoader = new CardLoader(this);
             StructureManager = new StructureManager(serviceLocator.Find<IStructureFactory>(),
                                                     serviceLocator.Find<IFactionManager>(),
                                                     serviceLocator.Find<IMapManager>());
@@ -29,9 +25,6 @@ namespace Assets.Factions
 
         public event FactionDelegates.OnTurnStarted TurnStarted;
 
-        public ICardLoader CardLoader { get; }
-        public IDeck Deck { get; }
-        public List<ICard> Hand { get; }
         public string Name { get; }
 
         public IStructureManager StructureManager { get; }
@@ -65,33 +58,9 @@ namespace Assets.Factions
             TurnStarted?.Invoke(this);
         }
 
-        public void Draw()
-        {
-            var cardsToDraw = GetMaxHandSize() - Hand.Count;
-
-            if (cardsToDraw > 0)
-            {
-                for (int i = 0; i < cardsToDraw; i++)
-                {
-                    DrawCard(Deck.Draw());
-                }
-            }
-        }
-
-        public void DrawCard(ICard card)
-        {
-            Hand.Add(card);
-            CardEventManager.CardReceived(card, this);
-        }
-
         public void EndTurn()
         {
             TurnEnded?.Invoke(this);
-        }
-
-        public int GetMaxHandSize()
-        {
-            return 5;
         }
 
         public Dictionary<ResourceType, int> GetResources()
@@ -112,19 +81,11 @@ namespace Assets.Factions
 
         public abstract void TakeTurn();
 
-        internal void AddResources(Dictionary<ResourceType, int> resouces)
+        public void ModifyResource(Dictionary<ResourceType, int> cost)
         {
-            foreach (var resouce in resouces)
+            foreach (var kvp in cost)
             {
-                ModifyResource(resouce.Key, resouce.Value);
-            }
-        }
-
-        internal void RemoveResources(Dictionary<ResourceType, int> resouces)
-        {
-            foreach (var resouce in resouces)
-            {
-                ModifyResource(resouce.Key, -resouce.Value);
+                ModifyResource(kvp.Key, kvp.Value);
             }
         }
     }

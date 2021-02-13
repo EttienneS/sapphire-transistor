@@ -11,11 +11,13 @@ namespace Assets.Structures
         private readonly List<IStructure> _structures;
         private IMapManager _mapManager;
         private IStructureFactory _structureFactory;
+        private IFactionManager _factionManager;
 
         public StructureManager(IStructureFactory structureFactory, IFactionManager factionManager, IMapManager mapManager)
         {
             _structures = new List<IStructure>();
             _structureFactory = structureFactory;
+            _factionManager = factionManager;
             _mapManager = mapManager;
             PlacementValidator = new PlacementValidator(factionManager, _mapManager);
         }
@@ -26,6 +28,11 @@ namespace Assets.Structures
         {
             if (type != StructureType.Empty)
             {
+                if (_factionManager.TryGetStructureAtCoord(coord, out IStructure structure))
+                {
+                    _factionManager.GetOwnerOfStructure(structure)
+                                   .StructureManager.RemoveStructure(structure);
+                }
                 _structures.Add(_structureFactory.GetStructure(type, coord));
             }
         }
@@ -75,11 +82,11 @@ namespace Assets.Structures
                     }
                     closed.Add(current);
 
-                    if (TryGetStructureInCell(current, out IStructure currentStructure))
+                    if (TryGetStructureAtCoord(current, out IStructure currentStructure))
                     {
                         foreach (var coord in currentStructure.OccupiedCoords)
                         {
-                            if (TryGetStructureInCell(coord, out IStructure linkedStructure))
+                            if (TryGetStructureAtCoord(coord, out IStructure linkedStructure))
                             {
                                 if (!network.Contains(linkedStructure))
                                 {
@@ -117,7 +124,7 @@ namespace Assets.Structures
             }
         }
 
-        public bool TryGetStructureInCell(ICoord coord, out IStructure structure)
+        public bool TryGetStructureAtCoord(ICoord coord, out IStructure structure)
         {
             structure = _structures.Find(s => s.OccupiedCoords.Contains(coord));
 

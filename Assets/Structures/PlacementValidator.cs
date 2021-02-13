@@ -53,7 +53,7 @@ namespace Assets.Structures
 
         private IPlacementResult CellEmpty(Cell cell)
         {
-            if (_factionManager.TryGetStructureInCell(cell, out IStructure structure))
+            if (_factionManager.TryGetStructureAtCoord(cell.Coord, out IStructure structure))
             {
                 return _notEmptyResult;
             }
@@ -79,7 +79,7 @@ namespace Assets.Structures
 
         private IPlacementResult CellEmptyOrSame(Cell cell, StructureType structureToPlace)
         {
-            if (_factionManager.TryGetStructureInCell(cell, out IStructure structure))
+            if (_factionManager.TryGetStructureAtCoord(cell.Coord, out IStructure structure))
             {
                 if (structure.Type == structureToPlace)
                 {
@@ -94,7 +94,7 @@ namespace Assets.Structures
         {
             foreach (var neighbour in cell.GetCardinalNeighbours())
             {
-                if (_factionManager.TryGetStructureInCell(neighbour, out IStructure structure)
+                if (_factionManager.TryGetStructureAtCoord(neighbour.Coord, out IStructure structure)
                     && structure.Type == type)
                 {
                     return true;

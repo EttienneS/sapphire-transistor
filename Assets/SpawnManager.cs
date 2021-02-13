@@ -73,7 +73,7 @@ namespace Assets
                 ("BellTower", 10),
                 ("Barn", 100),
                 ("House", 200),
-                ("Field", 200),
+                ("Field", 500),
                 ("Empty", 5),
             };
 
@@ -167,7 +167,6 @@ namespace Assets
         {
             if (!_objectPools.ContainsKey(address))
             {
-                Debug.LogWarning($"use a pool! {address}");
                 var op = Addressables.InstantiateAsync(address, position, Quaternion.identity, transform);
                 op.Completed += (AsyncOperationHandle<GameObject> obj) => callback.Invoke(obj.Result);
             }
@@ -239,7 +238,7 @@ namespace Assets
         {
             var outline = obj.AddComponent<Outline>();
 
-            outline.OutlineMode = Outline.Mode.OutlineAll;
+            outline.OutlineMode = Outline.Mode.OutlineVisible;
             outline.OutlineColor = Color.red;
             outline.OutlineWidth = 5f;
 
@@ -305,7 +304,11 @@ namespace Assets
             _chunkStructureLookup[renderer].Remove(structure);
 
             var pool = GetAssetNameForStructureType(structure.Type);
-            RecyleItem(pool, _structureObjectLookup[structure]);
+
+            if (_structureObjectLookup.ContainsKey(structure))
+            {
+                RecyleItem(pool, _structureObjectLookup[structure]);
+            }
         }
 
         private void StructureEventManager_OnStructurePlanned(IStructure structure)

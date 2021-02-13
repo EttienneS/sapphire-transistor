@@ -56,6 +56,7 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\QuickOutline\Scripts\Outline.cs" />
     <Compile Include="Assets\InputManager\IInputHandler.cs" />
     <Compile Include="Assets\Structures\PlacementValidator.cs" />
     <Compile Include="Assets\LeanTween\Framework\LeanTween.cs" />
@@ -191,7 +192,6 @@
     <Compile Include="Assets\Structures\Behaviors\SettlementCore.cs" />
     <Compile Include="Assets\Helpers\UIHelper.cs" />
     <Compile Include="Assets\UI\RadialMenuDelegates.cs" />
-    <Compile Include="Assets\Cards\ICardAction.cs" />
     <Compile Include="Assets\InputManager\MoveCameraCommand.cs" />
     <Compile Include="Assets\Structures\Behaviors\NoBehavior.cs" />
     <Compile Include="Assets\Map\Pathing\Direction.cs" />
@@ -206,7 +206,11 @@
     <Compile Include="Assets\UI\ResourcePanel.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\Following.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Scripts\SetGlobalTime.cs" />
-    <Compile Include="Assets\QuickOutline\Scripts\Outline.cs" />
+    <Compile Include="Assets\Cards\IDeckManager.cs" />
+    <Compile Include="Assets\Cards\DeckManager.cs" />
+    <Compile Include="Assets\Cards\Actions\RemoveAction.cs" />
+    <Compile Include="Assets\Cards\Actions\BuildAction.cs" />
+    <Compile Include="Assets\Cards\Actions\ICardAction.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -220,6 +224,7 @@
      <None Include="Assets\AllIn1SpriteShader\Resources\AllIn1SpriteShaderScaledTime.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
      <None Include="Assets\QuickOutline\Resources\Shaders\OutlineMask.shader" />
+     <None Include="Assets\Resources\Cards\BoxClear.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\AllIn1SpriteShader\Resources\AllIn1SpriteShaderUiMask.shader" />
      <None Include="Assets\Resources\Cards\House.txt" />
@@ -231,9 +236,10 @@
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
      <None Include="Assets\QuickOutline\Readme.txt" />
-     <None Include="Assets\Resources\Cards\Long.txt" />
+     <None Include="Assets\Resources\Cards\LongNS.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+     <None Include="Assets\Resources\Cards\LongEW.txt" />
      <None Include="Assets\LeanTween\Examples\Archived\2dUnlitWithFade.shader" />
      <None Include="Assets\Resources\Cards\Corner.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />

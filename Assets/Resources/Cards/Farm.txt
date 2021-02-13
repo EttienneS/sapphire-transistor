@@ -1,10 +1,10 @@
 Name=Farm
 Cost=5G,1F,2W
 -
-R=Road
-H=House
-B=Barn
-F=Field
+R=Build Road
+H=Build House
+B=Build Barn
+F=Build Field
 ======
 FFFFFF
 FF##FF

@@ -92,16 +92,14 @@ namespace Assets.Factions
             OnTurnStarted?.Invoke(_activeFaction);
 
             _activeFaction.DoTurnStartActions();
-            _activeFaction.DoTurnStartActions();
-            _activeFaction.Draw();
             _activeFaction.TakeTurn();
         }
 
-        public bool TryGetStructureInCell(Cell cell, out IStructure structure)
+        public bool TryGetStructureAtCoord(ICoord coord, out IStructure structure)
         {
             foreach (var faction in GetAllFactions())
             {
-                structure = faction.StructureManager.GetStructures().Find(s => s.OccupiedCoords.Any(c => c.Equals(cell.Coord)));
+                structure = faction.StructureManager.GetStructures().Find(s => s.OccupiedCoords.Any(c => c.Equals(coord)));
                 if (structure != null)
                 {
                     return true;

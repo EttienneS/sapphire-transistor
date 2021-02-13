@@ -127,6 +127,12 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: 176ec4f9ab2a7194db3ca4ab97fba6a1
+    m_Address: RemoveMarker
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: aa16110a372069b46b6f3f9cae36d497, type: 2}
   m_SchemaSet:

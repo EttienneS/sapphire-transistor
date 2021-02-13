@@ -40,7 +40,7 @@ namespace Assets
         private void MakeFactionCores(IMapManager mapManager, IFactionManager factionManager)
         {
             var faction = factionManager.GetPlayerFaction();
-            faction.AddResources(new Dictionary<ResourceType, int>()
+            faction.ModifyResource(new Dictionary<ResourceType, int>()
             {
                 {  ResourceType.Gold, 10 },
                 {  ResourceType.Food, 10 },
@@ -71,23 +71,21 @@ namespace Assets
             var locator = GetLocator();
 
             var player = new PlayerFaction("Player", locator);
-            DealCards(player);
+            DealCards(player.DeckManager);
             var nature = new NatureFaction("Nature", locator);
-            DealCards(nature);
             var enemy = new AIFaction("Enemy", locator);
-            DealCards(enemy);
 
             factionManager.AddFaction(player);
             factionManager.AddFaction(nature);
             factionManager.AddFaction(enemy);
         }
 
-        private void DealCards(IFaction faction)
+        private void DealCards(IDeckManager cardPlayer)
         {
             var cardMan = Locate<ICardManager>();
             for (int i = 0; i < 25; i++)
             {
-                faction.Deck.AddCard(faction.CardLoader.Load(cardMan.GetRandomRawCard()));
+                cardPlayer.Deck.AddCard(cardPlayer.CardLoader.Load(cardMan.GetRandomRawCard()));
             }
         }
 
