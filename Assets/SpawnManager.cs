@@ -75,22 +75,22 @@ namespace Assets
                 ("House", 200),
                 ("Field", 500),
                 ("Empty", 5),
+                ("RemoveMarker", 50),
             };
 
             foreach (var (pool, size) in poolConfigs)
             {
                 var queue = new Queue<GameObject>();
+                _objectPools.Add(pool, queue);
                 for (var i = 0; i < size; i++)
                 {
-                    SpawnModel(pool, Vector3.zero, (obj) =>
+                    InitModel(pool, Vector3.zero, (obj) =>
                     {
                         _objectPools[pool].Enqueue(obj);
                         InitOutline(obj);
                         obj.SetActive(false);
                     });
                 }
-
-                _objectPools.Add(pool, queue);
             }
 
             _typeAssetLookup.Add(StructureType.Tree, "Tree");
@@ -163,18 +163,16 @@ namespace Assets
             }
         }
 
+        private void InitModel(string address, Vector3 position, SpawnCallback callback)
+        {
+            var op = Addressables.InstantiateAsync(address, position, Quaternion.identity, transform);
+            op.Completed += (AsyncOperationHandle<GameObject> obj) => callback.Invoke(obj.Result);
+        }
+
         public void SpawnModel(string address, Vector3 position, SpawnCallback callback)
         {
-            if (!_objectPools.ContainsKey(address))
-            {
-                var op = Addressables.InstantiateAsync(address, position, Quaternion.identity, transform);
-                op.Completed += (AsyncOperationHandle<GameObject> obj) => callback.Invoke(obj.Result);
-            }
-            else
-            {
-                var obj = ActivatePoolObject(address, position, transform);
-                callback.Invoke(obj);
-            }
+            var obj = ActivatePoolObject(address, position, transform);
+            callback.Invoke(obj);
         }
 
         public void SpawnModel(StructureType type, Vector3 position, SpawnCallback callback)
