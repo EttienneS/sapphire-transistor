@@ -21,6 +21,8 @@ namespace Assets.Cards
 
         void DrawToHandSize();
 
+        void DiscardHand();
+
         int GetMaxHandSize();
 
         void OnPlayerCardActive(ICard card);
@@ -28,5 +30,6 @@ namespace Assets.Cards
         void PreviewCard(ICard card, ICoord coord);
 
         bool TryGetActiveCard(out ICard card);
+        void DiscardCard(ICard card);
     }
 }

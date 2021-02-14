@@ -20,8 +20,6 @@ namespace Assets.Factions
             CellEventManager.OnCellClicked += CellClicked;
 
             DeckManager = new DeckManager(this);
-
-
         }
 
         public void CellClicked(Cell cell)
@@ -72,6 +70,12 @@ namespace Assets.Factions
             {
                 StructureEventManager.ShowHiglight(structure);
             }
+        }
+
+        public override void EndTurn()
+        {
+            DeckManager.DiscardHand();
+            base.EndTurn();
         }
     }
 }

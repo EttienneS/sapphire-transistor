@@ -58,7 +58,7 @@ namespace Assets.Factions
             TurnStarted?.Invoke(this);
         }
 
-        public void EndTurn()
+        public virtual void EndTurn()
         {
             TurnEnded?.Invoke(this);
         }

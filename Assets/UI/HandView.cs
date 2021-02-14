@@ -1,6 +1,5 @@
 ﻿using Assets.Cards;
 using Assets.Factions;
-using Assets.Map;
 using Assets.ServiceLocator;
 using System;
 using System.Collections.Generic;
@@ -36,11 +35,11 @@ namespace Assets.UI
                 }
             };
 
-            CardEventManager.OnCardPlayed += (ICard card, ICoord _) =>
+            CardEventManager.OnCardDiscarded += (ICard card) =>
             {
                 if (_handLookup.ContainsKey(card))
                 {
-                    OnCardPlayed(card);
+                    OnCardDiscarded(card);
                 }
             };
         }
@@ -58,7 +57,7 @@ namespace Assets.UI
             }
         }
 
-        private void OnCardPlayed(ICard card)
+        private void OnCardDiscarded(ICard card)
         {
             Locator.Instance.Find<ISpawnManager>().AddItemToDestroy(_handLookup[card].gameObject);
             _handLookup.Remove(card);

@@ -1,6 +1,7 @@
 ﻿using Assets.Factions;
 using Assets.Map;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Cards
 {
@@ -58,10 +59,17 @@ namespace Assets.Cards
                 card.Play(coord);
                 _owner.ModifyResource(cost);
 
-                Hand.Remove(_activeCard);
+                DiscardCard(_activeCard);
                 _activeCard = null;
             }
             ClearPreview();
+        }
+
+        public void DiscardCard(ICard card)
+        {
+            Hand.Remove(card);
+
+            CardEventManager.CardDiscarded(card);
         }
 
         public void DrawCard(ICard card)
@@ -125,6 +133,16 @@ namespace Assets.Cards
                 _activePreview.Value.card.ClearPreview();
                 _activePreview = null;
             }
+        }
+
+        public void DiscardHand()
+        {
+            foreach (var card in Hand.ToList())
+            {
+                DiscardCard(card);
+            }
+            _activeCard = null;
+            ClearPreview();
         }
     }
 }
