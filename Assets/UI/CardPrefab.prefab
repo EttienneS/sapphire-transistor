@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8818794979857568423}
   - component: {fileID: 4074229433012411523}
   - component: {fileID: 2815543713466581496}
+  - component: {fileID: 3530730394523176061}
   m_Layer: 5
   m_Name: CardPrefab
   m_TagString: Untagged
@@ -27,7 +28,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877765198806247761}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.043619405, w: 0.9990483}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -36,7 +37,7 @@ RectTransform:
   - {fileID: 7652848285678224574}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 5}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 320, y: 322}
@@ -151,6 +152,23 @@ MonoBehaviour:
   Title: {fileID: 5106612513217432090}
   Cost: {fileID: 8145400350686575372}
   Content: {fileID: 9135946621064296287}
+  Background: {fileID: 8818794979857568423}
+  Outline: {fileID: 3530730394523176061}
+--- !u!114 &3530730394523176061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877765198806247761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 10, y: 10}
+  m_UseGraphicAlpha: 1
 --- !u!1 &2169882065103120453
 GameObject:
   m_ObjectHideFlags: 0

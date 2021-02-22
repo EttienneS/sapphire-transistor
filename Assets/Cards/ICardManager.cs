@@ -1,7 +1,10 @@
-﻿namespace Assets.Cards
+﻿using Assets.Factions;
+
+namespace Assets.Cards
 {
     public interface ICardManager
     {
-        string GetRandomRawCard();
+        ICard GetRandomCard(IFaction owner);
     }
+
 }

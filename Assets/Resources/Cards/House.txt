@@ -1,5 +1,6 @@
 Name=House
 Cost=3W,2S,1G
+Color=Yellow
 -
 R=Build Road
 H=Build House

@@ -7,18 +7,19 @@ namespace Assets.Cards
 {
     public interface ICard
     {
+        CardColor Color { get; }
         string Name { get; }
 
-        Dictionary<ResourceType, int> GetCost();
+        bool CanPlay(ICoord coord);
+
+        void ClearPreview();
 
         ICardAction[,] GetActions();
 
-        bool CanPlay(ICoord coord);
+        Dictionary<ResourceType, int> GetCost();
 
         void Play(ICoord coord);
 
         void Preview(ICoord coord);
-
-        void ClearPreview();
     }
 }

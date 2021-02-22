@@ -1,5 +1,6 @@
 Name=Long Road
 Cost=1G,1S
+Color=Blue
 -
 R=Build Road
 =====

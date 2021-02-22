@@ -1,5 +1,4 @@
-﻿using Assets.Cards;
-using Assets.Factions;
+﻿using Assets.Factions;
 using Assets.Helpers;
 using Assets.Map;
 using Assets.MapGeneration;
@@ -71,22 +70,12 @@ namespace Assets
             var locator = GetLocator();
 
             var player = new PlayerFaction("Player", locator);
-            DealCards(player.DeckManager);
             var nature = new NatureFaction("Nature", locator);
             var enemy = new AIFaction("Enemy", locator);
 
             factionManager.AddFaction(player);
             factionManager.AddFaction(nature);
             factionManager.AddFaction(enemy);
-        }
-
-        private void DealCards(IDeckManager cardPlayer)
-        {
-            var cardMan = Locate<ICardManager>();
-            for (int i = 0; i < 25; i++)
-            {
-                cardPlayer.Deck.AddCard(cardPlayer.CardLoader.Load(cardMan.GetRandomRawCard()));
-            }
         }
 
         private void GenerateMap(IMapManager mapManager, int size, IStructureFactory structureFactory, IFactionManager factionManger)

@@ -83,11 +83,13 @@
     <Compile Include="Assets\UI\RadialMenuController.cs" />
     <Compile Include="Assets\Helpers\FastNoiseExtension.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathBezier.cs" />
+    <Compile Include="Assets\Cards\Deck.cs" />
     <Compile Include="Assets\Map\ChunkRenderer.cs" />
     <Compile Include="Assets\StrategyCamera\ICameraController.cs" />
     <Compile Include="Assets\Structures\Behaviors\HouseBehavior.cs" />
     <Compile Include="Assets\InputManager\MouseAndKeyboardInputHandler.cs" />
     <Compile Include="Assets\Structures\Structure.cs" />
+    <Compile Include="Assets\Cards\IDeckManager.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSplines.cs" />
     <Compile Include="Assets\Helpers\Instrumenter.cs" />
     <Compile Include="Assets\Map\Pathing\CellPriorityQueue.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Assets\Factions\FactionManager.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Scripts\SetAtlasUvs.cs" />
     <Compile Include="Assets\Structures\IStructureFactory.cs" />
+    <Compile Include="Assets\Cards\Actions\BuildAction.cs" />
     <Compile Include="Assets\Map\MapEventManager.cs" />
     <Compile Include="Assets\InputManager\ZoomCommand.cs" />
     <Compile Include="Assets\Helpers\RandomExtensions.cs" />
@@ -160,6 +163,7 @@
     <Compile Include="Assets\Factions\FactionExtensions.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralAdvancedTechniques.cs" />
     <Compile Include="Assets\Map\Pathing\Pathfinder.cs" />
+    <Compile Include="Assets\Cards\Actions\ICardAction.cs" />
     <Compile Include="Assets\LeanTween\Framework\LeanSmooth.cs" />
     <Compile Include="Assets\Factions\ResourceType.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralBasics2d.cs" />
@@ -173,11 +177,11 @@
     <Compile Include="Assets\MapGeneration\MapGenerator.cs" />
     <Compile Include="Assets\ServiceLocator\IGameService.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Scripts\AllIn1ShaderWindow.cs" />
+    <Compile Include="Assets\Cards\DeckManager.cs" />
     <Compile Include="Assets\Helpers\FastNoiseLite.cs" />
     <Compile Include="Assets\LeanTween\Framework\LeanTest.cs" />
     <Compile Include="Assets\InputManager\TouchScreenHandler.cs" />
     <Compile Include="Assets\ServiceLocator\LocatableMonoBehaviorBase.cs" />
-    <Compile Include="Assets\Cards\ICardLoader.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSpline2d.cs" />
     <Compile Include="Assets\UI\HandView.cs" />
     <Compile Include="Assets\Map\Coord.cs" />
@@ -187,6 +191,7 @@
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSplinePerformance.cs" />
     <Compile Include="Assets\Cards\Card.cs" />
     <Compile Include="Assets\Helpers\ColorExtensions.cs" />
+    <Compile Include="Assets\Cards\Actions\RemoveAction.cs" />
     <Compile Include="Assets\MapGeneration\ITerrainDefinition.cs" />
     <Compile Include="Assets\Structures\StructureEventManager.cs" />
     <Compile Include="Assets\Structures\Behaviors\SettlementCore.cs" />
@@ -206,11 +211,7 @@
     <Compile Include="Assets\UI\ResourcePanel.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\Following.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Scripts\SetGlobalTime.cs" />
-    <Compile Include="Assets\Cards\IDeckManager.cs" />
-    <Compile Include="Assets\Cards\DeckManager.cs" />
-    <Compile Include="Assets\Cards\Actions\RemoveAction.cs" />
-    <Compile Include="Assets\Cards\Actions\BuildAction.cs" />
-    <Compile Include="Assets\Cards\Actions\ICardAction.cs" />
+    <Compile Include="Assets\Cards\CardColor.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

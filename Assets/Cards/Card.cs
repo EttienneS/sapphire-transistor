@@ -13,15 +13,17 @@ namespace Assets.Cards
         private ICardAction[,] _originalActions;
         private ICardAction[,] _rotatedActions;
 
-        public Card(string name, (int x, int z) basePoint, ICardAction[,] actions, Dictionary<ResourceType, int> cost)
+        public Card(string name, CardColor color, (int x, int z) basePoint, ICardAction[,] actions, Dictionary<ResourceType, int> cost)
         {
             Name = name;
+            Color = color;
             _originalActions = actions;
             _rotatedActions = _originalActions;
             _basePoint = basePoint;
             _cost = cost;
         }
 
+        public CardColor Color { get; }
         public string Name { get; }
 
         public bool CanPlay(ICoord anchor)

@@ -1,5 +1,6 @@
 ﻿using Assets.Factions;
 using Assets.Map;
+using Assets.ServiceLocator;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,16 +16,25 @@ namespace Assets.Cards
         {
             _owner = owner;
 
-            CardLoader = new CardLoader(_owner);
-            Deck = new Deck();
+            _deck = new Deck("Standard");
             Hand = new List<ICard>();
+
+            DealCards();
 
             CardEventManager.OnSetPlayerCardActive += OnPlayerCardActive;
         }
 
-        public ICardLoader CardLoader { get; }
+        private void DealCards()
+        {
+            var cardMan = Locator.Instance.Find<ICardManager>();
+            for (int i = 0; i < 25; i++)
+            {
+                _deck.AddCard(cardMan.GetRandomCard(_owner));
+            }
+        }
 
-        public IDeck Deck { get; }
+
+        private IDeck _deck;
 
         public List<ICard> Hand { get; }
 
@@ -68,12 +78,13 @@ namespace Assets.Cards
         public void DiscardCard(ICard card)
         {
             Hand.Remove(card);
-
+            _deck.AddToDiscardPile(card);
             CardEventManager.CardDiscarded(card);
         }
 
-        public void DrawCard(ICard card)
+        public void DrawCard()
         {
+            var card = _deck.Draw();
             Hand.Add(card);
             CardEventManager.CardReceived(card, _owner);
         }
@@ -86,7 +97,7 @@ namespace Assets.Cards
             {
                 for (int i = 0; i < cardsToDraw; i++)
                 {
-                    DrawCard(Deck.Draw());
+                    DrawCard();
                 }
             }
         }

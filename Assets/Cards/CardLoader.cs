@@ -8,23 +8,16 @@ using System.Text.RegularExpressions;
 
 namespace Assets.Cards
 {
-    public class CardLoader : ICardLoader
+    public class CardLoader
     {
-        private IFaction _owner;
-
-        public CardLoader(IFaction owner)
-        {
-            _owner = owner;
-        }
-
         public delegate ICardAction MakeCardActionDelegate();
 
-        public ICard Load(string input)
+        public ICard Load(string input, IFaction _owner)
         {
             var lenght = ParseLenght(input);
             var actions = new ICardAction[lenght, lenght];
             var basePoint = ParseBasePoint(input);
-            var legend = ParseLegend(input);
+            var legend = ParseLegend(input, _owner);
             var map = GetCardMapLines(input);
 
             for (int z = 0; z < lenght; z++)
@@ -36,12 +29,13 @@ namespace Assets.Cards
             }
 
             var name = ParseName(input);
+            var color = ParseColor(input);
             var cost = ParseCost(input);
 
-            return new Card(name, basePoint, actions, cost);
+            return new Card(name, color, basePoint, actions, cost);
         }
 
-        public MakeCardActionDelegate ParseAction(string action)
+        public MakeCardActionDelegate ParseAction(string action, IFaction owner)
         {
             var actionParts = action.Split(new[] { ' ' }, 2);
             var verb = actionParts[0];
@@ -54,7 +48,7 @@ namespace Assets.Cards
 
             return (verb.ToLower()) switch
             {
-                "build" => () => new BuildAction((StructureType)Enum.Parse(typeof(StructureType), value), _owner),
+                "build" => () => new BuildAction((StructureType)Enum.Parse(typeof(StructureType), value), owner),
                 "remove" => () => new RemoveAction(),
                 _ => throw new KeyNotFoundException($"Unkown verb: {action}"),
             };
@@ -97,6 +91,11 @@ namespace Assets.Cards
             return (int.Parse(parts[0]), int.Parse(parts[1]));
         }
 
+        private CardColor ParseColor(string input)
+        {
+            return (CardColor)Enum.Parse(typeof(CardColor), GetProperty(input, "Color"));
+        }
+
         private Dictionary<ResourceType, int> ParseCost(string input)
         {
             // Cost=1G,1S
@@ -123,7 +122,7 @@ namespace Assets.Cards
             return cost;
         }
 
-        private Dictionary<char, MakeCardActionDelegate> ParseLegend(string card)
+        private Dictionary<char, MakeCardActionDelegate> ParseLegend(string card, IFaction owner)
         {
             var lines = SplitCard(card);
             var legend = new Dictionary<char, MakeCardActionDelegate>();
@@ -131,7 +130,7 @@ namespace Assets.Cards
             var legendMode = false;
 
             legend.Add('.', null);
-            legend.Add('#', () => new BuildAction(StructureType.Empty, _owner));
+            legend.Add('#', () => new BuildAction(StructureType.Empty, owner));
 
             foreach (var line in lines)
             {
@@ -148,7 +147,7 @@ namespace Assets.Cards
                     if (legendMode)
                     {
                         var parts = line.Split('=');
-                        legend.Add(parts[0][0], ParseAction(parts[1]));
+                        legend.Add(parts[0][0], ParseAction(parts[1], owner));
                     }
                 }
             }

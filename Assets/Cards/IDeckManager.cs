@@ -5,8 +5,6 @@ namespace Assets.Cards
 {
     public interface IDeckManager
     {
-        public ICardLoader CardLoader { get; }
-        public IDeck Deck { get; }
         public List<ICard> Hand { get; }
 
         void CancelCard();
@@ -17,7 +15,7 @@ namespace Assets.Cards
 
         void ConfirmCard();
 
-        void DrawCard(ICard card);
+        void DrawCard();
 
         void DrawToHandSize();
 

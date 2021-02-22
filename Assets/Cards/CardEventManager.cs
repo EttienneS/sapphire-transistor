@@ -13,6 +13,10 @@ namespace Assets.Cards
         public delegate void CardReceived(ICard card, IFaction player);
 
         public delegate void SetPlayerCardActive(ICard card);
+
+        public delegate void DeckShuffled(IDeck deck);
+
+        public delegate void DeckRecyled(IDeck deck);
     }
 
     public static class CardEventManager
@@ -26,6 +30,22 @@ namespace Assets.Cards
         public static event CardDelegates.CardReceived OnCardReceived;
 
         public static event CardDelegates.SetPlayerCardActive OnSetPlayerCardActive;
+
+        public static event CardDelegates.DeckShuffled OnDeckShuffled;
+
+        public static event CardDelegates.DeckRecyled OnDeckRecyled;
+
+        public static void DeckRecyled(IDeck deck)
+        {
+            Debug.Log($"Deck Recyled {deck}");
+            OnDeckRecyled?.Invoke(deck);
+        }
+
+        public static void DeckShuffled(IDeck deck)
+        {
+            Debug.Log($"Deck Shuffled {deck}");
+            OnDeckShuffled?.Invoke(deck);
+        }
 
         public static void CardDiscarded(ICard card)
         {
