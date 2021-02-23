@@ -37,7 +37,7 @@ namespace Assets.UI
             }
             else
             {
-                Outline.effectColor = Color.black;
+                Outline.effectColor = new Color(0,0,0,0);
             }
         }
 
