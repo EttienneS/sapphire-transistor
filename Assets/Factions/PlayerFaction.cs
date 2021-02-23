@@ -43,7 +43,7 @@ namespace Assets.Factions
             DeckManager.DrawToHandSize();
 
             var connected = StructureManager.GetStructuresLinkedTo(StructureManager.GetCore());
-
+            
             HighlightConnected(connected);
             GetYieldForConnected(connected);
         }
@@ -66,7 +66,7 @@ namespace Assets.Factions
                 StructureEventManager.HideHighlight(structure);
             }
 
-            foreach (var structure in StructureManager.GetStructures().Except(connected))
+            foreach (var structure in StructureManager.GetStructures().Except(connected).Where(s => s.RequiresLink))
             {
                 StructureEventManager.ShowHiglight(structure);
             }

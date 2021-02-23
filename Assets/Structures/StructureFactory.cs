@@ -31,13 +31,13 @@ namespace Assets.Structures
             AddBehavior(new SettlementCore(map));
             AddBehavior(new NoBehavior(map));
 
-            _structureBuilderLookup.Add(StructureType.Tree, (coord, type) => new Structure(type, 1, 1, GetBehaviour<NoBehavior>(), coord));
-            _structureBuilderLookup.Add(StructureType.Rock, (coord, type) => new Structure(type, 1, 1, GetBehaviour<NoBehavior>(), coord));
+            _structureBuilderLookup.Add(StructureType.Tree, (coord, type) => new Structure(type, 1, 1, GetBehaviour<NoBehavior>(), coord, false));
+            _structureBuilderLookup.Add(StructureType.Rock, (coord, type) => new Structure(type, 1, 1, GetBehaviour<NoBehavior>(), coord, false));
             _structureBuilderLookup.Add(StructureType.Core, (coord, type) => new Structure(type, 2, 2, GetBehaviour<SettlementCore>(), coord));
             _structureBuilderLookup.Add(StructureType.Road, (coord, type) => new Structure(type, 1, 1, GetBehaviour<NoBehavior>(), coord));
             _structureBuilderLookup.Add(StructureType.House, (coord, type) => new Structure(type, 1, 1, GetBehaviour<HouseBehavior>(), coord));
             _structureBuilderLookup.Add(StructureType.Barn, (coord, type) => new Structure(type, 2, 2, GetBehaviour<FarmBehaviour>(), coord));
-            _structureBuilderLookup.Add(StructureType.Field, (coord, type) => new Structure(type, 1, 1, GetBehaviour<NoBehavior>(), coord));
+            _structureBuilderLookup.Add(StructureType.Field, (coord, type) => new Structure(type, 1, 1, GetBehaviour<NoBehavior>(), coord, false));
         }
 
         private void AddBehavior(IStructureBehaviour behavior)

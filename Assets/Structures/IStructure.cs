@@ -16,6 +16,8 @@ namespace Assets.Structures
 
         int Height { get; }
 
+        bool RequiresLink { get; }
+
         Dictionary<ResourceType, int> GetYield(IStructure structure);
 
         void TurnEnd(IStructure structure);
