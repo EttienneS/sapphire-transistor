@@ -11,6 +11,8 @@ namespace Assets.Cards
 
         void CellClicked(Cell cell);
 
+        void CellHover(Cell cell);
+
         void ClearPreview();
 
         void ConfirmCard();

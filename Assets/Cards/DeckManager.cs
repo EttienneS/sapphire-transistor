@@ -45,17 +45,17 @@ namespace Assets.Cards
 
         public void CellClicked(Cell cell)
         {
-            if (TryGetActiveCard(out ICard activeCard))
+            if (TryGetActiveCard(out ICard activeCard) && PreviewValid(cell, activeCard))
             {
-                if (_activePreview.HasValue && _activePreview.Value.coord == cell.Coord && _activePreview.Value.card == activeCard)
-                {
-                    ConfirmCard();
-                }
-                else
-                {
-                    PreviewCard(activeCard, cell.Coord);
-                }
+                ConfirmCard();
             }
+        }
+
+        private bool PreviewValid(Cell cell, ICard activeCard)
+        {
+            return _activePreview.HasValue
+                && _activePreview.Value.coord == cell.Coord
+                && _activePreview.Value.card == activeCard;
         }
 
         public void ConfirmCard()
@@ -154,6 +154,17 @@ namespace Assets.Cards
             }
             _activeCard = null;
             ClearPreview();
+        }
+
+        public void CellHover(Cell cell)
+        {
+            if (TryGetActiveCard(out ICard activeCard))
+            {
+                if (_activePreview?.card != activeCard || _activePreview?.coord != cell.Coord)
+                {
+                    PreviewCard(activeCard, cell.Coord);
+                }
+            }
         }
     }
 }

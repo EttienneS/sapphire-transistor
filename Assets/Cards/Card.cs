@@ -83,8 +83,9 @@ namespace Assets.Cards
         {
             foreach (var (cardAction, coord) in GetExecutionList(baseCoord))
             {
-                cardAction.Play(coord);
                 cardAction.ClearPreview();
+
+                cardAction.Play(coord);
             }
 
             CardEventManager.CardPlayed(this, baseCoord);

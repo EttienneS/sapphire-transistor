@@ -20,7 +20,7 @@ namespace Assets
         private readonly Dictionary<ChunkRenderer, List<IStructure>> _chunkStructureLookup = new Dictionary<ChunkRenderer, List<IStructure>>();
         private readonly List<GameObject> _destroyCache = new List<GameObject>();
         private readonly Dictionary<GameObject, Material[]> _materialBackup = new Dictionary<GameObject, Material[]>();
-        private readonly Dictionary<string, Queue<GameObject>> _objectPools = new Dictionary<string, Queue<GameObject>>();
+        private readonly Dictionary<string, List<GameObject>> _objectPools = new Dictionary<string, List<GameObject>>();
         private readonly Dictionary<IStructure, GameObject> _structureObjectLookup = new Dictionary<IStructure, GameObject>();
         private readonly Dictionary<StructureType, string> _typeAssetLookup = new Dictionary<StructureType, string>();
 
@@ -80,13 +80,14 @@ namespace Assets
 
             foreach (var (pool, size) in poolConfigs)
             {
-                var queue = new Queue<GameObject>();
+                var queue = new List<GameObject>();
                 _objectPools.Add(pool, queue);
                 for (var i = 0; i < size; i++)
                 {
                     InitModel(pool, Vector3.zero, (obj) =>
                     {
-                        _objectPools[pool].Enqueue(obj);
+                        _objectPools[pool].Add(obj);
+                        obj.name = $"{pool}-{_objectPools[pool].Count}";
                         InitOutline(obj);
                         obj.SetActive(false);
                     });
@@ -123,7 +124,11 @@ namespace Assets
             {
                 RestoreMaterials(gameObject);
 
-                _objectPools[pool].Enqueue(gameObject);
+                _outlineLookup[gameObject].enabled = false;
+
+                // add recyled items to front of list so they are used first when new items are required
+                _objectPools[pool].Remove(gameObject);
+                _objectPools[pool].Insert(0, gameObject);
                 gameObject.SetActive(false);
             }
             else
@@ -206,16 +211,28 @@ namespace Assets
             DestroyItemsInCache();
 
             UpdateHighlights();
+
+            SpawnPendingStructures();
+        }
+
+        private void SpawnPendingStructures()
+        {
+            foreach (var structure in _structuresToSpawn)
+            {
+                SpawnStructure(structure);
+            }
+            _structuresToSpawn.Clear();
         }
 
         private GameObject ActivatePoolObject(string address, Vector3 position, Transform parent)
         {
-            var obj = _objectPools[address].Dequeue();
+            var obj = _objectPools[address][0];
             obj.transform.parent = parent;
             obj.transform.position = position;
             obj.SetActive(true);
 
-            _objectPools[address].Enqueue(obj);
+            _objectPools[address].Remove(obj);
+            _objectPools[address].Add(obj);
             return obj;
         }
 
@@ -326,11 +343,13 @@ namespace Assets
                 // otherwise it will draw when the chunk activates later
                 if (_activeChunks.Contains(renderer) && !drawnOnce)
                 {
-                    SpawnStructure(structure);
+                    _structuresToSpawn.Add(structure);
                     drawnOnce = true;
                 }
             }
         }
+
+        private List<IStructure> _structuresToSpawn = new List<IStructure>();
 
         private void UpdateHighlights()
         {

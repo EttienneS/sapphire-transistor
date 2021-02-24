@@ -18,6 +18,7 @@ namespace Assets.Factions
         {
             _uiManager = serviceLocator.Find<IUIManager>();
             CellEventManager.OnCellClicked += CellClicked;
+            CellEventManager.OnMouseOver += CellHover;
 
             DeckManager = new DeckManager(this);
         }
@@ -30,6 +31,16 @@ namespace Assets.Factions
             }
 
             DeckManager.CellClicked(cell);
+        }
+
+        public void CellHover(Cell cell)
+        {
+            if (UIHelper.MouseOverUi())
+            {
+                return;
+            }
+
+            DeckManager.CellHover(cell);
         }
 
         public void ResetUI()
