@@ -1,8 +1,6 @@
-﻿using Assets.Cards;
-using Assets.Map;
+﻿using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,9 +12,9 @@ namespace Assets.Factions
         private Queue<IFaction> _factionQueue;
         private IFaction _natureFaction;
         private PlayerFaction _playerFaction;
-        private Lazy<ICardManager> _cardManager;
 
         public event FactionDelegates.OnTurnEnded OnTurnEnded;
+
         public event FactionDelegates.OnTurnStarted OnTurnStarted;
 
         public void AddFaction(IFaction faction)
@@ -77,7 +75,6 @@ namespace Assets.Factions
         public override void Initialize()
         {
             _factionQueue = new Queue<IFaction>();
-            _cardManager = new Lazy<ICardManager>(() => Locate<ICardManager>());
         }
 
         public void MoveToNextTurn()
@@ -91,15 +88,14 @@ namespace Assets.Factions
             OnTurnStarted?.Invoke(_activeFaction);
 
             _activeFaction.DoTurnStartActions();
-            _activeFaction.Draw();
             _activeFaction.TakeTurn();
         }
 
-        public bool TryGetStructureInCell(Cell cell, out IStructure structure)
+        public bool TryGetStructureAtCoord(ICoord coord, out IStructure structure)
         {
             foreach (var faction in GetAllFactions())
             {
-                structure = faction.StructureManager.GetStructures().Find(s => s.OccupiedCoords.Any(c => c.Equals(cell.Coord)));
+                structure = faction.StructureManager.GetStructures().Find(s => s.OccupiedCoords.Any(c => c.Equals(coord)));
                 if (structure != null)
                 {
                     return true;

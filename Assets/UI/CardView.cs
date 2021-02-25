@@ -8,7 +8,10 @@ namespace Assets.UI
     public class CardView : MonoBehaviour
     {
         public TMP_Text Title;
+        public TMP_Text Cost;
         public TMP_Text Content;
+        public Image Background;
+        public UnityEngine.UI.Outline Outline;
 
         private ICard _card;
 
@@ -17,7 +20,7 @@ namespace Assets.UI
             _card = card;
 
             Title.text = _card.Name;
-
+            Background.color = _card.Color.GetActualColor();
             CardEventManager.OnSetPlayerCardActive += CardActive;
         }
 
@@ -28,14 +31,13 @@ namespace Assets.UI
 
         private void CardActive(ICard card)
         {
-            var img = GetComponentInChildren<Image>();
             if (card == _card)
             {
-                img.color = Color.red;
+                Outline.effectColor = Color.red;
             }
             else
             {
-                img.color = Color.white;
+                Outline.effectColor = new Color(0,0,0,0);
             }
         }
 
@@ -43,6 +45,13 @@ namespace Assets.UI
         {
             // content changes if card is rotated
             Content.text = _card.ToString();
+
+            Cost.text = "";
+            foreach (var costItem in _card.GetCost())
+            {
+                Cost.text += $"{costItem.Value}{costItem.Key.ToString()[0]} ";
+            }
+            Cost.text = Cost.text.Trim();
         }
 
         public void Clicked()

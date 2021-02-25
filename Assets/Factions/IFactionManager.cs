@@ -22,9 +22,8 @@ namespace Assets.Factions
 
         IFaction GetOwnerOfStructure(IStructure structure);
 
-        bool TryGetStructureInCell(Cell cell, out IStructure structure);
+        bool TryGetStructureAtCoord(ICoord coord, out IStructure structure);
 
         IFaction GetNatureFaction();
-
     }
 }

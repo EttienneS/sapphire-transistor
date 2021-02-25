@@ -15,6 +15,5 @@ namespace Assets.UI
         {
             GetComponentInChildren<TMPro.TMP_Text>().text = text;
         }
-
     }
 }

@@ -32,10 +32,8 @@ namespace Assets
             _locator.Register<IStructureFactory>(new StructureFactory());
             _locator.Register<IFactionManager>(new FactionManager());
 
-            _locator.Register<ICardManager>(new CardManager());
-
             _locator.Register<NewGameManager>(new NewGameManager());
-            
+
             _locator.Register<IUIManager>(FindObjectOfType<UIManager>());
         }
 

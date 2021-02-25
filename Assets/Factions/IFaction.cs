@@ -1,5 +1,4 @@
-﻿using Assets.Cards;
-using Assets.Map;
+﻿using Assets.Structures;
 using System.Collections.Generic;
 
 namespace Assets.Factions
@@ -14,15 +13,9 @@ namespace Assets.Factions
 
         string Name { get; }
 
-        IDeck Deck { get; }
-
-        List<ICard> Hand { get; }
-
         IStructureManager StructureManager { get; }
 
-        ICardLoader CardLoader { get; }
-
-        bool CanAfford((ResourceType resource, int amount)[] cost);
+        bool CanAfford(Dictionary<ResourceType, int> cost);
 
         void DoTurnEndActions();
 
@@ -32,12 +25,8 @@ namespace Assets.Factions
 
         void ModifyResource(ResourceType resource, int amount);
 
+        void ModifyResource(Dictionary<ResourceType, int> cost);
+
         void TakeTurn();
-
-        int GetMaxHandSize();
-
-        void DrawCard(ICard card);
-
-        void Draw();
     }
 }

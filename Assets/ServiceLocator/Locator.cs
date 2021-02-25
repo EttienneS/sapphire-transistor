@@ -77,6 +77,7 @@ namespace Assets.ServiceLocator
             }
             return true;
         }
+
         internal void LogServices()
         {
             var msg = "Loaded services:\n";

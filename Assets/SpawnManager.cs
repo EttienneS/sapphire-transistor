@@ -20,9 +20,15 @@ namespace Assets
         private readonly Dictionary<ChunkRenderer, List<IStructure>> _chunkStructureLookup = new Dictionary<ChunkRenderer, List<IStructure>>();
         private readonly List<GameObject> _destroyCache = new List<GameObject>();
         private readonly Dictionary<GameObject, Material[]> _materialBackup = new Dictionary<GameObject, Material[]>();
-        private readonly Dictionary<string, Queue<GameObject>> _objectPools = new Dictionary<string, Queue<GameObject>>();
+        private readonly Dictionary<string, List<GameObject>> _objectPools = new Dictionary<string, List<GameObject>>();
         private readonly Dictionary<IStructure, GameObject> _structureObjectLookup = new Dictionary<IStructure, GameObject>();
         private readonly Dictionary<StructureType, string> _typeAssetLookup = new Dictionary<StructureType, string>();
+
+        private Dictionary<GameObject, Outline> _outlineLookup = new Dictionary<GameObject, Outline>();
+
+        private List<GameObject> _outlinesToDisable = new List<GameObject>();
+
+        private List<GameObject> _outlinesToEnable = new List<GameObject>();
 
         public delegate void SpawnCallback(GameObject spawnedObject);
 
@@ -63,27 +69,29 @@ namespace Assets
             {
                 ("Tree", 1000),
                 ("Rock", 500),
-                ("Road", 200),
-                ("Anchor", 200),
-                ("Base", 200),
+                ("Road", 1000),
                 ("BellTower", 10),
-                ("Barn", 20),
-                ("House", 100),
+                ("Barn", 100),
+                ("House", 200),
+                ("Field", 500),
+                ("Empty", 5),
+                ("RemoveMarker", 50),
             };
 
             foreach (var (pool, size) in poolConfigs)
             {
-                var queue = new Queue<GameObject>();
+                var queue = new List<GameObject>();
+                _objectPools.Add(pool, queue);
                 for (var i = 0; i < size; i++)
                 {
-                    SpawnModel(pool, Vector3.zero, (obj) =>
+                    InitModel(pool, Vector3.zero, (obj) =>
                     {
-                        _objectPools[pool].Enqueue(obj);
+                        _objectPools[pool].Add(obj);
+                        obj.name = $"{pool}-{_objectPools[pool].Count}";
+                        InitOutline(obj);
                         obj.SetActive(false);
                     });
                 }
-
-                _objectPools.Add(pool, queue);
             }
 
             _typeAssetLookup.Add(StructureType.Tree, "Tree");
@@ -91,6 +99,9 @@ namespace Assets
             _typeAssetLookup.Add(StructureType.Core, "BellTower");
             _typeAssetLookup.Add(StructureType.Road, "Road");
             _typeAssetLookup.Add(StructureType.House, "House");
+            _typeAssetLookup.Add(StructureType.Barn, "Barn");
+            _typeAssetLookup.Add(StructureType.Field, "Field");
+            _typeAssetLookup.Add(StructureType.Empty, "Empty");
 
             MapEventManager.OnChunkRenderCreated += MapEventManager_OnChunkRenderCreated;
             MapEventManager.OnChunkRenderActivated += MapEventManager_OnChunkRenderActivated;
@@ -98,6 +109,9 @@ namespace Assets
 
             StructureEventManager.OnStructurePlanned += StructureEventManager_OnStructurePlanned;
             StructureEventManager.OnStructureDestroyed += StructureEventManager_OnStructureDestroyed;
+
+            StructureEventManager.OnShowHighlight += (structure) => SetOutlineOnStructure(structure, true);
+            StructureEventManager.OnHideHighlight += (structure) => SetOutlineOnStructure(structure, false);
         }
 
         public void RecyleItem(string pool, GameObject gameObject)
@@ -110,13 +124,15 @@ namespace Assets
             {
                 RestoreMaterials(gameObject);
 
-                Debug.Log($"Recyle: {pool} >> {gameObject.name}");
-                _objectPools[pool].Enqueue(gameObject);
+                _outlineLookup[gameObject].enabled = false;
+
+                // add recyled items to front of list so they are used first when new items are required
+                _objectPools[pool].Remove(gameObject);
+                _objectPools[pool].Insert(0, gameObject);
                 gameObject.SetActive(false);
             }
             else
             {
-                Debug.Log($"Destroy: {pool} >> {gameObject.name}");
                 AddItemToDestroy(gameObject);
             }
         }
@@ -126,18 +142,42 @@ namespace Assets
             RecyleItem(type.ToString(), gameObject);
         }
 
+        public void SetOutlineOnStructure(IStructure structure, bool active)
+        {
+            if (_structureObjectLookup.ContainsKey(structure))
+            {
+                var obj = _structureObjectLookup[structure];
+
+                if (obj != null)
+                {
+                    if (active)
+                    {
+                        lock (_outlinesToEnable)
+                        {
+                            _outlinesToEnable.Add(obj);
+                        }
+                    }
+                    else
+                    {
+                        lock (_outlinesToDisable)
+                        {
+                            _outlinesToDisable.Add(obj);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void InitModel(string address, Vector3 position, SpawnCallback callback)
+        {
+            var op = Addressables.InstantiateAsync(address, position, Quaternion.identity, transform);
+            op.Completed += (AsyncOperationHandle<GameObject> obj) => callback.Invoke(obj.Result);
+        }
+
         public void SpawnModel(string address, Vector3 position, SpawnCallback callback)
         {
-            if (!_objectPools.ContainsKey(address))
-            {
-                var op = Addressables.InstantiateAsync(address, position, Quaternion.identity, transform);
-                op.Completed += (AsyncOperationHandle<GameObject> obj) => callback.Invoke(obj.Result);
-            }
-            else
-            {
-                var obj = ActivatePoolObject(address, position, transform);
-                callback.Invoke(obj);
-            }
+            var obj = ActivatePoolObject(address, position, transform);
+            callback.Invoke(obj);
         }
 
         public void SpawnModel(StructureType type, Vector3 position, SpawnCallback callback)
@@ -169,16 +209,30 @@ namespace Assets
         public void Update()
         {
             DestroyItemsInCache();
+
+            UpdateHighlights();
+
+            SpawnPendingStructures();
+        }
+
+        private void SpawnPendingStructures()
+        {
+            foreach (var structure in _structuresToSpawn)
+            {
+                SpawnStructure(structure);
+            }
+            _structuresToSpawn.Clear();
         }
 
         private GameObject ActivatePoolObject(string address, Vector3 position, Transform parent)
         {
-            var obj = _objectPools[address].Dequeue();
+            var obj = _objectPools[address][0];
             obj.transform.parent = parent;
             obj.transform.position = position;
             obj.SetActive(true);
 
-            _objectPools[address].Enqueue(obj);
+            _objectPools[address].Remove(obj);
+            _objectPools[address].Add(obj);
             return obj;
         }
 
@@ -193,6 +247,19 @@ namespace Assets
         private string GetAssetNameForStructureType(StructureType type)
         {
             return _typeAssetLookup[type];
+        }
+
+        private void InitOutline(GameObject obj)
+        {
+            var outline = obj.AddComponent<Outline>();
+
+            outline.OutlineMode = Outline.Mode.OutlineVisible;
+            outline.OutlineColor = Color.red;
+            outline.OutlineWidth = 5f;
+
+            outline.enabled = false;
+
+            _outlineLookup.Add(obj, outline);
         }
 
         private void MapEventManager_OnChunkRenderActivated(ChunkRenderer renderer)
@@ -252,7 +319,11 @@ namespace Assets
             _chunkStructureLookup[renderer].Remove(structure);
 
             var pool = GetAssetNameForStructureType(structure.Type);
-            RecyleItem(pool, _structureObjectLookup[structure]);
+
+            if (_structureObjectLookup.ContainsKey(structure))
+            {
+                RecyleItem(pool, _structureObjectLookup[structure]);
+            }
         }
 
         private void StructureEventManager_OnStructurePlanned(IStructure structure)
@@ -272,9 +343,32 @@ namespace Assets
                 // otherwise it will draw when the chunk activates later
                 if (_activeChunks.Contains(renderer) && !drawnOnce)
                 {
-                    SpawnStructure(structure);
+                    _structuresToSpawn.Add(structure);
                     drawnOnce = true;
                 }
+            }
+        }
+
+        private List<IStructure> _structuresToSpawn = new List<IStructure>();
+
+        private void UpdateHighlights()
+        {
+            lock (_outlinesToEnable)
+            {
+                foreach (var outline in _outlinesToEnable)
+                {
+                    _outlineLookup[outline].enabled = true;
+                }
+                _outlinesToEnable.Clear();
+            }
+
+            lock (_outlinesToDisable)
+            {
+                foreach (var outline in _outlinesToDisable)
+                {
+                    _outlineLookup[outline].enabled = false;
+                }
+                _outlinesToDisable.Clear();
             }
         }
     }

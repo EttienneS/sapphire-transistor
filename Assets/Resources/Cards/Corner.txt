@@ -1,7 +1,8 @@
 Name=Corner
 Cost=1G,1S
+Color=Blue
 -
-R=Road
+R=Build Road
 ===
 RRR
 R..

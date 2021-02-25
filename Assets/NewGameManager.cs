@@ -1,11 +1,11 @@
-﻿using Assets.Cards;
-using Assets.Factions;
+﻿using Assets.Factions;
 using Assets.Helpers;
 using Assets.Map;
 using Assets.MapGeneration;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using Assets.Structures;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Assets
@@ -39,6 +39,13 @@ namespace Assets
         private void MakeFactionCores(IMapManager mapManager, IFactionManager factionManager)
         {
             var faction = factionManager.GetPlayerFaction();
+            faction.ModifyResource(new Dictionary<ResourceType, int>()
+            {
+                {  ResourceType.Gold, 10 },
+                {  ResourceType.Food, 10 },
+                {  ResourceType.Stone, 10 },
+                {  ResourceType.Wood, 10 },
+            });
 
             var coreCell = mapManager.GetRandomCell((cell) => cell.Terrain.Type == TerrainType.Grass);
             faction.StructureManager.AddStructure(StructureType.Core, coreCell.Coord);
@@ -63,25 +70,13 @@ namespace Assets
             var locator = GetLocator();
 
             var player = new PlayerFaction("Player", locator);
-            DealCards(player);
             var nature = new NatureFaction("Nature", locator);
-            DealCards(nature);
             var enemy = new AIFaction("Enemy", locator);
-            DealCards(enemy);
 
-
-            factionManager.AddFaction(player);
             factionManager.AddFaction(nature);
             factionManager.AddFaction(enemy);
-        }
+            factionManager.AddFaction(player);
 
-        private void DealCards(IFaction faction)
-        {
-            var cardMan = Locate<ICardManager>();
-            for (int i = 0; i < 10; i++)
-            {
-                faction.Deck.AddCard(faction.CardLoader.Load(cardMan.GetRandomRawCard()));
-            }
         }
 
         private void GenerateMap(IMapManager mapManager, int size, IStructureFactory structureFactory, IFactionManager factionManger)

@@ -1,21 +1,22 @@
 ﻿using Assets.Factions;
 using Assets.Map;
+using System.Collections.Generic;
 
 namespace Assets.Structures.Behaviors
 {
-    public class HouseBehavior: StructureBehaviorBase
+    public class HouseBehavior : StructureBehaviorBase
     {
-        private readonly (ResourceType, int)[] _baseYield;
+        private readonly Dictionary<ResourceType, int> _baseYield;
 
         public HouseBehavior(IMapManager map) : base(map)
         {
-            _baseYield = new[]
+            _baseYield = new Dictionary<ResourceType, int>
             {
-                (ResourceType.Gold, 1)
+                { ResourceType.Gold, 1 }
             };
         }
 
-        public override (ResourceType, int)[] GetBaseYield(IStructure structure)
+        public override Dictionary<ResourceType, int> GetBaseYield(IStructure structure)
         {
             return _baseYield;
         }

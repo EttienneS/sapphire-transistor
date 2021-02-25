@@ -1,4 +1,6 @@
-﻿using Assets.Map;
+﻿using Assets.Cards.Actions;
+using Assets.Factions;
+using Assets.Map;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,18 +8,22 @@ namespace Assets.Cards
 {
     public class Card : ICard
     {
+        private readonly Dictionary<ResourceType, int> _cost;
         private (int x, int z) _basePoint;
         private ICardAction[,] _originalActions;
         private ICardAction[,] _rotatedActions;
 
-        public Card(string name, (int x, int z) basePoint, ICardAction[,] actions)
+        public Card(string name, CardColor color, (int x, int z) basePoint, ICardAction[,] actions, Dictionary<ResourceType, int> cost)
         {
             Name = name;
+            Color = color;
             _originalActions = actions;
             _rotatedActions = _originalActions;
             _basePoint = basePoint;
+            _cost = cost;
         }
 
+        public CardColor Color { get; }
         public string Name { get; }
 
         public bool CanPlay(ICoord anchor)
@@ -41,6 +47,17 @@ namespace Assets.Cards
             return true;
         }
 
+        public void ClearPreview()
+        {
+            foreach (var action in GetActions())
+            {
+                if (action != null)
+                {
+                    action.ClearPreview();
+                }
+            }
+        }
+
         public ICardAction[,] GetActions()
         {
             return _rotatedActions;
@@ -49,6 +66,11 @@ namespace Assets.Cards
         public (int x, int z) GetBasePoint()
         {
             return _basePoint;
+        }
+
+        public Dictionary<ResourceType, int> GetCost()
+        {
+            return _cost;
         }
 
         public ICoord GetRelativeAnchorPoint(ICoord anchor)
@@ -61,6 +83,8 @@ namespace Assets.Cards
         {
             foreach (var (cardAction, coord) in GetExecutionList(baseCoord))
             {
+                cardAction.ClearPreview();
+
                 cardAction.Play(coord);
             }
 
@@ -75,27 +99,6 @@ namespace Assets.Cards
                 cardAction.Preview(coord);
             }
             CardEventManager.CardPreviewed(this, baseCoord);
-        }
-
-        private List<(ICardAction cardAction, ICoord coord)> GetExecutionList(ICoord coord)
-        {
-            var executionList = new List<(ICardAction cardAction, ICoord coord)>();
-            var actions = GetActions();
-
-            for (int x = 0; x < actions.GetLength(0); x++)
-            {
-                for (int z = 0; z < actions.GetLength(1); z++)
-                {
-                    var action = actions[x, z];
-                    if (action != null)
-                    {
-                        var adjustedCoord = new Coord(coord.X + x, coord.Y, coord.Z + z);
-                        executionList.Add((action, adjustedCoord));
-                    }
-                }
-            }
-
-            return executionList;
         }
 
         public override string ToString()
@@ -123,15 +126,25 @@ namespace Assets.Cards
             return str;
         }
 
-        public void ClearPreview()
+        private List<(ICardAction cardAction, ICoord coord)> GetExecutionList(ICoord coord)
         {
-            foreach (var action in GetActions())
+            var executionList = new List<(ICardAction cardAction, ICoord coord)>();
+            var actions = GetActions();
+
+            for (int x = 0; x < actions.GetLength(0); x++)
             {
-                if (action != null)
+                for (int z = 0; z < actions.GetLength(1); z++)
                 {
-                    action.ClearPreview();
+                    var action = actions[x, z];
+                    if (action != null)
+                    {
+                        var adjustedCoord = new Coord(coord.X + x, coord.Y, coord.Z + z);
+                        executionList.Add((action, adjustedCoord));
+                    }
                 }
             }
+
+            return executionList;
         }
     }
 }

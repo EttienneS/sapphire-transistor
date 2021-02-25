@@ -1,9 +1,11 @@
-Name=Houses
+Name=House
 Cost=3W,2S,1G
+Color=Yellow
 -
-R=Road
-H=House
-===
-RRR
-.H.
-RRR
+R=Build Road
+H=Build House
+====
+RRRR
+R..R
+RH.R
+RRRR

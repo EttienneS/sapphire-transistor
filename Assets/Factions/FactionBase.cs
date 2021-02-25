@@ -1,5 +1,4 @@
-﻿using Assets.Cards;
-using Assets.Map;
+﻿using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
 using System.Collections.Generic;
@@ -13,11 +12,8 @@ namespace Assets.Factions
         protected FactionBase(string name, IServiceLocator serviceLocator)
         {
             _resources = new Dictionary<ResourceType, int>();
-            Deck = new Deck();
             Name = name;
-            Hand = new List<ICard>();
 
-            CardLoader = new CardLoader(this);
             StructureManager = new StructureManager(serviceLocator.Find<IStructureFactory>(),
                                                     serviceLocator.Find<IFactionManager>(),
                                                     serviceLocator.Find<IMapManager>());
@@ -29,24 +25,20 @@ namespace Assets.Factions
 
         public event FactionDelegates.OnTurnStarted TurnStarted;
 
-        public IDeck Deck { get; }
-        public List<ICard> Hand { get; }
         public string Name { get; }
 
         public IStructureManager StructureManager { get; }
 
-        public ICardLoader CardLoader { get; }
-
-        public bool CanAfford((ResourceType resource, int amount)[] cost)
+        public bool CanAfford(Dictionary<ResourceType, int> cost)
         {
             var resources = GetResources();
             foreach (var resource in cost)
             {
-                if (!resources.ContainsKey(resource.resource))
+                if (!resources.ContainsKey(resource.Key))
                 {
                     return false;
                 }
-                if (resources[resource.resource] < resource.amount)
+                if (resources[resource.Key] < resource.Value)
                 {
                     return false;
                 }
@@ -63,37 +55,12 @@ namespace Assets.Factions
         public void DoTurnStartActions()
         {
             StructureManager.DoTurnStartActions();
-            AddResources(StructureManager.GetCombinedYield());
             TurnStarted?.Invoke(this);
         }
 
-        public void Draw()
-        {
-            var cardsToDraw = GetMaxHandSize() - Hand.Count;
-
-            if (cardsToDraw > 0)
-            {
-                for (int i = 0; i < cardsToDraw; i++)
-                {
-                    DrawCard(Deck.Draw());
-                }
-            }
-        }
-
-        public void DrawCard(ICard card)
-        {
-            Hand.Add(card);
-            CardEventManager.CardReceived(card, this);
-        }
-
-        public void EndTurn()
+        public virtual void EndTurn()
         {
             TurnEnded?.Invoke(this);
-        }
-
-        public int GetMaxHandSize()
-        {
-            return 5;
         }
 
         public Dictionary<ResourceType, int> GetResources()
@@ -112,13 +79,13 @@ namespace Assets.Factions
             OnResourcesUpdated?.Invoke(resource, _resources[resource]);
         }
 
-               public abstract void TakeTurn();
+        public abstract void TakeTurn();
 
-        private void AddResources(List<(ResourceType resouceType, int amount)> resouces)
+        public void ModifyResource(Dictionary<ResourceType, int> cost)
         {
-            foreach (var resouce in resouces)
+            foreach (var kvp in cost)
             {
-                ModifyResource(resouce.resouceType, resouce.amount);
+                ModifyResource(kvp.Key, kvp.Value);
             }
         }
     }

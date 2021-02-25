@@ -12,17 +12,20 @@ namespace Assets.Structures
 
         ICoord[] OccupiedCoords { get; }
 
-        string Description { get; }
-
         int Width { get; }
+
         int Height { get; }
 
-        (ResourceType, int)[] GetYield(IStructure structure);
+        bool RequiresLink { get; }
+
+        Dictionary<ResourceType, int> GetYield(IStructure structure);
 
         void TurnEnd(IStructure structure);
 
         void TurnStart(IStructure structure);
+
         ICoord GetOrigin();
+
         string GetStatus();
     }
 }

@@ -1,0 +1,10 @@
+Name=Box Clear
+Cost=1G
+Color=Red
+-
+X=Remove
+====
+XXXX
+XXXX
+XXXX
+XXXX

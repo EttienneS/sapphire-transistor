@@ -1,10 +1,11 @@
 ﻿using Assets.Factions;
+using System.Collections.Generic;
 
 namespace Assets.Structures
 {
     public interface IStructureBehaviour
     {
-        (ResourceType, int)[] GetBaseYield(IStructure structure);
+        Dictionary<ResourceType, int> GetBaseYield(IStructure structure);
 
         void TurnStart(IStructure structure);
 

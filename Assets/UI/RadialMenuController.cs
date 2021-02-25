@@ -23,7 +23,7 @@ namespace Assets.UI
 
         public event RadialMenuDelegates.MenuClosed MenuClosed;
 
-        public void AddButton(string text, RadialMenuDelegates.MenuItemClicked onItemClicked, RadialMenuDelegates.MenuItemConfirmed onItemConfirmed,  bool enabled = true)
+        public void AddButton(string text, RadialMenuDelegates.MenuItemClicked onItemClicked, RadialMenuDelegates.MenuItemConfirmed onItemConfirmed, bool enabled = true)
         {
             var menuButton = Instantiate(RadialMenuElementPrefab, ElementContainer.transform);
             menuButton.Load(text);
@@ -43,7 +43,6 @@ namespace Assets.UI
                     menuButton.GetComponent<Button>().interactable = false;
                 }
             }
-            
 
             UpdatePositionOfElements();
         }
@@ -55,7 +54,7 @@ namespace Assets.UI
             var offset = Mathf.Max(buttonRect.x, buttonRect.y) / 2;
             Radius = (Mathf.Max(containerRect.x, containerRect.y) / 2) + offset;
         }
-         
+
         public void CloseMenu()
         {
             MenuClosed?.Invoke();

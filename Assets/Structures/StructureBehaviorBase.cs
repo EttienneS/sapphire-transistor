@@ -1,5 +1,6 @@
 ﻿using Assets.Factions;
 using Assets.Map;
+using System.Collections.Generic;
 
 namespace Assets.Structures
 {
@@ -12,7 +13,7 @@ namespace Assets.Structures
             _map = map;
         }
 
-        public abstract (ResourceType, int)[] GetBaseYield(IStructure structure);
+        public abstract Dictionary<ResourceType, int> GetBaseYield(IStructure structure);
 
         public abstract void TurnEnd(IStructure structure);
 

@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Assets.UI
 {
-
     public interface IUIManager
     {
         RadialMenuManager RadialMenuManager { get; set; }
@@ -12,5 +11,8 @@ namespace Assets.UI
         void HighlightCells(ICoord[] coord, Color color);
 
         void DisableHighlights();
+
+        void ShowDrawView();
+        void HideDrawView();
     }
 }

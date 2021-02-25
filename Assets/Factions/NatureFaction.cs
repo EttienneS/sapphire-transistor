@@ -14,6 +14,7 @@ namespace Assets.Factions
         {
             Task.Run(() => DoStuff());
         }
+
         public void DoStuff()
         {
             for (int i = 0; i < 2; i++)

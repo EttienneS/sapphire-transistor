@@ -2,30 +2,57 @@
 using Assets.Helpers;
 using Assets.Map;
 using Assets.ServiceLocator;
+using Assets.Structures;
 using Assets.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Factions
 {
     public class PlayerFaction : FactionBase
     {
-        private readonly IFactionManager _factionManager;
+        public IHandManager HandManager;
+        private readonly CardLoader _cardLoader;
         private readonly IUIManager _uiManager;
 
-        private ICard _activeCard;
-
-        private (ICard card, ICoord coord)? _activePreview;
+        public Dictionary<CardColor, IDeck> Decks { get; set; }
 
         public PlayerFaction(string name, IServiceLocator serviceLocator) : base(name, serviceLocator)
         {
             _uiManager = serviceLocator.Find<IUIManager>();
-            _factionManager = serviceLocator.Find<IFactionManager>();
+
             CellEventManager.OnCellClicked += CellClicked;
-            CardEventManager.OnSetPlayerCardActive += OnPlayerCardActive;
+            CellEventManager.OnMouseOver += CellHover;
+
+            _cardLoader = new CardLoader(this);
+            HandManager = new HandManager(this);
+
+            PopulateDecks();
+
+            CardEventManager.OnCardReceived += CardEventManager_OnCardReceived;
         }
 
-        public void CancelCard()
+        private void CardEventManager_OnCardReceived(ICard card, IFaction player)
         {
-            ClearPreview();
+            if (player == this && HandManager.GetOpenHandSize() == 0)
+            {
+                _uiManager.HideDrawView();
+            }
+        }
+
+        private void PopulateDecks()
+        {
+            Decks = new Dictionary<CardColor, IDeck>();
+            foreach (var card in _cardLoader.GetAvailableCards())
+            {
+                if (!Decks.ContainsKey(card.Color))
+                {
+                    Decks.Add(card.Color, new Deck(card.Color));
+                }
+
+                Decks[card.Color].AddCard(card);
+            }
         }
 
         public void CellClicked(Cell cell)
@@ -35,47 +62,25 @@ namespace Assets.Factions
                 return;
             }
 
-            if (TryGetActiveCard(out ICard activeCard))
-            {
-                if (_activePreview.HasValue && _activePreview.Value.coord == cell.Coord && _activePreview.Value.card == activeCard)
-                {
-                    ConfirmCard();
-                }
-                else
-                {
-                    PreviewCard(activeCard, cell.Coord);
-                }
-            }
+            HandManager.CellClicked(cell);
         }
 
-        public void ConfirmCard()
+        public void CellHover(Cell cell)
         {
-            var card = _activePreview.Value.card;
-            var coord = _activePreview.Value.coord;
-            if (card.CanPlay(coord))
+            if (UIHelper.MouseOverUi())
             {
-                card.Play(coord);
+                return;
             }
-            ClearPreview();
-            Hand.Remove(_activeCard);
-            _activeCard = null;
+
+            HandManager.CellHover(cell);
         }
 
-        public bool TryGetActiveCard(out ICard card)
+        public override void EndTurn()
         {
-            card = _activeCard;
-            if (_activeCard == null)
-            {
-                return false;
-            }
-            return true;
-        }
+            _uiManager.HideDrawView();
 
-        public void PreviewCard(ICard card, ICoord coord)
-        {
-            ClearPreview();
-            _activePreview = (card, coord);
-            _activePreview.Value.card.Preview(_activePreview.Value.coord);
+            HandManager.DiscardHand();
+            base.EndTurn();
         }
 
         public void ResetUI()
@@ -86,27 +91,48 @@ namespace Assets.Factions
 
         public override void TakeTurn()
         {
+            var connected = StructureManager.GetStructuresLinkedTo(StructureManager.GetCore());
+
+            ReadyDecks();
+
+            _uiManager.ShowDrawView();
+
+            HighlightConnected(connected);
+            GetYieldForConnected(connected);
         }
 
-        private void ClearPreview()
+        private void ReadyDecks()
         {
-            if (_activePreview.HasValue)
+            foreach (var deck in Decks)
             {
-                _activePreview.Value.card.ClearPreview();
-                _activePreview = null;
+                if (deck.Value.GetRemaining() <= 0)
+                {
+                    deck.Value.Recyle();
+                }
             }
         }
 
-        private void OnPlayerCardActive(ICard card)
+        private void GetYieldForConnected(System.Collections.Generic.List<IStructure> connected)
         {
-            if (Hand.Contains(card))
+            foreach (var structure in connected)
             {
-                ClearPreview();
-                _activeCard = card;
+                foreach (var resource in structure.GetYield(structure))
+                {
+                    ModifyResource(resource.Key, resource.Value);
+                }
             }
-            else
+        }
+
+        private void HighlightConnected(System.Collections.Generic.List<IStructure> connected)
+        {
+            foreach (var structure in connected)
             {
-                throw new System.Exception($"Card not in hand!: {card}");
+                StructureEventManager.HideHighlight(structure);
+            }
+
+            foreach (var structure in StructureManager.GetStructures().Except(connected).Where(s => s.RequiresLink))
+            {
+                StructureEventManager.ShowHiglight(structure);
             }
         }
     }

@@ -8,16 +8,28 @@ namespace Assets.UI
 {
     public class UIManager : LocatableMonoBehaviorBase, IUIManager
     {
+        private List<GameObject> _activeHighlights = new List<GameObject>();
         private IFaction _activePlayer;
         private CurrentPlayerLabel _currentPlayerLabel;
+        private DrawView _drawView;
         private EndTurnButton _endTurnButton;
 
         private IFactionManager _factionManager;
-        private List<GameObject> _activeHighlights = new List<GameObject>();
         private IFaction _playerFaction;
+        private bool _ready;
+        private bool? _showDrawView ;
         private ISpawnManager _spawnManager;
-        public RadialMenuManager RadialMenuManager { get; set; }
         public MessageManager MessageManager { get; set; }
+        public RadialMenuManager RadialMenuManager { get; set; }
+
+        public void DestroyDrawView()
+        {
+            if (_drawView != null)
+            {
+                _spawnManager.AddItemToDestroy(_drawView.gameObject);
+            }
+            _drawView = null;
+        }
 
         public void DisableHighlights()
         {
@@ -31,6 +43,11 @@ namespace Assets.UI
             }
         }
 
+        public void HideDrawView()
+        {
+            _showDrawView = false;
+        }
+
         public void HighlightCells(ICoord[] coords, Color color)
         {
             DisableHighlights();
@@ -42,7 +59,6 @@ namespace Assets.UI
                     obj.GetComponent<MeshRenderer>().material.color = color;
                 });
             }
-
         }
 
         public override void Initialize()
@@ -53,17 +69,40 @@ namespace Assets.UI
             _spawnManager = Locate<ISpawnManager>();
 
             _currentPlayerLabel = GetComponentInChildren<CurrentPlayerLabel>();
-            _endTurnButton = GetComponentInChildren<EndTurnButton>();
-
             _currentPlayerLabel.Hide();
+
+            _drawView = GetComponentInChildren<DrawView>();
+            HideDrawView();
+            _endTurnButton = GetComponentInChildren<EndTurnButton>();
 
             RadialMenuManager = new RadialMenuManager(_spawnManager, transform);
             MessageManager = new MessageManager(_spawnManager, transform);
         }
 
+        public void ShowDrawView()
+        {
+            _showDrawView = true;
+        }
+
         private void FactionManager_OnTurnStarted(IFaction faction)
         {
             _activePlayer = faction;
+        }
+
+        private void ManageCardDrawView()
+        {
+            if (!_showDrawView.HasValue) return;
+
+            if (_showDrawView.Value)
+            {
+                _drawView.Show();
+            }
+            else
+            {
+                _drawView.Hide();
+            }
+
+            _showDrawView = null;
         }
 
         private void ShowOrHideActivePlayerMessage()
@@ -85,8 +124,6 @@ namespace Assets.UI
             }
         }
 
-        private bool _ready;
-
         private void Update()
         {
             if (!_ready)
@@ -97,6 +134,8 @@ namespace Assets.UI
             {
                 ShowOrHideActivePlayerMessage();
             }
+
+            ManageCardDrawView();
         }
     }
 }

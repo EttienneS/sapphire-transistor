@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace Assets.Map
 {
@@ -8,6 +7,7 @@ namespace Assets.Map
         float Y { get; }
         int X { get; }
         int Z { get; }
+
         int DistanceTo(ICoord other);
     }
 }

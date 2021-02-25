@@ -8,39 +8,14 @@ namespace Assets.Cards
     {
         void AddCard(ICard card);
 
+        void AddToDiscardPile(ICard card);
+
         ICard Draw();
 
         void Shuffle();
-    }
+        int GetRemaining();
+        int GetDiscardPile();
 
-    public class Deck : IDeck
-    {
-        private readonly Queue<ICard> _cards;
-
-        public Deck()
-        {
-            _cards = new Queue<ICard>();
-        }
-
-        public void AddCard(ICard card)
-        {
-            _cards.Enqueue(card);
-        }
-
-        public ICard Draw()
-        {
-            return _cards.Dequeue();
-        }
-
-        public void Shuffle()
-        {
-            var shuffled = _cards.ToList();
-            shuffled.Shuffle();
-            _cards.Clear();
-            foreach (var card in shuffled)
-            {
-                _cards.Enqueue(card);
-            }
-        }
+        void Recyle();
     }
 }

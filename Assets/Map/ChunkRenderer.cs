@@ -57,7 +57,6 @@ namespace Assets.Map
                 MapEventManager.ChunkRendererDeactivated(this);
                 _active = false;
             }
-            
         }
 
         public void GenerateMesh()
