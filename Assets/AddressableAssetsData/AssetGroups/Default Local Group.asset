@@ -133,13 +133,6 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
-  - m_GUID: 54b384a63396b884f99b5164ab255655
-    m_Address: DrawView
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - UI
-    m_MainAsset: {fileID: 754810457150195491, guid: 54b384a63396b884f99b5164ab255655, type: 3}
-    m_TargetAsset: {fileID: 754810457150195491, guid: 54b384a63396b884f99b5164ab255655, type: 3}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: aa16110a372069b46b6f3f9cae36d497, type: 2}
   m_SchemaSet:

@@ -28,6 +28,21 @@ namespace Assets.Factions
             _cardLoader = new CardLoader(this);
             HandManager = new HandManager(this);
 
+            PopulateDecks();
+
+            CardEventManager.OnCardReceived += CardEventManager_OnCardReceived;
+        }
+
+        private void CardEventManager_OnCardReceived(ICard card, IFaction player)
+        {
+            if (player == this && HandManager.GetOpenHandSize() == 0)
+            {
+                _uiManager.HideDrawView();
+            }
+        }
+
+        private void PopulateDecks()
+        {
             Decks = new Dictionary<CardColor, IDeck>();
             foreach (var card in _cardLoader.GetAvailableCards())
             {
@@ -35,7 +50,7 @@ namespace Assets.Factions
                 {
                     Decks.Add(card.Color, new Deck(card.Color));
                 }
-                
+
                 Decks[card.Color].AddCard(card);
             }
         }
@@ -62,7 +77,7 @@ namespace Assets.Factions
 
         public override void EndTurn()
         {
-            Locator.Instance.Find<IUIManager>().HideDrawView();
+            _uiManager.HideDrawView();
 
             HandManager.DiscardHand();
             base.EndTurn();
@@ -80,7 +95,7 @@ namespace Assets.Factions
 
             ReadyDecks();
 
-            Locator.Instance.Find<IUIManager>().ShowDrawView();
+            _uiManager.ShowDrawView();
 
             HighlightConnected(connected);
             GetYieldForConnected(connected);

@@ -30,5 +30,7 @@ namespace Assets.Cards
         void DiscardCard(ICard card);
 
         void DrawCard(ICard card);
+
+        int GetOpenHandSize();
     }
 }

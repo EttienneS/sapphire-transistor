@@ -1,6 +1,5 @@
 ﻿using Assets.Factions;
 using Assets.Map;
-using Assets.ServiceLocator;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -91,6 +90,11 @@ namespace Assets.Cards
 
         public void DrawCard(ICard card)
         {
+            if (Hand.Count >= GetMaxHandSize())
+            {
+                throw new System.Exception("Too many cards in hand!");
+            }
+
             Hand.Add(card);
             CardEventManager.CardReceived(card, _owner);
         }
@@ -98,6 +102,11 @@ namespace Assets.Cards
         public int GetMaxHandSize()
         {
             return 5;
+        }
+
+        public int GetOpenHandSize()
+        {
+            return GetMaxHandSize() - Hand.Count;
         }
 
         public void OnPlayerCardActive(ICard card)
