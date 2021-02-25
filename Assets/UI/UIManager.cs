@@ -85,6 +85,7 @@ namespace Assets.UI
         }
 
         private bool _ready;
+        private bool? _showDrawView;
 
         private void Update()
         {
@@ -96,6 +97,44 @@ namespace Assets.UI
             {
                 ShowOrHideActivePlayerMessage();
             }
+
+            if (_showDrawView.HasValue)
+            {
+                if (_showDrawView.Value)
+                {
+                    _spawnManager.SpawnUIElement("DrawView", transform, (obj) =>
+                    {
+                        _drawView = obj.GetComponent<DrawView>();
+                    });
+                }
+                else
+                {
+                    HideDrawView();
+                }
+
+                _showDrawView = null;
+            }
+        }
+
+        private DrawView _drawView;
+
+        public void ShowDrawView()
+        {
+            _showDrawView = true;
+        }
+
+        public void HideDrawView()
+        {
+            _showDrawView = false;
+        }
+
+        public void DestroyDrawView()
+        {
+            if (_drawView != null)
+            {
+                _spawnManager.AddItemToDestroy(_drawView.gameObject);
+            }
+            _drawView = null;
         }
     }
 }

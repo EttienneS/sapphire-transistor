@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Assets.Cards
 {
-    public interface IDeckManager
+    public interface IHandManager
     {
         public List<ICard> Hand { get; }
 
@@ -17,10 +17,6 @@ namespace Assets.Cards
 
         void ConfirmCard();
 
-        void DrawCard();
-
-        void DrawToHandSize();
-
         void DiscardHand();
 
         int GetMaxHandSize();
@@ -30,6 +26,9 @@ namespace Assets.Cards
         void PreviewCard(ICard card, ICoord coord);
 
         bool TryGetActiveCard(out ICard card);
+
         void DiscardCard(ICard card);
+
+        void DrawCard(ICard card);
     }
 }

@@ -70,7 +70,6 @@
     <Compile Include="Assets\Helpers\MaterialHelper.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\TestingUnitTests.cs" />
     <Compile Include="Assets\LeanTween\Framework\LTSeq.cs" />
-    <Compile Include="Assets\Cards\ICardManager.cs" />
     <Compile Include="Assets\Map\CellEventManager.cs" />
     <Compile Include="Assets\MapGeneration\DefaultTerrainDefinition.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralUISpace.cs" />
@@ -89,7 +88,7 @@
     <Compile Include="Assets\Structures\Behaviors\HouseBehavior.cs" />
     <Compile Include="Assets\InputManager\MouseAndKeyboardInputHandler.cs" />
     <Compile Include="Assets\Structures\Structure.cs" />
-    <Compile Include="Assets\Cards\IDeckManager.cs" />
+    <Compile Include="Assets\Cards\IHandManager.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSplines.cs" />
     <Compile Include="Assets\Helpers\Instrumenter.cs" />
     <Compile Include="Assets\Map\Pathing\CellPriorityQueue.cs" />
@@ -169,7 +168,6 @@
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralBasics2d.cs" />
     <Compile Include="Assets\Map\ChunkRendererFactory.cs" />
     <Compile Include="Assets\Map\IMapManager.cs" />
-    <Compile Include="Assets\Cards\CardManager.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSplineTrack.cs" />
     <Compile Include="Assets\Cards\IDeck.cs" />
     <Compile Include="Assets\Map\MapManager.cs" />
@@ -177,7 +175,7 @@
     <Compile Include="Assets\MapGeneration\MapGenerator.cs" />
     <Compile Include="Assets\ServiceLocator\IGameService.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Scripts\AllIn1ShaderWindow.cs" />
-    <Compile Include="Assets\Cards\DeckManager.cs" />
+    <Compile Include="Assets\Cards\HandManager.cs" />
     <Compile Include="Assets\Helpers\FastNoiseLite.cs" />
     <Compile Include="Assets\LeanTween\Framework\LeanTest.cs" />
     <Compile Include="Assets\InputManager\TouchScreenHandler.cs" />
@@ -212,6 +210,8 @@
     <Compile Include="Assets\LeanTween\Examples\Scripts\Following.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Scripts\SetGlobalTime.cs" />
     <Compile Include="Assets\Cards\CardColor.cs" />
+    <Compile Include="Assets\UI\DrawView.cs" />
+    <Compile Include="Assets\UI\DeckView.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

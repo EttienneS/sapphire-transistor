@@ -6,35 +6,20 @@ using System.Linq;
 
 namespace Assets.Cards
 {
-    public class DeckManager : IDeckManager
+    public class HandManager : IHandManager
     {
         private ICard _activeCard;
         private (ICard card, ICoord coord)? _activePreview;
         private IFaction _owner;
 
-        public DeckManager(IFaction owner)
+        public HandManager(IFaction owner)
         {
             _owner = owner;
 
-            _deck = new Deck("Standard");
             Hand = new List<ICard>();
-
-            DealCards();
 
             CardEventManager.OnSetPlayerCardActive += OnPlayerCardActive;
         }
-
-        private void DealCards()
-        {
-            var cardMan = Locator.Instance.Find<ICardManager>();
-            for (int i = 0; i < 25; i++)
-            {
-                _deck.AddCard(cardMan.GetRandomCard(_owner));
-            }
-        }
-
-
-        private IDeck _deck;
 
         public List<ICard> Hand { get; }
 
@@ -51,11 +36,24 @@ namespace Assets.Cards
             }
         }
 
-        private bool PreviewValid(Cell cell, ICard activeCard)
+        public void CellHover(Cell cell)
         {
-            return _activePreview.HasValue
-                && _activePreview.Value.coord == cell.Coord
-                && _activePreview.Value.card == activeCard;
+            if (TryGetActiveCard(out ICard activeCard))
+            {
+                if (_activePreview?.card != activeCard || _activePreview?.coord != cell.Coord)
+                {
+                    PreviewCard(activeCard, cell.Coord);
+                }
+            }
+        }
+
+        public void ClearPreview()
+        {
+            if (_activePreview.HasValue)
+            {
+                _activePreview.Value.card.ClearPreview();
+                _activePreview = null;
+            }
         }
 
         public void ConfirmCard()
@@ -78,28 +76,23 @@ namespace Assets.Cards
         public void DiscardCard(ICard card)
         {
             Hand.Remove(card);
-            _deck.AddToDiscardPile(card);
             CardEventManager.CardDiscarded(card);
         }
 
-        public void DrawCard()
+        public void DiscardHand()
         {
-            var card = _deck.Draw();
-            Hand.Add(card);
-            CardEventManager.CardReceived(card, _owner);
+            foreach (var card in Hand.ToList())
+            {
+                DiscardCard(card);
+            }
+            _activeCard = null;
+            ClearPreview();
         }
 
-        public void DrawToHandSize()
+        public void DrawCard(ICard card)
         {
-            var cardsToDraw = GetMaxHandSize() - Hand.Count;
-
-            if (cardsToDraw > 0)
-            {
-                for (int i = 0; i < cardsToDraw; i++)
-                {
-                    DrawCard();
-                }
-            }
+            Hand.Add(card);
+            CardEventManager.CardReceived(card, _owner);
         }
 
         public int GetMaxHandSize()
@@ -137,34 +130,11 @@ namespace Assets.Cards
             return true;
         }
 
-        public void ClearPreview()
+        private bool PreviewValid(Cell cell, ICard activeCard)
         {
-            if (_activePreview.HasValue)
-            {
-                _activePreview.Value.card.ClearPreview();
-                _activePreview = null;
-            }
-        }
-
-        public void DiscardHand()
-        {
-            foreach (var card in Hand.ToList())
-            {
-                DiscardCard(card);
-            }
-            _activeCard = null;
-            ClearPreview();
-        }
-
-        public void CellHover(Cell cell)
-        {
-            if (TryGetActiveCard(out ICard activeCard))
-            {
-                if (_activePreview?.card != activeCard || _activePreview?.coord != cell.Coord)
-                {
-                    PreviewCard(activeCard, cell.Coord);
-                }
-            }
+            return _activePreview.HasValue
+                && _activePreview.Value.coord == cell.Coord
+                && _activePreview.Value.card == activeCard;
         }
     }
 }

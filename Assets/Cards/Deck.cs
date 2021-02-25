@@ -9,18 +9,28 @@ namespace Assets.Cards
         private readonly Queue<ICard> _cards;
         private readonly List<ICard> _discardPile;
 
-        public string Name { get; }
+        public CardColor Color { get; }
 
-        public Deck(string name)
+        public Deck(CardColor color)
         {
-            Name = name;
+            Color = color;
             _cards = new Queue<ICard>();
             _discardPile = new List<ICard>();
+
+            CardEventManager.OnCardDiscarded += OnCardDiscarded;
+        }
+
+        private void OnCardDiscarded(ICard card)
+        {
+            if (card.Color == Color)
+            {
+                AddToDiscardPile(card);
+            }
         }
 
         public override string ToString()
         {
-            return Name;
+            return Color.ToString();
         }
 
         public void AddCard(ICard card)
@@ -37,21 +47,20 @@ namespace Assets.Cards
         {
             if (_cards.Count == 0)
             {
-                RecyleDeck();
-                Shuffle();
+                throw new System.Exception("No cards to draw!");
             }
 
             return _cards.Dequeue();
         }
 
-        public void RecyleDeck()
+        public void Recyle()
         {
             foreach (var card in _discardPile)
             {
                 AddCard(card);
             }
             _discardPile.Clear();
-
+            Shuffle();
             CardEventManager.DeckRecyled(this);
         }
 
@@ -66,6 +75,16 @@ namespace Assets.Cards
             }
 
             CardEventManager.DeckShuffled(this);
+        }
+
+        public int GetRemaining()
+        {
+            return _cards.Count;
+        }
+
+        public int GetDiscardPile()
+        {
+            return _discardPile.Count;
         }
     }
 }

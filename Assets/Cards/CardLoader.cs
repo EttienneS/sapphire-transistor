@@ -5,11 +5,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace Assets.Cards
 {
     public class CardLoader
     {
+        private List<string> _rawOptions;
+        private IFaction _owner;
+
+        public CardLoader(IFaction owner)
+        {
+            _owner = owner;
+            _rawOptions = new List<string>();
+            foreach (var cardObject in Resources.LoadAll<TextAsset>("Cards"))
+            {
+                Debug.Log($"Card Loaded: {cardObject.name}");
+                _rawOptions.Add(cardObject.text);
+            }
+        }
+
         public delegate ICardAction MakeCardActionDelegate();
 
         public ICard Load(string input, IFaction _owner)
@@ -33,6 +48,18 @@ namespace Assets.Cards
             var cost = ParseCost(input);
 
             return new Card(name, color, basePoint, actions, cost);
+        }
+
+        internal IEnumerable<ICard> GetAvailableCards()
+        {
+            var cards = new List<ICard>();
+
+            foreach (var option in _rawOptions)
+            {
+                cards.Add(Load(option, _owner));
+            }
+
+            return cards;
         }
 
         public MakeCardActionDelegate ParseAction(string action, IFaction owner)

@@ -73,9 +73,10 @@ namespace Assets
             var nature = new NatureFaction("Nature", locator);
             var enemy = new AIFaction("Enemy", locator);
 
-            factionManager.AddFaction(player);
             factionManager.AddFaction(nature);
             factionManager.AddFaction(enemy);
+            factionManager.AddFaction(player);
+
         }
 
         private void GenerateMap(IMapManager mapManager, int size, IStructureFactory structureFactory, IFactionManager factionManger)

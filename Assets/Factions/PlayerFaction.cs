@@ -4,23 +4,40 @@ using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
 using Assets.UI;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Assets.Factions
 {
     public class PlayerFaction : FactionBase
     {
+        public IHandManager HandManager;
+        private readonly CardLoader _cardLoader;
         private readonly IUIManager _uiManager;
 
-        public IDeckManager DeckManager;
+        public Dictionary<CardColor, IDeck> Decks { get; set; }
 
         public PlayerFaction(string name, IServiceLocator serviceLocator) : base(name, serviceLocator)
         {
             _uiManager = serviceLocator.Find<IUIManager>();
+
             CellEventManager.OnCellClicked += CellClicked;
             CellEventManager.OnMouseOver += CellHover;
 
-            DeckManager = new DeckManager(this);
+            _cardLoader = new CardLoader(this);
+            HandManager = new HandManager(this);
+
+            Decks = new Dictionary<CardColor, IDeck>();
+            foreach (var card in _cardLoader.GetAvailableCards())
+            {
+                if (!Decks.ContainsKey(card.Color))
+                {
+                    Decks.Add(card.Color, new Deck(card.Color));
+                }
+                
+                Decks[card.Color].AddCard(card);
+            }
         }
 
         public void CellClicked(Cell cell)
@@ -30,7 +47,7 @@ namespace Assets.Factions
                 return;
             }
 
-            DeckManager.CellClicked(cell);
+            HandManager.CellClicked(cell);
         }
 
         public void CellHover(Cell cell)
@@ -40,7 +57,15 @@ namespace Assets.Factions
                 return;
             }
 
-            DeckManager.CellHover(cell);
+            HandManager.CellHover(cell);
+        }
+
+        public override void EndTurn()
+        {
+            Locator.Instance.Find<IUIManager>().HideDrawView();
+
+            HandManager.DiscardHand();
+            base.EndTurn();
         }
 
         public void ResetUI()
@@ -51,12 +76,25 @@ namespace Assets.Factions
 
         public override void TakeTurn()
         {
-            DeckManager.DrawToHandSize();
-
             var connected = StructureManager.GetStructuresLinkedTo(StructureManager.GetCore());
-            
+
+            ReadyDecks();
+
+            Locator.Instance.Find<IUIManager>().ShowDrawView();
+
             HighlightConnected(connected);
             GetYieldForConnected(connected);
+        }
+
+        private void ReadyDecks()
+        {
+            foreach (var deck in Decks)
+            {
+                if (deck.Value.GetRemaining() <= 0)
+                {
+                    deck.Value.Recyle();
+                }
+            }
         }
 
         private void GetYieldForConnected(System.Collections.Generic.List<IStructure> connected)
@@ -81,12 +119,6 @@ namespace Assets.Factions
             {
                 StructureEventManager.ShowHiglight(structure);
             }
-        }
-
-        public override void EndTurn()
-        {
-            DeckManager.DiscardHand();
-            base.EndTurn();
         }
     }
 }

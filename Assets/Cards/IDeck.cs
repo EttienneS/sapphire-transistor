@@ -13,5 +13,9 @@ namespace Assets.Cards
         ICard Draw();
 
         void Shuffle();
+        int GetRemaining();
+        int GetDiscardPile();
+
+        void Recyle();
     }
 }

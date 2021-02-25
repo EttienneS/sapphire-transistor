@@ -11,5 +11,8 @@ namespace Assets.UI
         void HighlightCells(ICoord[] coord, Color color);
 
         void DisableHighlights();
+
+        void ShowDrawView();
+        void HideDrawView();
     }
 }
