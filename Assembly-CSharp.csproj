@@ -113,6 +113,8 @@
     <Compile Include="Assets\ServiceLocator\IServiceLocator.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathBezier2d.cs" />
     <Compile Include="Assets\Map\ITerrain.cs" />
+    <Compile Include="Assets\Cards\CardColor.cs" />
+    <Compile Include="Assets\UI\DeckView.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Demo\Scripts\DemoItem.cs" />
     <Compile Include="Assets\Cards\ICard.cs" />
     <Compile Include="Assets\Factions\FactionDelegates.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Assets\Cards\Actions\ICardAction.cs" />
     <Compile Include="Assets\LeanTween\Framework\LeanSmooth.cs" />
     <Compile Include="Assets\Factions\ResourceType.cs" />
+    <Compile Include="Assets\UI\DrawView.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralBasics2d.cs" />
     <Compile Include="Assets\Map\ChunkRendererFactory.cs" />
     <Compile Include="Assets\Map\IMapManager.cs" />
@@ -209,9 +212,6 @@
     <Compile Include="Assets\UI\ResourcePanel.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\Following.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Scripts\SetGlobalTime.cs" />
-    <Compile Include="Assets\Cards\CardColor.cs" />
-    <Compile Include="Assets\UI\DrawView.cs" />
-    <Compile Include="Assets\UI\DeckView.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -237,10 +237,9 @@
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
      <None Include="Assets\QuickOutline\Readme.txt" />
-     <None Include="Assets\Resources\Cards\LongNS.txt" />
+     <None Include="Assets\Resources\Cards\Long.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
-     <None Include="Assets\Resources\Cards\LongEW.txt" />
      <None Include="Assets\LeanTween\Examples\Archived\2dUnlitWithFade.shader" />
      <None Include="Assets\Resources\Cards\Corner.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />

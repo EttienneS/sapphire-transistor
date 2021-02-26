@@ -18,6 +18,15 @@ namespace Assets.Cards
             Hand = new List<ICard>();
 
             CardEventManager.OnSetPlayerCardActive += OnPlayerCardActive;
+            CardEventManager.OnCardRotated += OnCardRotated;
+        }
+
+        private void OnCardRotated(ICard card)
+        {
+            if (card == _activePreview?.card)
+            {
+                ClearPreview();
+            }
         }
 
         public List<ICard> Hand { get; }

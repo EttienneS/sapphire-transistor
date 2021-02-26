@@ -21,5 +21,9 @@ namespace Assets.Cards
         void Play(ICoord coord);
 
         void Preview(ICoord coord);
+
+        void RotateCW();
+        void RotateCCW();
+
     }
 }

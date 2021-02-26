@@ -1,4 +1,7 @@
-﻿using Assets.StrategyCamera;
+﻿using Assets.Cards;
+using Assets.Factions;
+using Assets.ServiceLocator;
+using Assets.StrategyCamera;
 using UnityEngine;
 
 namespace Assets.InputManager
@@ -16,6 +19,22 @@ namespace Assets.InputManager
             _cameraController = cameraController;
         }
 
+        public static void RotateCardCCW()
+        {
+            if (Locator.Instance.Find<IFactionManager>().GetPlayerFaction().HandManager.TryGetActiveCard(out ICard card))
+            {
+                card.RotateCCW();
+            }
+        }
+
+        public static void RotateCardCW()
+        {
+            if (Locator.Instance.Find<IFactionManager>().GetPlayerFaction().HandManager.TryGetActiveCard(out ICard card))
+            {
+                card.RotateCW();
+            }
+        }
+
         public void HandleInput()
         {
             HandleMouseWheel();
@@ -27,6 +46,8 @@ namespace Assets.InputManager
             HandleArrowMovement();
 
             HandleKeyboardZoom();
+
+            HandleCardRotation();
         }
 
         private void FollowPlaneDrag()
@@ -61,6 +82,18 @@ namespace Assets.InputManager
             }
         }
 
+        private void HandleCardRotation()
+        {
+            if (Input.GetKeyUp(KeyCode.E))
+            {
+                RotateCardCW();
+            }
+
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                RotateCardCCW();
+            }
+        }
         private void HandleKeyboardZoom()
         {
             if (Input.GetKey(KeyCode.R))
