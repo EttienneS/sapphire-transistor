@@ -19,6 +19,22 @@ namespace Assets.InputManager
             _cameraController = cameraController;
         }
 
+        public static void RotateCardCCW()
+        {
+            if (Locator.Instance.Find<IFactionManager>().GetPlayerFaction().HandManager.TryGetActiveCard(out ICard card))
+            {
+                card.RotateCCW();
+            }
+        }
+
+        public static void RotateCardCW()
+        {
+            if (Locator.Instance.Find<IFactionManager>().GetPlayerFaction().HandManager.TryGetActiveCard(out ICard card))
+            {
+                card.RotateCW();
+            }
+        }
+
         public void HandleInput()
         {
             HandleMouseWheel();
@@ -46,25 +62,6 @@ namespace Assets.InputManager
             }
         }
 
-        private void HandleCardRotation()
-        {
-            if (Input.GetKeyUp(KeyCode.E))
-            {
-                if (Locator.Instance.Find<IFactionManager>().GetPlayerFaction().HandManager.TryGetActiveCard(out ICard card))
-                {
-                    card.RotateCW();
-                }
-            }
-
-            if (Input.GetKeyUp(KeyCode.Q))
-            {
-                if (Locator.Instance.Find<IFactionManager>().GetPlayerFaction().HandManager.TryGetActiveCard(out ICard card))
-                {
-                    card.RotateCCW();
-                }
-            }
-        }
-
         private void HandleArrowMovement()
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
@@ -85,6 +82,18 @@ namespace Assets.InputManager
             }
         }
 
+        private void HandleCardRotation()
+        {
+            if (Input.GetKeyUp(KeyCode.E))
+            {
+                RotateCardCW();
+            }
+
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                RotateCardCCW();
+            }
+        }
         private void HandleKeyboardZoom()
         {
             if (Input.GetKey(KeyCode.R))
