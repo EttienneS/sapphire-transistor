@@ -101,6 +101,55 @@ namespace Assets.Cards
             CardEventManager.CardPreviewed(this, baseCoord);
         }
 
+        public void RotateCCW()
+        {
+            RotateCW();
+            RotateCW();
+            RotateCW();
+        }
+
+        public void RotateCW()
+        {
+            _rotatedActions = ReverseRows(Transpose(_rotatedActions));
+            CardEventManager.CardRotated(this);
+        }
+
+        private static ICardAction[,] ReverseRows(ICardAction[,] matrix)
+        {
+            int w = matrix.GetLength(0);
+            int h = matrix.GetLength(1);
+
+            var result = new ICardAction[h, w];
+
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    result[i, j] = matrix[i, h - j - 1];
+                }
+            }
+
+            return result;
+        }
+
+        private static ICardAction[,] Transpose(ICardAction[,] matrix)
+        {
+            int w = matrix.GetLength(0);
+            int h = matrix.GetLength(1);
+
+            ICardAction[,] result = new ICardAction[h, w];
+
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    result[j, i] = matrix[i, j];
+                }
+            }
+
+            return result;
+        }
+
         public override string ToString()
         {
             var str = "";

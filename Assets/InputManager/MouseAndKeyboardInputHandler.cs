@@ -1,4 +1,7 @@
-﻿using Assets.StrategyCamera;
+﻿using Assets.Cards;
+using Assets.Factions;
+using Assets.ServiceLocator;
+using Assets.StrategyCamera;
 using UnityEngine;
 
 namespace Assets.InputManager
@@ -27,6 +30,8 @@ namespace Assets.InputManager
             HandleArrowMovement();
 
             HandleKeyboardZoom();
+
+            HandleCardRotation();
         }
 
         private void FollowPlaneDrag()
@@ -38,6 +43,25 @@ namespace Assets.InputManager
             {
                 _dragCurrentPosition = ray.GetPoint(entry);
                 _cameraController.SetNewPosition(_cameraController.transform.position + _dragStartPosition - _dragCurrentPosition);
+            }
+        }
+
+        private void HandleCardRotation()
+        {
+            if (Input.GetKeyUp(KeyCode.E))
+            {
+                if (Locator.Instance.Find<IFactionManager>().GetPlayerFaction().HandManager.TryGetActiveCard(out ICard card))
+                {
+                    card.RotateCW();
+                }
+            }
+
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                if (Locator.Instance.Find<IFactionManager>().GetPlayerFaction().HandManager.TryGetActiveCard(out ICard card))
+                {
+                    card.RotateCCW();
+                }
             }
         }
 

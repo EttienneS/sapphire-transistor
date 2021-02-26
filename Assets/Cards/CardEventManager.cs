@@ -12,11 +12,13 @@ namespace Assets.Cards
 
         public delegate void CardReceived(ICard card, IFaction player);
 
-        public delegate void SetPlayerCardActive(ICard card);
+        public delegate void CardRotated(ICard card);
+
+        public delegate void DeckRecyled(IDeck deck);
 
         public delegate void DeckShuffled(IDeck deck);
 
-        public delegate void DeckRecyled(IDeck deck);
+        public delegate void SetPlayerCardActive(ICard card);
     }
 
     public static class CardEventManager
@@ -29,24 +31,12 @@ namespace Assets.Cards
 
         public static event CardDelegates.CardReceived OnCardReceived;
 
-        public static event CardDelegates.SetPlayerCardActive OnSetPlayerCardActive;
+        public static event CardDelegates.CardRotated OnCardRotated;
+        public static event CardDelegates.DeckRecyled OnDeckRecyled;
 
         public static event CardDelegates.DeckShuffled OnDeckShuffled;
 
-        public static event CardDelegates.DeckRecyled OnDeckRecyled;
-
-        public static void DeckRecyled(IDeck deck)
-        {
-            Debug.Log($"Deck Recyled {deck}");
-            OnDeckRecyled?.Invoke(deck);
-        }
-
-        public static void DeckShuffled(IDeck deck)
-        {
-            Debug.Log($"Deck Shuffled {deck}");
-            OnDeckShuffled?.Invoke(deck);
-        }
-
+        public static event CardDelegates.SetPlayerCardActive OnSetPlayerCardActive;
         public static void CardDiscarded(ICard card)
         {
             Debug.Log($"Card discarded {card}");
@@ -70,6 +60,23 @@ namespace Assets.Cards
             OnCardReceived?.Invoke(card, player);
         }
 
+        public static void CardRotated(ICard card)
+        {
+            Debug.Log($"Card rotated {card}");
+            OnCardRotated?.Invoke(card);
+        }
+
+        public static void DeckRecyled(IDeck deck)
+        {
+            Debug.Log($"Deck Recyled {deck}");
+            OnDeckRecyled?.Invoke(deck);
+        }
+
+        public static void DeckShuffled(IDeck deck)
+        {
+            Debug.Log($"Deck Shuffled {deck}");
+            OnDeckShuffled?.Invoke(deck);
+        }
         public static void SetPlayerCardActive(ICard card)
         {
             Debug.Log($"Card active {card}");
