@@ -75,7 +75,7 @@ namespace Assets.Cards
 
             return (verb.ToLower()) switch
             {
-                "build" => () => new BuildAction((StructureType)Enum.Parse(typeof(StructureType), value), owner),
+                "build" => () => new BuildAction((StructureDefinition.StructureType)Enum.Parse(typeof(StructureDefinition.StructureType), value), owner),
                 "remove" => () => new RemoveAction(),
                 _ => throw new KeyNotFoundException($"Unkown verb: {action}"),
             };
@@ -157,7 +157,7 @@ namespace Assets.Cards
             var legendMode = false;
 
             legend.Add('.', null);
-            legend.Add('#', () => new BuildAction(StructureType.Empty, owner));
+            legend.Add('#', () => new BuildAction(StructureDefinition.StructureType.Empty, owner));
 
             foreach (var line in lines)
             {

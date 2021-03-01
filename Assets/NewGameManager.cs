@@ -48,18 +48,18 @@ namespace Assets
             });
 
             var coreCell = mapManager.GetRandomCell((cell) => cell.Terrain.Type == TerrainType.Grass);
-            faction.StructureManager.AddStructure(StructureType.Core, coreCell.Coord);
+            faction.StructureManager.AddStructure(StructureDefinition.StructureType.Core, coreCell.Coord);
 
             var coreRect = mapManager.GetRectangle(coreCell.Coord, 2, 2);
             var roadRect = coreRect.SelectMany(c => c.NonNullNeighbors).Except(coreRect);
             foreach (var cell in roadRect)
             {
-                faction.StructureManager.AddStructure(StructureType.Road, cell.Coord);
+                faction.StructureManager.AddStructure(StructureDefinition.StructureType.Road, cell.Coord);
             }
 
             foreach (var roadStub in CellExtensions.GetCardinalsOutsideRectangle(roadRect))
             {
-                faction.StructureManager.AddStructure(StructureType.Road, roadStub.Coord);
+                faction.StructureManager.AddStructure(StructureDefinition.StructureType.Road, roadStub.Coord);
             }
 
             factionManager.MoveToNextTurn();

@@ -14,7 +14,8 @@ namespace Assets.Factions
             _resources = new Dictionary<ResourceType, int>();
             Name = name;
 
-            StructureManager = new StructureManager(serviceLocator.Find<IStructureFactory>(),
+            StructureManager = new StructureManager(serviceLocator.Find<IStructureDefinitionManager>(),
+                                                    serviceLocator.Find<IStructureFactory>(),
                                                     serviceLocator.Find<IFactionManager>(),
                                                     serviceLocator.Find<IMapManager>());
         }

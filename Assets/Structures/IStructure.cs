@@ -6,7 +6,7 @@ namespace Assets.Structures
 {
     public interface IStructure
     {
-        StructureType Type { get; }
+        StructureDefinition.StructureType Type { get; }
 
         IStructureBehaviour Behaviour { get; }
 

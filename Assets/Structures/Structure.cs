@@ -6,7 +6,7 @@ namespace Assets.Structures
 {
     public class Structure : IStructure
     {
-        public Structure(StructureType type, int width, int height, IStructureBehaviour behaviour, ICoord coord, bool requiresLink = true)
+        public Structure(StructureDefinition.StructureType type, int width, int height, IStructureBehaviour behaviour, ICoord coord, bool requiresLink = true)
         {
             Type = type;
             Behaviour = behaviour;
@@ -32,7 +32,7 @@ namespace Assets.Structures
 
         public int Height { get; }
         public ICoord[] OccupiedCoords { get; }
-        public StructureType Type { get; }
+        public StructureDefinition.StructureType Type { get; }
         public int Width { get; }
 
         public bool RequiresLink { get; }

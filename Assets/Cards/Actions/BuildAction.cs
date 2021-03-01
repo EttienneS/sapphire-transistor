@@ -9,22 +9,24 @@ namespace Assets.Cards.Actions
     public class BuildAction : ICardAction
     {
         private readonly IFaction _owner;
-        private readonly StructureType _structureType;
+        private readonly StructureDefinition.StructureType _structureType;
 
         private GameObject _previewObject;
         private ISpawnManager _spawnManager;
+        private IStructureDefinitionManager _structureDefinitionManager;
 
-        public BuildAction(StructureType structureType, IFaction owner)
+        public BuildAction(StructureDefinition.StructureType structureType, IFaction owner)
         {
             _structureType = structureType;
             _owner = owner;
 
             _spawnManager = Locator.Instance.Find<ISpawnManager>();
+            _structureDefinitionManager = Locator.Instance.Find<IStructureDefinitionManager>();
         }
 
         public bool CanPlay(ICoord coord)
         {
-            return _owner.StructureManager.PlacementValidator.CanPlace(coord, _structureType).CanPlace;
+            return _structureDefinitionManager.CanPlace(coord, _structureType).CanPlace;
         }
 
         public void ClearPreview()
