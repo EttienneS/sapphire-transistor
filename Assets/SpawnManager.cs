@@ -79,6 +79,8 @@ namespace Assets
 
             foreach (var (pool, size) in pools)
             {
+                Debug.Log($"Init {pool}");
+
                 var queue = new List<GameObject>();
                 _objectPools.Add(pool, queue);
                 for (var i = 0; i < size; i++)

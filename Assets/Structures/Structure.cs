@@ -49,7 +49,7 @@ namespace Assets.Structures
 
         public Dictionary<ResourceType, int> GetYield(IStructure structure)
         {
-            return Behaviour.GetBaseYield(this);
+            return Behaviour.GetYield(this);
         }
 
         public override string ToString()

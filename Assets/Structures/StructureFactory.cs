@@ -23,10 +23,10 @@ namespace Assets.Structures
         {
             var map = Locate<IMapManager>();
 
-            AddBehavior(new HouseBehavior(map));
-            AddBehavior(new FarmBehaviour(map));
-            AddBehavior(new SettlementCore(map));
-            AddBehavior(new NoBehavior(map));
+            AddBehavior(new HouseBehavior());
+            AddBehavior(new FarmBehaviour());
+            AddBehavior(new SettlementCore());
+            AddBehavior(new NoBehavior());
             AddBehavior(new CabinBehaviour(map));
         }
 

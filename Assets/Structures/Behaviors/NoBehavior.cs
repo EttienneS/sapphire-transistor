@@ -6,11 +6,11 @@ namespace Assets.Structures.Behaviors
 {
     public class NoBehavior : StructureBehaviorBase
     {
-        public NoBehavior(IMapManager map) : base(map)
+        public NoBehavior( ) 
         {
         }
 
-        public override Dictionary<ResourceType, int> GetBaseYield(IStructure structure)
+        public override Dictionary<ResourceType, int> GetYield(IStructure structure)
         {
             return new Dictionary<ResourceType, int>();
         }

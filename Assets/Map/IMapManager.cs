@@ -18,8 +18,7 @@ namespace Assets.Map
 
         Cell GetCenter();
 
-        List<Cell> GetCircle(Cell center, int radius);
-
+        List<Cell> GetCircle(ICoord coord, int radius);
         Pathfinder GetPathfinder();
 
         Cell GetRandomCell();

@@ -94,12 +94,12 @@ namespace Assets.Map
             return _cells[Width / 2, Height / 2];
         }
 
-        public List<Cell> GetCircle(Cell center, int radius)
+        public List<Cell> GetCircle(ICoord center, int radius)
         {
             var cells = new List<Cell>();
 
-            var centerX = center.Coord.X;
-            var centerY = center.Coord.Z;
+            var centerX = center.X;
+            var centerY = center.Z;
 
             for (var x = centerX - radius; x <= centerX; x++)
             {
