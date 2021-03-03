@@ -11,16 +11,16 @@ namespace Assets
 
         void SpawnModel(string meshName, Vector3 position, SpawnManager.SpawnCallback callback);
 
-        void SpawnModel(StructureType type, Vector3 position, SpawnManager.SpawnCallback callback);
+        void SpawnModel(StructureDefinition.StructureType type, Vector3 position, SpawnManager.SpawnCallback callback);
 
         void SpawnPreviewModel(string address, Vector3 position, bool valid, SpawnManager.SpawnCallback callback);
 
-        void SpawnPreviewModel(StructureType type, Vector3 position, bool valid, SpawnManager.SpawnCallback callback);
+        void SpawnPreviewModel(StructureDefinition.StructureType type, Vector3 position, bool valid, SpawnManager.SpawnCallback callback);
 
         void SpawnUIElement(string name, Transform parent, SpawnManager.SpawnCallback callback);
 
         void RecyleItem(string pool, GameObject gameObject);
 
-        void RecyleItem(StructureType type, GameObject gameObject);
+        void RecyleItem(StructureDefinition.StructureType type, GameObject gameObject);
     }
 }

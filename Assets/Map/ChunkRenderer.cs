@@ -360,7 +360,7 @@ namespace Assets.Map
             _mesh.SetNormals(normals);
         }
 
-        public bool CoordInChunk(ICoord coord)
+        public bool CoordInChunk(Coord coord)
         {
             var maxx = (X + 1) * Constants.ChunkSize;
             var minx = X * Constants.ChunkSize;

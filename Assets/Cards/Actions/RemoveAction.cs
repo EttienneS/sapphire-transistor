@@ -19,7 +19,7 @@ namespace Assets.Cards.Actions
             _spawnManager = Locator.Instance.Find<ISpawnManager>();
         }
 
-        public bool CanPlay(ICoord coord)
+        public bool CanPlay(Coord coord)
         {
             return true;
         }
@@ -32,7 +32,7 @@ namespace Assets.Cards.Actions
             }
         }
 
-        public void Play(ICoord coord)
+        public void Play(Coord coord)
         {
             if (_factionManager.TryGetStructureAtCoord(coord, out IStructure structure))
             {
@@ -43,7 +43,7 @@ namespace Assets.Cards.Actions
             ClearPreview();
         }
 
-        public void Preview(ICoord coord)
+        public void Preview(Coord coord)
         {
             _spawnManager.SpawnPreviewModel(AssetName, coord.ToAdjustedVector3(), CanPlay(coord), (obj) => _previewObject = obj);
         }

@@ -23,7 +23,7 @@ namespace Assets.Cards
 
         void OnPlayerCardActive(ICard card);
 
-        void PreviewCard(ICard card, ICoord coord);
+        void PreviewCard(ICard card, Coord coord);
 
         bool TryGetActiveCard(out ICard card);
 

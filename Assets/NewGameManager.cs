@@ -33,7 +33,7 @@ namespace Assets
         private static void ConfigureCameraDefaults(IMapManager mapManager, IFactionManager factionManger, ICameraController cameraController)
         {
             cameraController.ConfigureBounds(0, mapManager.Width, 0, mapManager.Height);
-            cameraController.MoveToPosition(factionManger.GetPlayerFaction().StructureManager.GetStructures()[0].GetOrigin().ToAdjustedVector3());
+            cameraController.MoveToPosition(factionManger.GetPlayerFaction().StructureManager.GetStructures()[0].Coord.ToAdjustedVector3());
         }
 
         private void MakeFactionCores(IMapManager mapManager, IFactionManager factionManager)
@@ -48,18 +48,17 @@ namespace Assets
             });
 
             var coreCell = mapManager.GetRandomCell((cell) => cell.Terrain.Type == TerrainType.Grass);
-            faction.StructureManager.AddStructure(StructureType.Core, coreCell.Coord);
+            faction.StructureManager.AddStructure(StructureDefinition.StructureType.Core, coreCell.Coord);
 
-            var coreRect = mapManager.GetRectangle(coreCell.Coord, 2, 2);
-            var roadRect = coreRect.SelectMany(c => c.NonNullNeighbors).Except(coreRect);
+            var roadRect = coreCell.NonNullNeighbors;
             foreach (var cell in roadRect)
             {
-                faction.StructureManager.AddStructure(StructureType.Road, cell.Coord);
+                faction.StructureManager.AddStructure(StructureDefinition.StructureType.Road, cell.Coord);
             }
 
             foreach (var roadStub in CellExtensions.GetCardinalsOutsideRectangle(roadRect))
             {
-                faction.StructureManager.AddStructure(StructureType.Road, roadStub.Coord);
+                faction.StructureManager.AddStructure(StructureDefinition.StructureType.Road, roadStub.Coord);
             }
 
             factionManager.MoveToNextTurn();

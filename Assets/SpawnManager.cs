@@ -22,13 +22,13 @@ namespace Assets
         private readonly Dictionary<GameObject, Material[]> _materialBackup = new Dictionary<GameObject, Material[]>();
         private readonly Dictionary<string, List<GameObject>> _objectPools = new Dictionary<string, List<GameObject>>();
         private readonly Dictionary<IStructure, GameObject> _structureObjectLookup = new Dictionary<IStructure, GameObject>();
-        private readonly Dictionary<StructureType, string> _typeAssetLookup = new Dictionary<StructureType, string>();
 
         private Dictionary<GameObject, Outline> _outlineLookup = new Dictionary<GameObject, Outline>();
 
         private List<GameObject> _outlinesToDisable = new List<GameObject>();
 
         private List<GameObject> _outlinesToEnable = new List<GameObject>();
+        private IStructureDefinitionManager _structureDefinitionManager;
 
         public delegate void SpawnCallback(GameObject spawnedObject);
 
@@ -65,21 +65,22 @@ namespace Assets
 
         public override void Initialize()
         {
-            var poolConfigs = new List<(string pool, int size)>
+            _structureDefinitionManager = Locate<IStructureDefinitionManager>();
+
+            var pools = new List<(string pool, int size)>
             {
-                ("Tree", 1000),
-                ("Rock", 500),
-                ("Road", 1000),
-                ("BellTower", 10),
-                ("Barn", 100),
-                ("House", 200),
-                ("Field", 500),
-                ("Empty", 5),
                 ("RemoveMarker", 50),
             };
 
-            foreach (var (pool, size) in poolConfigs)
+            foreach (var def in _structureDefinitionManager.StructureDefinitions)
             {
+                pools.Add((def.Asset, def.PoolSize));
+            }
+
+            foreach (var (pool, size) in pools)
+            {
+                Debug.Log($"Init {pool}");
+
                 var queue = new List<GameObject>();
                 _objectPools.Add(pool, queue);
                 for (var i = 0; i < size; i++)
@@ -93,15 +94,6 @@ namespace Assets
                     });
                 }
             }
-
-            _typeAssetLookup.Add(StructureType.Tree, "Tree");
-            _typeAssetLookup.Add(StructureType.Rock, "Rock");
-            _typeAssetLookup.Add(StructureType.Core, "BellTower");
-            _typeAssetLookup.Add(StructureType.Road, "Road");
-            _typeAssetLookup.Add(StructureType.House, "House");
-            _typeAssetLookup.Add(StructureType.Barn, "Barn");
-            _typeAssetLookup.Add(StructureType.Field, "Field");
-            _typeAssetLookup.Add(StructureType.Empty, "Empty");
 
             MapEventManager.OnChunkRenderCreated += MapEventManager_OnChunkRenderCreated;
             MapEventManager.OnChunkRenderActivated += MapEventManager_OnChunkRenderActivated;
@@ -137,7 +129,7 @@ namespace Assets
             }
         }
 
-        public void RecyleItem(StructureType type, GameObject gameObject)
+        public void RecyleItem(StructureDefinition.StructureType type, GameObject gameObject)
         {
             RecyleItem(type.ToString(), gameObject);
         }
@@ -180,9 +172,9 @@ namespace Assets
             callback.Invoke(obj);
         }
 
-        public void SpawnModel(StructureType type, Vector3 position, SpawnCallback callback)
+        public void SpawnModel(StructureDefinition.StructureType type, Vector3 position, SpawnCallback callback)
         {
-            SpawnModel(GetAssetNameForStructureType(type), position, callback);
+            SpawnModel(_structureDefinitionManager.GetAssetNameForStructureType(type), position, callback);
         }
 
         public void SpawnPreviewModel(string meshName, Vector3 position, bool valid, SpawnCallback callback)
@@ -195,9 +187,9 @@ namespace Assets
             });
         }
 
-        public void SpawnPreviewModel(StructureType type, Vector3 position, bool valid, SpawnCallback callback)
+        public void SpawnPreviewModel(StructureDefinition.StructureType type, Vector3 position, bool valid, SpawnCallback callback)
         {
-            SpawnPreviewModel(GetAssetNameForStructureType(type), position, valid, callback);
+            SpawnPreviewModel(_structureDefinitionManager.GetAssetNameForStructureType(type), position, valid, callback);
         }
 
         public void SpawnUIElement(string name, Transform parent, SpawnCallback callback)
@@ -242,11 +234,6 @@ namespace Assets
             {
                 _materialBackup.Add(go, go.GetComponent<MeshRenderer>().materials);
             }
-        }
-
-        private string GetAssetNameForStructureType(StructureType type)
-        {
-            return _typeAssetLookup[type];
         }
 
         private void InitOutline(GameObject obj)
@@ -301,8 +288,8 @@ namespace Assets
         private void SpawnStructure(IStructure structure)
         {
             // never invoke this directly, this should invoke when the spawn manager decides its required
-            var placement = StructureExtensions.CalculatePlacementPosition(structure.GetOrigin(), structure.Width, structure.Height);
-            var address = GetAssetNameForStructureType(structure.Type);
+            var placement = structure.Coord.ToAdjustedVector3();
+            var address = _structureDefinitionManager.GetAssetNameForStructureType(structure.Type);
             SpawnModel(address, placement, (obj) =>
             {
                 if (!_structureObjectLookup.ContainsKey(structure))
@@ -315,10 +302,10 @@ namespace Assets
 
         private void StructureEventManager_OnStructureDestroyed(IStructure structure)
         {
-            var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(structure.GetOrigin()));
+            var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(structure.Coord));
             _chunkStructureLookup[renderer].Remove(structure);
 
-            var pool = GetAssetNameForStructureType(structure.Type);
+            var pool = _structureDefinitionManager.GetAssetNameForStructureType(structure.Type);
 
             if (_structureObjectLookup.ContainsKey(structure))
             {
@@ -329,23 +316,21 @@ namespace Assets
         private void StructureEventManager_OnStructurePlanned(IStructure structure)
         {
             var drawnOnce = false; // structures can be in more than one chunk, just to be sure we do not redraw it a lot
-            foreach (var coord in structure.OccupiedCoords)
+
+            var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(structure.Coord));
+
+            var chunkStructures = _chunkStructureLookup[renderer];
+            if (!chunkStructures.Contains(structure))
             {
-                var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(coord));
+                chunkStructures.Add(structure);
+            }
 
-                var chunkStructures = _chunkStructureLookup[renderer];
-                if (!chunkStructures.Contains(structure))
-                {
-                    chunkStructures.Add(structure);
-                }
-
-                // draw this structure if the current chunk is active,
-                // otherwise it will draw when the chunk activates later
-                if (_activeChunks.Contains(renderer) && !drawnOnce)
-                {
-                    _structuresToSpawn.Add(structure);
-                    drawnOnce = true;
-                }
+            // draw this structure if the current chunk is active,
+            // otherwise it will draw when the chunk activates later
+            if (_activeChunks.Contains(renderer) && !drawnOnce)
+            {
+                _structuresToSpawn.Add(structure);
+                drawnOnce = true;
             }
         }
 

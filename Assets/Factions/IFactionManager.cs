@@ -22,7 +22,7 @@ namespace Assets.Factions
 
         IFaction GetOwnerOfStructure(IStructure structure);
 
-        bool TryGetStructureAtCoord(ICoord coord, out IStructure structure);
+        bool TryGetStructureAtCoord(Coord coord, out IStructure structure);
 
         IFaction GetNatureFaction();
     }

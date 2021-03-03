@@ -1,5 +1,4 @@
 ﻿using Assets.Factions;
-using Assets.Map;
 using System.Collections.Generic;
 
 namespace Assets.Structures.Behaviors
@@ -8,7 +7,7 @@ namespace Assets.Structures.Behaviors
     {
         private readonly Dictionary<ResourceType, int> _baseYield;
 
-        public SettlementCore(IMapManager map) : base(map)
+        public SettlementCore()
         {
             _baseYield = new Dictionary<ResourceType, int>
             {
@@ -16,7 +15,7 @@ namespace Assets.Structures.Behaviors
             };
         }
 
-        public override Dictionary<ResourceType, int> GetBaseYield(IStructure structure)
+        public override Dictionary<ResourceType, int> GetYield(IStructure structure)
         {
             return _baseYield;
         }

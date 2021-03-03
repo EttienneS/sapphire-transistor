@@ -16,7 +16,7 @@ namespace Assets.Map
             Terrain = terain;
         }
 
-        public ICoord Coord { get; set; }
+        public Coord Coord { get; set; }
 
         public Cell NextWithSamePriority { get; set; }
 

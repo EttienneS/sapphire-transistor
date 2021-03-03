@@ -10,7 +10,7 @@ namespace Assets.Cards
         CardColor Color { get; }
         string Name { get; }
 
-        bool CanPlay(ICoord coord);
+        bool CanPlay(Coord coord);
 
         void ClearPreview();
 
@@ -18,9 +18,9 @@ namespace Assets.Cards
 
         Dictionary<ResourceType, int> GetCost();
 
-        void Play(ICoord coord);
+        void Play(Coord coord);
 
-        void Preview(ICoord coord);
+        void Preview(Coord coord);
 
         void RotateCW();
         void RotateCCW();

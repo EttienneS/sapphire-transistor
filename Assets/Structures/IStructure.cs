@@ -6,26 +6,17 @@ namespace Assets.Structures
 {
     public interface IStructure
     {
-        StructureType Type { get; }
-
         IStructureBehaviour Behaviour { get; }
-
-        ICoord[] OccupiedCoords { get; }
-
-        int Width { get; }
-
-        int Height { get; }
-
+        Coord Coord { get; }
         bool RequiresLink { get; }
+        StructureDefinition.StructureType Type { get; }
+
+        string GetStatus();
 
         Dictionary<ResourceType, int> GetYield(IStructure structure);
 
         void TurnEnd(IStructure structure);
 
         void TurnStart(IStructure structure);
-
-        ICoord GetOrigin();
-
-        string GetStatus();
     }
 }

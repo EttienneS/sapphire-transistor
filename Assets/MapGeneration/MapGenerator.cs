@@ -59,21 +59,21 @@ namespace Assets.MapGeneration
                         {
                             if (UnityEngine.Random.value > 0.75f)
                             {
-                                natureFaction.StructureManager.AddStructure(StructureType.Tree, cell.Coord);
+                                natureFaction.StructureManager.AddStructure(StructureDefinition.StructureType.Tree, cell.Coord);
                             }
                         }
                         if (cell.Terrain.Type == TerrainType.Stone)
                         {
                             if (UnityEngine.Random.value > 0.75f)
                             {
-                                natureFaction.StructureManager.AddStructure(StructureType.Rock, cell.Coord);
+                                natureFaction.StructureManager.AddStructure(StructureDefinition.StructureType.Rock, cell.Coord);
                             }
                         }
                         if (cell.Terrain.Type == TerrainType.Grass)
                         {
                             if (UnityEngine.Random.value > 0.99f)
                             {
-                                natureFaction.StructureManager.AddStructure(StructureType.Tree, cell.Coord);
+                                natureFaction.StructureManager.AddStructure(StructureDefinition.StructureType.Tree, cell.Coord);
                             }
                         }
                     }

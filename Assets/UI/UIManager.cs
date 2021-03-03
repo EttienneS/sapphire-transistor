@@ -48,7 +48,7 @@ namespace Assets.UI
             _showDrawView = false;
         }
 
-        public void HighlightCells(ICoord[] coords, Color color)
+        public void HighlightCells(Coord[] coords, Color color)
         {
             DisableHighlights();
             foreach (var coord in coords)

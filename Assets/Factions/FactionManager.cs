@@ -91,11 +91,11 @@ namespace Assets.Factions
             _activeFaction.TakeTurn();
         }
 
-        public bool TryGetStructureAtCoord(ICoord coord, out IStructure structure)
+        public bool TryGetStructureAtCoord(Coord coord, out IStructure structure)
         {
             foreach (var faction in GetAllFactions())
             {
-                structure = faction.StructureManager.GetStructures().Find(s => s.OccupiedCoords.Any(c => c.Equals(coord)));
+                structure = faction.StructureManager.GetStructures().Find(s => s.Coord.Equals(coord));
                 if (structure != null)
                 {
                     return true;

@@ -25,12 +25,16 @@ namespace Assets
         {
             _locator = Locator.Create();
 
+            _locator.Register<IStructureDefinitionManager>(new StructureDefinitionManager());
+
             _locator.Register<ISpawnManager>(FindObjectOfType<SpawnManager>());
             _locator.Register<ICameraController>(FindObjectOfType<CameraController>());
             _locator.Register<IMapManager>(FindObjectOfType<MapManager>());
 
             _locator.Register<IStructureFactory>(new StructureFactory());
             _locator.Register<IFactionManager>(new FactionManager());
+
+            _locator.Register<IPlacementValidator>(new PlacementValidator());
 
             _locator.Register<NewGameManager>(new NewGameManager());
 

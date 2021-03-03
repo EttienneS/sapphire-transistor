@@ -1,0 +1,10 @@
+Name=Forrester
+Cost=5G,1F,2W
+Color=Green
+-
+R=Build Road
+C=Build Cabin
+===
+###
+#C#
+RRR

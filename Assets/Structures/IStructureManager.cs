@@ -5,7 +5,7 @@ namespace Assets.Structures
 {
     public interface IStructureManager
     {
-        void AddStructure(StructureType type, ICoord coord);
+        void AddStructure(StructureDefinition.StructureType type, Coord coord);
 
         void RemoveStructure(IStructure structure);
 
@@ -14,8 +14,6 @@ namespace Assets.Structures
         void DoTurnEndActions();
 
         void DoTurnStartActions();
-
-        IPlacementValidator PlacementValidator { get; }
 
         List<IStructure> GetStructuresLinkedTo(IStructure structure);
         IStructure GetCore();

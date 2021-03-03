@@ -3,13 +3,12 @@ Cost=5G,1F,2W
 Color=Green
 -
 R=Build Road
-H=Build House
 B=Build Barn
 F=Build Field
 ======
 FFFFFF
-FF##FF
-FFB#FF
-FRRFFF
-FRHFFF
+FFFFFF
+FFBFFF
+FFRFFF
+FFRFFF
 RRRRRR

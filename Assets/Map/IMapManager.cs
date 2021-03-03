@@ -14,12 +14,11 @@ namespace Assets.Map
 
         bool TryGetCellAtCoord(int x, int z, out Cell cell);
 
-        bool TryGetCellAtCoord(ICoord coord, out Cell cell);
+        bool TryGetCellAtCoord(Coord coord, out Cell cell);
 
         Cell GetCenter();
 
-        List<Cell> GetCircle(Cell center, int radius);
-
+        List<Cell> GetCircle(Coord coord, int radius);
         Pathfinder GetPathfinder();
 
         Cell GetRandomCell();
@@ -28,6 +27,6 @@ namespace Assets.Map
 
         ChunkRenderer GetRendererForCell(Cell cell);
 
-        List<Cell> GetRectangle(ICoord coord, int width, int height);
+        List<Cell> GetRectangle(Coord coord, int width, int height);
     }
 }

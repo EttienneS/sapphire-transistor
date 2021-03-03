@@ -1,71 +1,69 @@
 ﻿using Assets.Factions;
-using Assets.Helpers;
 using Assets.Map;
+using Assets.ServiceLocator;
 using System;
 
 namespace Assets.Structures
 {
-    public class PlacementValidator : IPlacementValidator
+    public class PlacementValidator : GameServiceBase, IPlacementValidator
     {
-        private IFactionManager _factionManager;
-        private IMapManager _mapManager;
+        private Lazy<IFactionManager> _factionManager;
+        private Lazy<IMapManager>  _mapManager;
 
         private readonly InvalidPlacementResult _noRoadResult = new InvalidPlacementResult("Cell does not have a neighbouring road!");
         private readonly InvalidPlacementResult _notEmptyResult = new InvalidPlacementResult("Cell is not empty!");
         private readonly ValidPlacementResult _validResult = new ValidPlacementResult();
 
-        public PlacementValidator(IFactionManager factionManager, IMapManager mapManager)
+        //public IPlacementResult CanPlace(ICoord coord, StructureDefinition.StructureType? structureType)
+        //{
+        //    if (_mapManager.TryGetCellAtCoord(coord, out Cell cell))
+        //    {
+        //        if (structureType == null)
+        //        {
+        //            return _validResult;
+        //        }
+        //        var type = structureType.Value;
+        //        switch (type)
+        //        {
+        //            case StructureDefinition.StructureType.House:
+        //            case StructureDefinition.StructureType.Rock:
+        //            case StructureDefinition.StructureType.Tree:
+        //            case StructureDefinition.StructureType.Road:
+        //            case StructureDefinition.StructureType.Barn:
+        //                return CellEmptyOrSame(cell, type);
+
+        //            case StructureDefinition.StructureType.Cabin:
+        //                return EmptyAndTerrainMatches(cell, type, TerrainType.Forrest);
+
+        //            case StructureDefinition.StructureType.Field:
+        //                return EmptyAndTerrainMatches(cell, type, TerrainType.Grass);
+
+        //            case StructureDefinition.StructureType.Empty:
+        //                return CellEmpty(cell);
+
+        //            default:
+        //                throw new NotImplementedException();
+        //        }
+        //    }
+        //    throw new IndexOutOfRangeException();
+        //}
+
+        public IPlacementResult CellEmpty(Coord coord)
         {
-            _factionManager = factionManager;
-            _mapManager = mapManager;
-        }
-
-        public IPlacementResult CanPlace(ICoord coord, StructureType? structureType)
-        {
-            if (_mapManager.TryGetCellAtCoord(coord, out Cell cell))
-            {
-                if (structureType == null)
-                {
-                    return _validResult;
-                }
-                var type = structureType.Value;
-                switch (type)
-                {
-                    case StructureType.House:
-                    case StructureType.Rock:
-                    case StructureType.Tree:
-                    case StructureType.Road:
-                    case StructureType.Barn:
-                        return CellEmptyOrSame(cell, type);
-
-                    case StructureType.Field:
-                        return EmptyAndTerrainMatches(cell, type, TerrainType.Grass);
-
-                    case StructureType.Empty:
-                        return CellEmpty(cell);
-
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
-            throw new IndexOutOfRangeException();
-        }
-
-        private IPlacementResult CellEmpty(Cell cell)
-        {
-            if (_factionManager.TryGetStructureAtCoord(cell.Coord, out IStructure structure))
+            if (_factionManager.Value.TryGetStructureAtCoord(coord, out _))
             {
                 return _notEmptyResult;
             }
             return _validResult;
         }
 
-        private IPlacementResult EmptyAndTerrainMatches(Cell cell, StructureType type, TerrainType required)
+        public IPlacementResult EmptyAndTerrainMatches(Coord coord, StructureDefinition.StructureType type, TerrainType required)
         {
-            var empty = CellEmptyOrSame(cell, type);
-            if (empty.CanPlace)
+            var empty = CellEmptyOrSame(coord, type);
+
+            if (empty.CanPlace && _mapManager.Value.TryGetCellAtCoord(coord, out Cell cell))
             {
-                if (cell.Terrain.Type == TerrainType.Grass)
+                if (cell.Terrain.Type == required)
                 {
                     return _validResult;
                 }
@@ -77,9 +75,9 @@ namespace Assets.Structures
             return empty;
         }
 
-        private IPlacementResult CellEmptyOrSame(Cell cell, StructureType structureToPlace)
+        public IPlacementResult CellEmptyOrSame(Coord coord, StructureDefinition.StructureType structureToPlace)
         {
-            if (_factionManager.TryGetStructureAtCoord(cell.Coord, out IStructure structure))
+            if (_factionManager.Value.TryGetStructureAtCoord(coord, out IStructure structure))
             {
                 if (structure.Type == structureToPlace)
                 {
@@ -90,18 +88,24 @@ namespace Assets.Structures
             return _validResult;
         }
 
-        private bool HasNeigbourContainingStructure(Cell cell, StructureType type)
+        public override void Initialize()
         {
-            foreach (var neighbour in cell.GetCardinalNeighbours())
-            {
-                if (_factionManager.TryGetStructureAtCoord(neighbour.Coord, out IStructure structure)
-                    && structure.Type == type)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            _factionManager = new Lazy<IFactionManager>(() => Locate<IFactionManager>());
+            _mapManager = new Lazy<IMapManager>(() => Locate<IMapManager>());
         }
+
+        //public bool HasNeigbourContainingStructure(Cell cell, StructureDefinition.StructureType type)
+        //{
+        //    foreach (var neighbour in cell.GetCardinalNeighbours())
+        //    {
+        //        if (_factionManager.TryGetStructureAtCoord(neighbour.Coord, out IStructure structure)
+        //            && structure.Type == type)
+        //        {
+        //            return true;
+        //        }
+        //    }
+
+        //    return false;
+        //}
     }
 }

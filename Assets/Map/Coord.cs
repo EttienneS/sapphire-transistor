@@ -3,7 +3,7 @@
 namespace Assets.Map
 {
     [Serializable]
-    public class Coord : ICoord
+    public class Coord : IEquatable<Coord>
     {
         private int _hash = 0;
 
@@ -38,13 +38,13 @@ namespace Assets.Map
             return obj1.Equals(obj2);
         }
 
-        public int DistanceTo(ICoord other)
+        public int DistanceTo(Coord other)
         {
             return (X < other.X ? other.X - X : X - other.X) +
                     (Z < other.Z ? other.Z - Z : Z - other.Z);
         }
 
-        public bool Equals(ICoord other)
+        public bool Equals(Coord other)
         {
             if (other is null)
             {

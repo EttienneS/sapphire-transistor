@@ -9,31 +9,32 @@ namespace Assets.Structures
     public class StructureManager : IStructureManager
     {
         private readonly List<IStructure> _structures;
+        private IFactionManager _factionManager;
         private IMapManager _mapManager;
         private IStructureFactory _structureFactory;
-        private IFactionManager _factionManager;
+        private IStructureDefinitionManager _structureDefinitionManager;
 
-        public StructureManager(IStructureFactory structureFactory, IFactionManager factionManager, IMapManager mapManager)
+        public StructureManager(IStructureDefinitionManager structureDefinitionManager, IStructureFactory structureFactory, IFactionManager factionManager, IMapManager mapManager)
         {
             _structures = new List<IStructure>();
             _structureFactory = structureFactory;
             _factionManager = factionManager;
             _mapManager = mapManager;
-            PlacementValidator = new PlacementValidator(factionManager, _mapManager);
+            _structureDefinitionManager = structureDefinitionManager;
         }
 
-        public IPlacementValidator PlacementValidator { get; }
+        public List<StructureDefinition> StructureDefinitions { get; }
 
-        public void AddStructure(StructureType type, ICoord coord)
+        public void AddStructure(StructureDefinition.StructureType type, Coord coord)
         {
-            if (type != StructureType.Empty)
+            if (type != StructureDefinition.StructureType.Empty)
             {
                 if (_factionManager.TryGetStructureAtCoord(coord, out IStructure structure))
                 {
                     _factionManager.GetOwnerOfStructure(structure)
                                    .StructureManager.RemoveStructure(structure);
                 }
-                _structures.Add(_structureFactory.GetStructure(type, coord));
+                _structures.Add(_structureFactory.GetStructure(_structureDefinitionManager.GetDefinitionForType(type), coord));
             }
         }
 
@@ -55,7 +56,7 @@ namespace Assets.Structures
 
         public IStructure GetCore()
         {
-            return _structures.First(s => s.Type == StructureType.Core);
+            return _structures.First(s => s.Type == StructureDefinition.StructureType.Core);
         }
 
         public List<IStructure> GetStructures()
@@ -69,10 +70,10 @@ namespace Assets.Structures
 
             using (Instrumenter.Start())
             {
-                var frontier = new Queue<ICoord>();
-                frontier.Enqueue(structure.GetOrigin());
+                var frontier = new Queue<Coord>();
+                frontier.Enqueue(structure.Coord);
 
-                var closed = new List<ICoord>();
+                var closed = new List<Coord>();
                 while (frontier.Count > 0)
                 {
                     var current = frontier.Dequeue();
@@ -82,28 +83,22 @@ namespace Assets.Structures
                     }
                     closed.Add(current);
 
-                    if (TryGetStructureAtCoord(current, out IStructure currentStructure))
+                    if (TryGetStructureAtCoord(current, out IStructure linkedStructure))
                     {
-                        foreach (var coord in currentStructure.OccupiedCoords)
+                        if (!network.Contains(linkedStructure))
                         {
-                            if (TryGetStructureAtCoord(coord, out IStructure linkedStructure))
-                            {
-                                if (!network.Contains(linkedStructure))
-                                {
-                                    network.Add(linkedStructure);
-                                }
+                            network.Add(linkedStructure);
+                        }
 
-                                if (linkedStructure.Type == StructureType.Road || linkedStructure.Type == StructureType.Core)
+                        if (linkedStructure.Type == StructureDefinition.StructureType.Road || linkedStructure.Type == StructureDefinition.StructureType.Core)
+                        {
+                            if (_mapManager.TryGetCellAtCoord(linkedStructure.Coord, out Cell cell))
+                            {
+                                foreach (var linkedCell in cell.GetCardinalNeighbours())
                                 {
-                                    if (_mapManager.TryGetCellAtCoord(linkedStructure.GetOrigin(), out Cell cell))
+                                    if (!closed.Contains(linkedCell.Coord))
                                     {
-                                        foreach (var linkedCell in cell.GetCardinalNeighbours())
-                                        {
-                                            if (!closed.Contains(linkedCell.Coord))
-                                            {
-                                                frontier.Enqueue(linkedCell.Coord);
-                                            }
-                                        }
+                                        frontier.Enqueue(linkedCell.Coord);
                                     }
                                 }
                             }
@@ -124,9 +119,10 @@ namespace Assets.Structures
             }
         }
 
-        public bool TryGetStructureAtCoord(ICoord coord, out IStructure structure)
+        public bool TryGetStructureAtCoord(Coord coord, out IStructure structure)
         {
-            structure = _structures.Find(s => s.OccupiedCoords.Contains(coord));
+            structure = _structures.Find(s => s.Coord.Equals(coord));
+            structure = _structures.Find(s => s.Coord == coord);
 
             return structure != null;
         }
