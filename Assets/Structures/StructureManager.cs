@@ -1,14 +1,11 @@
 ﻿using Assets.Factions;
 using Assets.Helpers;
 using Assets.Map;
-using Assets.ServiceLocator;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Assets.Structures
 {
-
     public class StructureManager : IStructureManager
     {
         private readonly List<IStructure> _structures;
@@ -28,7 +25,7 @@ namespace Assets.Structures
 
         public List<StructureDefinition> StructureDefinitions { get; }
 
-        public void AddStructure(StructureDefinition.StructureType type, ICoord coord)
+        public void AddStructure(StructureDefinition.StructureType type, Coord coord)
         {
             if (type != StructureDefinition.StructureType.Empty)
             {
@@ -73,10 +70,10 @@ namespace Assets.Structures
 
             using (Instrumenter.Start())
             {
-                var frontier = new Queue<ICoord>();
-                frontier.Enqueue(structure.GetOrigin());
+                var frontier = new Queue<Coord>();
+                frontier.Enqueue(structure.Coord);
 
-                var closed = new List<ICoord>();
+                var closed = new List<Coord>();
                 while (frontier.Count > 0)
                 {
                     var current = frontier.Dequeue();
@@ -86,28 +83,22 @@ namespace Assets.Structures
                     }
                     closed.Add(current);
 
-                    if (TryGetStructureAtCoord(current, out IStructure currentStructure))
+                    if (TryGetStructureAtCoord(current, out IStructure linkedStructure))
                     {
-                        foreach (var coord in currentStructure.OccupiedCoords)
+                        if (!network.Contains(linkedStructure))
                         {
-                            if (TryGetStructureAtCoord(coord, out IStructure linkedStructure))
-                            {
-                                if (!network.Contains(linkedStructure))
-                                {
-                                    network.Add(linkedStructure);
-                                }
+                            network.Add(linkedStructure);
+                        }
 
-                                if (linkedStructure.Type == StructureDefinition.StructureType.Road || linkedStructure.Type == StructureDefinition.StructureType.Core)
+                        if (linkedStructure.Type == StructureDefinition.StructureType.Road || linkedStructure.Type == StructureDefinition.StructureType.Core)
+                        {
+                            if (_mapManager.TryGetCellAtCoord(linkedStructure.Coord, out Cell cell))
+                            {
+                                foreach (var linkedCell in cell.GetCardinalNeighbours())
                                 {
-                                    if (_mapManager.TryGetCellAtCoord(linkedStructure.GetOrigin(), out Cell cell))
+                                    if (!closed.Contains(linkedCell.Coord))
                                     {
-                                        foreach (var linkedCell in cell.GetCardinalNeighbours())
-                                        {
-                                            if (!closed.Contains(linkedCell.Coord))
-                                            {
-                                                frontier.Enqueue(linkedCell.Coord);
-                                            }
-                                        }
+                                        frontier.Enqueue(linkedCell.Coord);
                                     }
                                 }
                             }
@@ -128,9 +119,10 @@ namespace Assets.Structures
             }
         }
 
-        public bool TryGetStructureAtCoord(ICoord coord, out IStructure structure)
+        public bool TryGetStructureAtCoord(Coord coord, out IStructure structure)
         {
-            structure = _structures.Find(s => s.OccupiedCoords.Contains(coord));
+            structure = _structures.Find(s => s.Coord.Equals(coord));
+            structure = _structures.Find(s => s.Coord == coord);
 
             return structure != null;
         }

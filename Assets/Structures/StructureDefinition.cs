@@ -4,7 +4,7 @@ namespace Assets.Structures
 {
     public class StructureDefinition
     {
-        public StructureDefinition(string name, string asset, int poolSize, StructureType type, string behaviour, bool requiresLink, int width, int height, CanPlaceDelegate canPlace)
+        public StructureDefinition(string name, string asset, int poolSize, StructureType type, string behaviour, bool requiresLink, CanPlaceDelegate canPlace)
         {
             Name = name;
             Asset = asset;
@@ -12,12 +12,10 @@ namespace Assets.Structures
             Type = type;
             Behaviour = behaviour;
             RequiresLink = requiresLink;
-            Width = width;
-            Height = height;
             CanPlace = canPlace;
         }
 
-        public delegate IPlacementResult CanPlaceDelegate(ICoord coord);
+        public delegate IPlacementResult CanPlaceDelegate(Coord coord);
 
         public enum StructureType
         {
@@ -30,12 +28,6 @@ namespace Assets.Structures
         public StructureType Type { get; }
         public string Behaviour { get; }
         public bool RequiresLink { get; }
-        public int Width { get; }
-        public int Height { get; }
         public CanPlaceDelegate CanPlace { get; }
-
-        
     }
-
-
 }

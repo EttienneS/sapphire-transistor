@@ -4,12 +4,12 @@ namespace Assets.Cards.Actions
 {
     public interface ICardAction
     {
-        bool CanPlay(ICoord coord);
+        bool CanPlay(Coord coord);
 
         void ClearPreview();
 
-        void Play(ICoord coord);
+        void Play(Coord coord);
 
-        void Preview(ICoord coord);
+        void Preview(Coord coord);
     }
 }

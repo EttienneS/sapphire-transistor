@@ -8,7 +8,7 @@ namespace Assets.Cards
     public class HandManager : IHandManager
     {
         private ICard _activeCard;
-        private (ICard card, ICoord coord)? _activePreview;
+        private (ICard card, Coord coord)? _activePreview;
         private IFaction _owner;
 
         public HandManager(IFaction owner)
@@ -131,7 +131,7 @@ namespace Assets.Cards
             }
         }
 
-        public void PreviewCard(ICard card, ICoord coord)
+        public void PreviewCard(ICard card, Coord coord)
         {
             ClearPreview();
             _activePreview = (card, coord);

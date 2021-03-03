@@ -89,6 +89,7 @@
     <Compile Include="Assets\InputManager\MouseAndKeyboardInputHandler.cs" />
     <Compile Include="Assets\Structures\Structure.cs" />
     <Compile Include="Assets\Cards\IHandManager.cs" />
+    <Compile Include="Assets\Structures\Behaviors\CabinBehaviour.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathSplines.cs" />
     <Compile Include="Assets\Helpers\Instrumenter.cs" />
     <Compile Include="Assets\Map\Pathing\CellPriorityQueue.cs" />
@@ -108,8 +109,8 @@
     <Compile Include="Assets\UI\EndTurnButton.cs" />
     <Compile Include="Assets\UI\MessageManager.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\TestingZLegacyExt.cs" />
+    <Compile Include="Assets\Structures\IStructureDefinitionManager.cs" />
     <Compile Include="Assets\UI\IUIManager.cs" />
-    <Compile Include="Assets\Map\ICoord.cs" />
     <Compile Include="Assets\ServiceLocator\IServiceLocator.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\PathBezier2d.cs" />
     <Compile Include="Assets\Map\ITerrain.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Assets\LeanTween\Examples\Archived\OldGUIExamplesCS.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Demo\Scripts\DemoCamera.cs" />
     <Compile Include="Assets\Factions\AIFaction.cs" />
+    <Compile Include="Assets\Structures\StructureDefinitionManager.cs" />
     <Compile Include="Assets\StrategyCamera\CameraEventManager.cs" />
     <Compile Include="Assets\Map\CoordExtension.cs" />
     <Compile Include="Assets\Factions\FactionBase.cs" />
@@ -198,13 +200,13 @@
     <Compile Include="Assets\Structures\Behaviors\SettlementCore.cs" />
     <Compile Include="Assets\Helpers\UIHelper.cs" />
     <Compile Include="Assets\UI\RadialMenuDelegates.cs" />
+    <Compile Include="Assets\Structures\StructureDefinition.cs" />
     <Compile Include="Assets\InputManager\MoveCameraCommand.cs" />
     <Compile Include="Assets\Structures\Behaviors\NoBehavior.cs" />
     <Compile Include="Assets\Map\Pathing\Direction.cs" />
     <Compile Include="Assets\InputManager\InputCommand.cs" />
     <Compile Include="Assets\Structures\Behaviors\FarmBehaviour.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Demo\Scripts\DemoCircleExpositor.cs" />
-    <Compile Include="Assets\Structures\StructureExtensions.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralBasic.cs" />
     <Compile Include="Assets\Structures\IStructureManager.cs" />
     <Compile Include="Assets\Cards\CardEventManager.cs" />
@@ -212,10 +214,6 @@
     <Compile Include="Assets\UI\ResourcePanel.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\Following.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Scripts\SetGlobalTime.cs" />
-    <Compile Include="Assets\Structures\Behaviors\CabinBehaviour.cs" />
-    <Compile Include="Assets\Structures\StructureDefinition.cs" />
-    <Compile Include="Assets\Structures\StructureDefinitionManager.cs" />
-    <Compile Include="Assets\Structures\IStructureDefinitionManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

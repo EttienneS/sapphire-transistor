@@ -8,7 +8,7 @@ namespace Assets.Cards
     {
         public delegate void CardDiscarded(ICard card);
 
-        public delegate void CardPlayed(ICard card, ICoord coord);
+        public delegate void CardPlayed(ICard card, Coord coord);
 
         public delegate void CardReceived(ICard card, IFaction player);
 
@@ -43,13 +43,13 @@ namespace Assets.Cards
             OnCardDiscarded?.Invoke(card);
         }
 
-        public static void CardPlayed(ICard card, ICoord coord)
+        public static void CardPlayed(ICard card, Coord coord)
         {
             Debug.Log($"Card played {card}");
             OnCardPlayed?.Invoke(card, coord);
         }
 
-        public static void CardPreviewed(ICard card, ICoord coord)
+        public static void CardPreviewed(ICard card, Coord coord)
         {
             OnCardPreviewed?.Invoke(card, coord);
         }

@@ -288,7 +288,7 @@ namespace Assets
         private void SpawnStructure(IStructure structure)
         {
             // never invoke this directly, this should invoke when the spawn manager decides its required
-            var placement = StructureExtensions.CalculatePlacementPosition(structure.GetOrigin(), structure.Width, structure.Height);
+            var placement = structure.Coord.ToAdjustedVector3();
             var address = _structureDefinitionManager.GetAssetNameForStructureType(structure.Type);
             SpawnModel(address, placement, (obj) =>
             {
@@ -302,7 +302,7 @@ namespace Assets
 
         private void StructureEventManager_OnStructureDestroyed(IStructure structure)
         {
-            var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(structure.GetOrigin()));
+            var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(structure.Coord));
             _chunkStructureLookup[renderer].Remove(structure);
 
             var pool = _structureDefinitionManager.GetAssetNameForStructureType(structure.Type);
@@ -316,23 +316,21 @@ namespace Assets
         private void StructureEventManager_OnStructurePlanned(IStructure structure)
         {
             var drawnOnce = false; // structures can be in more than one chunk, just to be sure we do not redraw it a lot
-            foreach (var coord in structure.OccupiedCoords)
+
+            var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(structure.Coord));
+
+            var chunkStructures = _chunkStructureLookup[renderer];
+            if (!chunkStructures.Contains(structure))
             {
-                var renderer = _chunkStructureLookup.Keys.First(c => c.CoordInChunk(coord));
+                chunkStructures.Add(structure);
+            }
 
-                var chunkStructures = _chunkStructureLookup[renderer];
-                if (!chunkStructures.Contains(structure))
-                {
-                    chunkStructures.Add(structure);
-                }
-
-                // draw this structure if the current chunk is active,
-                // otherwise it will draw when the chunk activates later
-                if (_activeChunks.Contains(renderer) && !drawnOnce)
-                {
-                    _structuresToSpawn.Add(structure);
-                    drawnOnce = true;
-                }
+            // draw this structure if the current chunk is active,
+            // otherwise it will draw when the chunk activates later
+            if (_activeChunks.Contains(renderer) && !drawnOnce)
+            {
+                _structuresToSpawn.Add(structure);
+                drawnOnce = true;
             }
         }
 

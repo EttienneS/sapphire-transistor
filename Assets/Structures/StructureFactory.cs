@@ -14,9 +14,9 @@ namespace Assets.Structures
             return _behaviorLookup[name];
         }
 
-        public IStructure GetStructure(StructureDefinition definition, ICoord coord)
+        public IStructure GetStructure(StructureDefinition definition, Coord coord)
         {
-            return new Structure(definition.Type, definition.Width, definition.Height, GetBehaviour(definition.Behaviour), coord, definition.RequiresLink);
+            return new Structure(definition.Type, GetBehaviour(definition.Behaviour), coord, definition.RequiresLink);
         }
 
         public override void Initialize()

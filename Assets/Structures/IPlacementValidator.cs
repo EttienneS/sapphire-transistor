@@ -4,9 +4,9 @@ namespace Assets.Structures
 {
     public interface IPlacementValidator
     {
-        IPlacementResult CellEmpty(ICoord coord);
-        IPlacementResult EmptyAndTerrainMatches(ICoord coord, StructureDefinition.StructureType type, TerrainType required);
-        IPlacementResult CellEmptyOrSame(ICoord coord, StructureDefinition.StructureType structureToPlace);
+        IPlacementResult CellEmpty(Coord coord);
+        IPlacementResult EmptyAndTerrainMatches(Coord coord, StructureDefinition.StructureType type, TerrainType required);
+        IPlacementResult CellEmptyOrSame(Coord coord, StructureDefinition.StructureType structureToPlace);
     }
 
     public interface IPlacementResult

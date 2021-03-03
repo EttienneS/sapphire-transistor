@@ -48,7 +48,7 @@ namespace Assets.Structures
         //    throw new IndexOutOfRangeException();
         //}
 
-        public IPlacementResult CellEmpty(ICoord coord)
+        public IPlacementResult CellEmpty(Coord coord)
         {
             if (_factionManager.Value.TryGetStructureAtCoord(coord, out _))
             {
@@ -57,7 +57,7 @@ namespace Assets.Structures
             return _validResult;
         }
 
-        public IPlacementResult EmptyAndTerrainMatches(ICoord coord, StructureDefinition.StructureType type, TerrainType required)
+        public IPlacementResult EmptyAndTerrainMatches(Coord coord, StructureDefinition.StructureType type, TerrainType required)
         {
             var empty = CellEmptyOrSame(coord, type);
 
@@ -75,7 +75,7 @@ namespace Assets.Structures
             return empty;
         }
 
-        public IPlacementResult CellEmptyOrSame(ICoord coord, StructureDefinition.StructureType structureToPlace)
+        public IPlacementResult CellEmptyOrSame(Coord coord, StructureDefinition.StructureType structureToPlace)
         {
             if (_factionManager.Value.TryGetStructureAtCoord(coord, out IStructure structure))
             {

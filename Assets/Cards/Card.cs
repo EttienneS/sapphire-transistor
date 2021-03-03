@@ -26,7 +26,7 @@ namespace Assets.Cards
         public CardColor Color { get; }
         public string Name { get; }
 
-        public bool CanPlay(ICoord anchor)
+        public bool CanPlay(Coord anchor)
         {
             var matrix = _rotatedActions;
 
@@ -73,13 +73,13 @@ namespace Assets.Cards
             return _cost;
         }
 
-        public ICoord GetRelativeAnchorPoint(ICoord anchor)
+        public Coord GetRelativeAnchorPoint(Coord anchor)
         {
             var (x, z) = GetBasePoint();
             return new Coord(anchor.X - x, anchor.Y, anchor.Z - z);
         }
 
-        public void Play(ICoord baseCoord)
+        public void Play(Coord baseCoord)
         {
             foreach (var (cardAction, coord) in GetExecutionList(baseCoord))
             {
@@ -91,7 +91,7 @@ namespace Assets.Cards
             CardEventManager.CardPlayed(this, baseCoord);
         }
 
-        public void Preview(ICoord baseCoord)
+        public void Preview(Coord baseCoord)
         {
             ClearPreview();
             foreach (var (cardAction, coord) in GetExecutionList(baseCoord))
@@ -175,9 +175,9 @@ namespace Assets.Cards
             return str;
         }
 
-        private List<(ICardAction cardAction, ICoord coord)> GetExecutionList(ICoord coord)
+        private List<(ICardAction cardAction, Coord coord)> GetExecutionList(Coord coord)
         {
-            var executionList = new List<(ICardAction cardAction, ICoord coord)>();
+            var executionList = new List<(ICardAction cardAction, Coord coord)>();
             var actions = GetActions();
 
             for (int x = 0; x < actions.GetLength(0); x++)

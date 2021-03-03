@@ -5,7 +5,7 @@ namespace Assets.Structures
 {
     public interface IStructureManager
     {
-        void AddStructure(StructureDefinition.StructureType type, ICoord coord);
+        void AddStructure(StructureDefinition.StructureType type, Coord coord);
 
         void RemoveStructure(IStructure structure);
 

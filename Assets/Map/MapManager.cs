@@ -73,7 +73,7 @@ namespace Assets.Map
             }
         }
 
-        public bool TryGetCellAtCoord(ICoord coord, out Cell cell)
+        public bool TryGetCellAtCoord(Coord coord, out Cell cell)
         {
             return TryGetCellAtCoord(coord.X, coord.Z, out cell);
         }
@@ -94,7 +94,7 @@ namespace Assets.Map
             return _cells[Width / 2, Height / 2];
         }
 
-        public List<Cell> GetCircle(ICoord center, int radius)
+        public List<Cell> GetCircle(Coord center, int radius)
         {
             var cells = new List<Cell>();
 
@@ -302,7 +302,7 @@ namespace Assets.Map
             return renderer;
         }
 
-        public List<Cell> GetRectangle(ICoord coord, int width, int height)
+        public List<Cell> GetRectangle(Coord coord, int width, int height)
         {
             var xstart = Mathf.Min(coord.X, coord.X + width);
             var xend = Mathf.Max(coord.X, coord.X + width);

@@ -24,7 +24,7 @@ namespace Assets.Cards.Actions
             _structureDefinitionManager = Locator.Instance.Find<IStructureDefinitionManager>();
         }
 
-        public bool CanPlay(ICoord coord)
+        public bool CanPlay(Coord coord)
         {
             return _structureDefinitionManager.CanPlace(coord, _structureType).CanPlace;
         }
@@ -37,12 +37,12 @@ namespace Assets.Cards.Actions
             }
         }
 
-        public void Play(ICoord coord)
+        public void Play(Coord coord)
         {
             _owner.StructureManager.AddStructure(_structureType, coord);
         }
 
-        public void Preview(ICoord coord)
+        public void Preview(Coord coord)
         {
             _spawnManager.SpawnPreviewModel(_structureType, coord.ToAdjustedVector3(), CanPlay(coord), (obj) => _previewObject = obj);
         }

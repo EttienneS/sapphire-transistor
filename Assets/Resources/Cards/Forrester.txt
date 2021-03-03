@@ -4,8 +4,7 @@ Color=Green
 -
 R=Build Road
 C=Build Cabin
-====
-....
-.###
-.#C#
-RRRR
+===
+###
+#C#
+RRR
