@@ -10,6 +10,7 @@ namespace Assets.Map
     {
         private const int _vertsPerCell = 4;
 
+        private bool _active = true;
         private Camera _camera;
 
         private Cell[,] _cells;
@@ -17,10 +18,15 @@ namespace Assets.Map
         private List<Color> _colors;
 
         private GridMesh _gridMesh;
+        private int _maxX = -int.MaxValue;
+        private int _maxZ = -int.MaxValue;
         private Mesh _mesh;
 
         private MeshCollider _meshCollider;
 
+        private int _minX = int.MaxValue;
+        private int _minZ = int.MaxValue;
+        private bool _redraw;
         private List<int> _triangles;
 
         private List<Vector2> _uvs;
@@ -29,8 +35,6 @@ namespace Assets.Map
         public int X { get; internal set; }
 
         public int Z { get; internal set; }
-
-        private bool _active = true;
 
         public void Activate(bool force = false)
         {
@@ -47,6 +51,18 @@ namespace Assets.Map
             _triangles.Add(a);
             _triangles.Add(b);
             _triangles.Add(c);
+        }
+
+        public bool CoordInChunk(Coord coord)
+        {
+            var maxx = (X + 1) * Constants.ChunkSize;
+            var minx = X * Constants.ChunkSize;
+
+            var maxz = (Z + 1) * Constants.ChunkSize;
+            var minz = Z * Constants.ChunkSize;
+
+            return (coord.X <= maxx) && (coord.X >= minx) &&
+                   (coord.Z <= maxz) && (coord.Z >= minz);
         }
 
         public void Deactivate()
@@ -106,6 +122,34 @@ namespace Assets.Map
         public void SetCells(Cell[,] cells)
         {
             _cells = cells;
+
+            for (var x = 0; x < _cells.GetLength(0); x++)
+            {
+                for (var z = 0; z < _cells.GetLength(1); z++)
+                {
+                    var cell = _cells[x, z];
+
+                    if (cell.Coord.X > _maxX)
+                    {
+                        _maxX = cell.Coord.X;
+                    }
+
+                    if (cell.Coord.X < _minX)
+                    {
+                        _minX = cell.Coord.X;
+                    }
+
+                    if (cell.Coord.Z > _maxZ)
+                    {
+                        _maxZ = cell.Coord.Z;
+                    }
+
+                    if (cell.Coord.Z < _minZ)
+                    {
+                        _minZ = cell.Coord.Z;
+                    }
+                }
+            }
         }
 
         public void Start()
@@ -113,6 +157,15 @@ namespace Assets.Map
             transform.position = GetPosition();
             GenerateMesh();
             GenerateGrid();
+        }
+
+        public void Update()
+        {
+            if (_redraw)
+            {
+                GenerateMesh();
+                _redraw = false;
+            }
         }
 
         internal void SetMaterial(Material chunkMaterial)
@@ -218,6 +271,28 @@ namespace Assets.Map
             GetComponent<MeshFilter>().mesh = _mesh = new Mesh();
             _mesh.name = $"Mesh {name}";
             _meshCollider = gameObject.AddComponent<MeshCollider>();
+
+            MapEventManager.OnCellTerrainChangedDelegate += CellTerrainChanged;
+        }
+
+        private bool CellIsInChunk(Cell cell)
+        {
+            var x = cell.Coord.X;
+            var z = cell.Coord.Z;
+
+            if (x < _maxX && x >= _minX && z < _maxZ && z >= _minZ)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void CellTerrainChanged(Cell cell, ITerrain terrain)
+        {
+            if (CellIsInChunk(cell))
+            {
+                _redraw = true;
+            }
         }
 
         private void FillSideRenderWalls(int width)
@@ -358,18 +433,6 @@ namespace Assets.Map
                 normals[v] = Vector3.up;
             }
             _mesh.SetNormals(normals);
-        }
-
-        public bool CoordInChunk(Coord coord)
-        {
-            var maxx = (X + 1) * Constants.ChunkSize;
-            var minx = X * Constants.ChunkSize;
-
-            var maxz = (Z + 1) * Constants.ChunkSize;
-            var minz = Z * Constants.ChunkSize;
-
-            return (coord.X <= maxx) && (coord.X >= minx) &&
-                   (coord.Z <= maxz) && (coord.Z >= minz);
         }
     }
 }

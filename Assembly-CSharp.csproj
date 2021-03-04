@@ -214,6 +214,7 @@
     <Compile Include="Assets\UI\ResourcePanel.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\Following.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Scripts\SetGlobalTime.cs" />
+    <Compile Include="Assets\Cards\Actions\TerraformAction.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -251,6 +252,7 @@
      <None Include="Assets\QuickOutline\Resources\Shaders\OutlineFill.shader" />
      <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
+     <None Include="Assets\Resources\Cards\Desert.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
      <None Include="Assets\AllIn1SpriteShader\Resources\AllIn1OneShaderFunctions.cginc" />
     <Reference Include="UnityEngine">

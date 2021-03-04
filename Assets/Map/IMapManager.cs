@@ -1,4 +1,5 @@
 ﻿using Assets.Map.Pathing;
+using Assets.MapGeneration;
 using System.Collections.Generic;
 
 namespace Assets.Map
@@ -21,6 +22,8 @@ namespace Assets.Map
         List<Cell> GetCircle(Coord coord, int radius);
         Pathfinder GetPathfinder();
 
+        ITerrainDefinition TerrainDefinition { get; }
+
         Cell GetRandomCell();
 
         Cell GetRandomCell(MapDelegates.CheckCell predicate);
@@ -28,5 +31,7 @@ namespace Assets.Map
         ChunkRenderer GetRendererForCell(Cell cell);
 
         List<Cell> GetRectangle(Coord coord, int width, int height);
+
+        void ChangeCellTerrain(Cell cell, ITerrain terrain);
     }
 }

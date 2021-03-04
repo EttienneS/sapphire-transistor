@@ -3,6 +3,7 @@ using Assets.Helpers;
 using Assets.Map;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Terrain = Assets.Map.Terrain;
 
 namespace Assets.MapGeneration
@@ -10,9 +11,19 @@ namespace Assets.MapGeneration
     public class DefaultTerrainDefinition : ITerrainDefinition
     {
         private Dictionary<TerrainType, Terrain> _terrainLookup;
+        private Dictionary<TerrainType, (float min, float max)> _heightLookup;
 
         public DefaultTerrainDefinition()
         {
+            _heightLookup = new Dictionary<TerrainType, (float min, float max)>
+            {
+                { TerrainType.Snow, (0.9f, float.MaxValue) },
+                { TerrainType.Stone, (0.7f, 0.9f) },
+                { TerrainType.Forrest, (0.5f, 0.7f) },
+                { TerrainType.Grass, (0.1f, 0.5f) },
+                { TerrainType.Sand, (0, 0.1f) },
+                { TerrainType.Water, (float.MinValue, 0f) },
+            };
             var terrains = new[]
             {
                 new Terrain(TerrainType.Snow, "e9ecef".GetColorFromHex(), 4),
@@ -26,35 +37,28 @@ namespace Assets.MapGeneration
             _terrainLookup = terrains.ToDictionary(t => t.Type, t => t);
         }
 
+        public float GetHeightForType(TerrainType type)
+        {
+            var (min, max) = _heightLookup[type];
+            return RandomExtensions.Range(min, max);
+        }
+
+        public ITerrain GetTerrainTypeByType(TerrainType type)
+        {
+            return _terrainLookup[type];
+        }
+
         public ITerrain GetTerrainTypeForHeight(float cellHeight)
         {
-            TerrainType terrainKey;
-            if (cellHeight > 0.9)
+            foreach (var kvp in _heightLookup)
             {
-                terrainKey = TerrainType.Snow;
-            }
-            else if (cellHeight > 0.7)
-            {
-                terrainKey = TerrainType.Stone;
-            }
-            else if (cellHeight > 0.5)
-            {
-                terrainKey = TerrainType.Forrest;
-            }
-            else if (cellHeight > 0.1)
-            {
-                terrainKey = TerrainType.Grass;
-            }
-            else if (cellHeight > 0)
-            {
-                terrainKey = TerrainType.Sand;
-            }
-            else
-            {
-                terrainKey = TerrainType.Water;
+                if (cellHeight >= kvp.Value.min && cellHeight < kvp.Value.max)
+                {
+                    return _terrainLookup[kvp.Key];
+                }
             }
 
-            return _terrainLookup[terrainKey];
+            throw new KeyNotFoundException($"Height lookup not found: {cellHeight}");
         }
     }
 }

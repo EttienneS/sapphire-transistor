@@ -33,7 +33,7 @@ namespace Assets.Map
         public int SearchHeuristic { get; set; }
         public int SearchPhase { get; set; }
         public int SearchPriority => (int)SearchDistance + SearchHeuristic;
-        public ITerrain Terrain { get; }
+        public ITerrain Terrain { get; set; }
 
         public static bool operator !=(Cell obj1, Cell obj2)
         {

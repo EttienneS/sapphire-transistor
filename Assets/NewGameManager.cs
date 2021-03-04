@@ -7,6 +7,7 @@ using Assets.StrategyCamera;
 using Assets.Structures;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Assets
 {
@@ -24,7 +25,7 @@ namespace Assets
 
             GenerateMap(mapManager, size: 5, structureFactory, factionManger);
 
-            MakeFactionCores(mapManager, factionManger);
+            //MakeFactionCores(mapManager, factionManger);
 
             var cameraController = Locate<ICameraController>();
             ConfigureCameraDefaults(mapManager, factionManger, cameraController);
@@ -33,7 +34,7 @@ namespace Assets
         private static void ConfigureCameraDefaults(IMapManager mapManager, IFactionManager factionManger, ICameraController cameraController)
         {
             cameraController.ConfigureBounds(0, mapManager.Width, 0, mapManager.Height);
-            cameraController.MoveToPosition(factionManger.GetPlayerFaction().StructureManager.GetStructures()[0].Coord.ToAdjustedVector3());
+            cameraController.MoveToPosition(new Vector3(mapManager.Width / 2, 0, mapManager.Height / 2));
         }
 
         private void MakeFactionCores(IMapManager mapManager, IFactionManager factionManager)
@@ -80,9 +81,9 @@ namespace Assets
 
         private void GenerateMap(IMapManager mapManager, int size, IStructureFactory structureFactory, IFactionManager factionManger)
         {
-            _mapGen = new MapGenerator(mapManager, size, new DefaultTerrainDefinition());
+            _mapGen = new MapGenerator(mapManager, size);
             _mapGen.GenerateMap();
-            _mapGen.PopulateMap(mapManager, structureFactory, factionManger);
+            //_mapGen.PopulateMap(mapManager, structureFactory, factionManger);
         }
     }
 }

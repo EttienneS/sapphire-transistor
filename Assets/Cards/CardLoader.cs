@@ -1,5 +1,7 @@
 ﻿using Assets.Cards.Actions;
 using Assets.Factions;
+using Assets.Map;
+using Assets.ServiceLocator;
 using Assets.Structures;
 using System;
 using System.Collections.Generic;
@@ -13,9 +15,11 @@ namespace Assets.Cards
     {
         private List<string> _rawOptions;
         private IFaction _owner;
+        private IMapManager _mapManager;
 
         public CardLoader(IFaction owner)
         {
+            _mapManager = Locator.Instance.Find<IMapManager>();
             _owner = owner;
             _rawOptions = new List<string>();
             foreach (var cardObject in Resources.LoadAll<TextAsset>("Cards"))
@@ -77,6 +81,7 @@ namespace Assets.Cards
             {
                 "build" => () => new BuildAction((StructureDefinition.StructureType)Enum.Parse(typeof(StructureDefinition.StructureType), value), owner),
                 "remove" => () => new RemoveAction(),
+                "terraform" => () => new TerraformAction(_mapManager, _mapManager.TerrainDefinition.GetTerrainTypeByType((TerrainType)Enum.Parse(typeof(TerrainType), value))),
                 _ => throw new KeyNotFoundException($"Unkown verb: {action}"),
             };
         }

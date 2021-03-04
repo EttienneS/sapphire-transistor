@@ -1,5 +1,6 @@
 ﻿using Assets.Helpers;
 using Assets.Map.Pathing;
+using Assets.MapGeneration;
 using Assets.ServiceLocator;
 using Assets.StrategyCamera;
 using System.Collections.Generic;
@@ -19,10 +20,14 @@ namespace Assets.Map
         private ChunkRenderer[,] _chunkRenderers;
         private List<Cell> _flatCells;
 
+        private ChunkRenderer _lastActiveChunk;
+        private float _lastZoomLevel = -1;
         private Pathfinder _pathfinder;
         public int Height { get; set; }
 
         public int Width { get; set; }
+
+        public ITerrainDefinition TerrainDefinition { get; internal set; }
 
         public void AddCellIfFound(int x, int z, List<Cell> cells)
         {
@@ -30,6 +35,13 @@ namespace Assets.Map
             {
                 cells.Add(_cells[x, z]);
             }
+        }
+
+        public void ChangeCellTerrain(Cell cell, ITerrain terrain)
+        {
+            cell.Terrain = terrain;
+            cell.Coord.SetY(TerrainDefinition.GetHeightForType(terrain.Type));
+            MapEventManager.CellTerrainChanged(cell, terrain);
         }
 
         public void Create(Cell[,] cellsToRender)
@@ -71,22 +83,6 @@ namespace Assets.Map
             {
                 Destroy(child.gameObject);
             }
-        }
-
-        public bool TryGetCellAtCoord(Coord coord, out Cell cell)
-        {
-            return TryGetCellAtCoord(coord.X, coord.Z, out cell);
-        }
-
-        public bool TryGetCellAtCoord(int x, int z, out Cell cell)
-        {
-            cell = null;
-            if (x >= Width || x < 0 || z >= Height || z < 0)
-            {
-                return false;
-            }
-            cell = _cellLookup[(x, z)];
-            return true;
         }
 
         public Cell GetCenter()
@@ -133,6 +129,28 @@ namespace Assets.Map
             return _cells[(int)(Random.value * Width), (int)(Random.value * Height)];
         }
 
+        public List<Cell> GetRectangle(Coord coord, int width, int height)
+        {
+            var xstart = Mathf.Min(coord.X, coord.X + width);
+            var xend = Mathf.Max(coord.X, coord.X + width);
+            var zstart = Mathf.Min(coord.Z, coord.Z + width);
+            var zend = Mathf.Max(coord.Z, coord.Z + width);
+
+            var cells = new List<Cell>();
+            for (var x = xstart; x < xend; x++)
+            {
+                for (var z = zstart; z < zend; z++)
+                {
+                    if (TryGetCellAtCoord(x, z, out Cell cell))
+                    {
+                        cells.Add(cell);
+                    }
+                }
+            }
+
+            return cells;
+        }
+
         public ChunkRenderer GetRendererForCell(Cell cell)
         {
             var x = Mathf.FloorToInt(cell.Coord.X / Constants.ChunkSize);
@@ -143,34 +161,81 @@ namespace Assets.Map
 
         public override void Initialize()
         {
+            TerrainDefinition = new DefaultTerrainDefinition();
             _chunkRendererFactory = new ChunkRendererFactory(Locate<ICameraController>().GetCamera());
 
             CameraEventManager.OnCameraPositionChanged += ActivateChunksNearCamera;
         }
 
-        private float _lastZoomLevel = -1;
-        private ChunkRenderer _lastActiveChunk;
-
-        private void ActivateChunksNearCamera(Vector3 cameraLocation)
+        public bool TryGetCellAtCoord(Coord coord, out Cell cell)
         {
-            if (_lastActiveChunk == null || _lastZoomLevel == -1)
+            return TryGetCellAtCoord(coord.X, coord.Z, out cell);
+        }
+
+        public bool TryGetCellAtCoord(int x, int z, out Cell cell)
+        {
+            cell = null;
+            if (x >= Width || x < 0 || z >= Height || z < 0)
             {
-                TryGetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z, out Cell cell);
-                _lastActiveChunk = GetChunkForcell(cell);
-                _lastZoomLevel = -1;
-                ActivateChunks(_lastActiveChunk, cameraLocation.y);
+                return false;
             }
-            else
+            cell = _cellLookup[(x, z)];
+            return true;
+        }
+
+        internal Cell[,] GetCells(int offsetX, int offsetY)
+        {
+            var cells = new Cell[Constants.ChunkSize, Constants.ChunkSize];
+            offsetX *= Constants.ChunkSize;
+            offsetY *= Constants.ChunkSize;
+
+            for (var x = 0; x < Constants.ChunkSize; x++)
             {
-                TryGetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z, out Cell cell);
-                var currentChunk = GetChunkForcell(cell);
-                if (_lastActiveChunk != currentChunk || _lastZoomLevel != cameraLocation.y)
+                for (var y = 0; y < Constants.ChunkSize; y++)
                 {
-                    ActivateChunks(currentChunk, cameraLocation.y);
+                    cells[x, y] = _cells[offsetX + x, offsetY + y];
                 }
-                _lastActiveChunk = currentChunk;
             }
-            _lastZoomLevel = cameraLocation.y;
+
+            return cells;
+        }
+
+        internal ChunkRenderer GetChunkForcell(Cell cell)
+        {
+            var chunkX = cell.Coord.X / Constants.ChunkSize;
+            var chunkZ = cell.Coord.Z / Constants.ChunkSize;
+
+            return _chunkRenderers[chunkX, chunkZ];
+        }
+
+        internal void LinkCellsToNeighbors(Cell[,] cells, int width, int height)
+        {
+            for (var z = 0; z < height; z++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    var cell = cells[x, z];
+                    if (x > 0)
+                    {
+                        cell.SetNeighbor(Direction.W, cells[x - 1, z]);
+
+                        if (z > 0)
+                        {
+                            cell.SetNeighbor(Direction.SW, cells[x - 1, z - 1]);
+
+                            if (x < width - 1)
+                            {
+                                cell.SetNeighbor(Direction.SE, cells[x + 1, z - 1]);
+                            }
+                        }
+                    }
+
+                    if (z > 0)
+                    {
+                        cell.SetNeighbor(Direction.S, cells[x, z - 1]);
+                    }
+                }
+            }
         }
 
         private void ActivateChunks(ChunkRenderer currentChunk, float zoom)
@@ -220,59 +285,26 @@ namespace Assets.Map
             }
         }
 
-        internal ChunkRenderer GetChunkForcell(Cell cell)
+        private void ActivateChunksNearCamera(Vector3 cameraLocation)
         {
-            var chunkX = cell.Coord.X / Constants.ChunkSize;
-            var chunkZ = cell.Coord.Z / Constants.ChunkSize;
-
-            return _chunkRenderers[chunkX, chunkZ];
-        }
-
-        internal Cell[,] GetCells(int offsetX, int offsetY)
-        {
-            var cells = new Cell[Constants.ChunkSize, Constants.ChunkSize];
-            offsetX *= Constants.ChunkSize;
-            offsetY *= Constants.ChunkSize;
-
-            for (var x = 0; x < Constants.ChunkSize; x++)
+            if (_lastActiveChunk == null || _lastZoomLevel == -1)
             {
-                for (var y = 0; y < Constants.ChunkSize; y++)
-                {
-                    cells[x, y] = _cells[offsetX + x, offsetY + y];
-                }
+                TryGetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z, out Cell cell);
+                _lastActiveChunk = GetChunkForcell(cell);
+                _lastZoomLevel = -1;
+                ActivateChunks(_lastActiveChunk, cameraLocation.y);
             }
-
-            return cells;
-        }
-
-        internal void LinkCellsToNeighbors(Cell[,] cells, int width, int height)
-        {
-            for (var z = 0; z < height; z++)
+            else
             {
-                for (var x = 0; x < width; x++)
+                TryGetCellAtCoord((int)cameraLocation.x, (int)cameraLocation.z, out Cell cell);
+                var currentChunk = GetChunkForcell(cell);
+                if (_lastActiveChunk != currentChunk || _lastZoomLevel != cameraLocation.y)
                 {
-                    var cell = cells[x, z];
-                    if (x > 0)
-                    {
-                        cell.SetNeighbor(Direction.W, cells[x - 1, z]);
-
-                        if (z > 0)
-                        {
-                            cell.SetNeighbor(Direction.SW, cells[x - 1, z - 1]);
-
-                            if (x < width - 1)
-                            {
-                                cell.SetNeighbor(Direction.SE, cells[x + 1, z - 1]);
-                            }
-                        }
-                    }
-
-                    if (z > 0)
-                    {
-                        cell.SetNeighbor(Direction.S, cells[x, z - 1]);
-                    }
+                    ActivateChunks(currentChunk, cameraLocation.y);
                 }
+                _lastActiveChunk = currentChunk;
             }
+            _lastZoomLevel = cameraLocation.y;
         }
 
         private Pathfinder CreatePathfinder()
@@ -300,28 +332,6 @@ namespace Assets.Map
             renderer.SetMaterial(ChunkMaterial);
 
             return renderer;
-        }
-
-        public List<Cell> GetRectangle(Coord coord, int width, int height)
-        {
-            var xstart = Mathf.Min(coord.X, coord.X + width);
-            var xend = Mathf.Max(coord.X, coord.X + width);
-            var zstart = Mathf.Min(coord.Z, coord.Z + width);
-            var zend = Mathf.Max(coord.Z, coord.Z + width);
-
-            var cells = new List<Cell>();
-            for (var x = xstart; x < xend; x++)
-            {
-                for (var z = zstart; z < zend; z++)
-                {
-                    if (TryGetCellAtCoord(x, z, out Cell cell))
-                    {
-                        cells.Add(cell);
-                    }
-                }
-            }
-
-            return cells;
         }
     }
 }

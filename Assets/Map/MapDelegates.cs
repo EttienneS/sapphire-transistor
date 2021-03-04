@@ -5,5 +5,7 @@
         public delegate bool CheckCell(Cell cell);
 
         public delegate void OnChunkRenderStatusChangedDelegate(ChunkRenderer renderer);
+
+        public delegate void OnCellTerrainChangedDelegate(Cell cell, ITerrain terrain);
     }
 }

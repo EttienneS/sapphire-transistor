@@ -10,15 +10,13 @@ namespace Assets.MapGeneration
     public class MapGenerator
     {
         private readonly IMapManager _mapManager;
-        private readonly ITerrainDefinition _terrainDefinition;
         private readonly int _chunksToRender = 30;
         private Cell[,] map;
 
-        public MapGenerator(IMapManager mapManager, int chunksToRender, ITerrainDefinition terrainDefinition)
+        public MapGenerator(IMapManager mapManager, int chunksToRender)
         {
             _mapManager = mapManager;
             _chunksToRender = chunksToRender;
-            _terrainDefinition = terrainDefinition;
         }
 
         public void GenerateMap()
@@ -37,8 +35,9 @@ namespace Assets.MapGeneration
             {
                 for (var z = 0; z < mapSize; z++)
                 {
-                    var cellHeight = height[x, z];
-                    var terrrain = _terrainDefinition.GetTerrainTypeForHeight(cellHeight);
+                    //var cellHeight = height[x, z];
+                    var cellHeight = -1;
+                    var terrrain = _mapManager.TerrainDefinition.GetTerrainTypeForHeight(cellHeight);
                     map[x, z] = new Cell(x, z, terrrain.Type == TerrainType.Water ? -0.25f : 0, terrrain);
                 }
             }
