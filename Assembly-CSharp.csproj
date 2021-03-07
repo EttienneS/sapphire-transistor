@@ -74,6 +74,7 @@
     <Compile Include="Assets\MapGeneration\DefaultTerrainDefinition.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\GeneralUISpace.cs" />
     <Compile Include="Assets\UI\CardView.cs" />
+    <Compile Include="Assets\Cards\Actions\TerraformAction.cs" />
     <Compile Include="Assets\Map\GridMesh.cs" />
     <Compile Include="Assets\Factions\IFactionManager.cs" />
     <Compile Include="Assets\Structures\IStructure.cs" />
@@ -214,7 +215,6 @@
     <Compile Include="Assets\UI\ResourcePanel.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\Following.cs" />
     <Compile Include="Assets\AllIn1SpriteShader\Scripts\SetGlobalTime.cs" />
-    <Compile Include="Assets\Cards\Actions\TerraformAction.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -232,6 +232,7 @@
      <None Include="Assets\Resources\Cards\BoxClear.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\AllIn1SpriteShader\Resources\AllIn1SpriteShaderUiMask.shader" />
+     <None Include="Assets\Resources\Cards\Core.txt" />
      <None Include="Assets\Resources\Cards\House.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
      <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />

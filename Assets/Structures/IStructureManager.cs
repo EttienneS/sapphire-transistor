@@ -16,6 +16,5 @@ namespace Assets.Structures
         void DoTurnStartActions();
 
         List<IStructure> GetStructuresLinkedTo(IStructure structure);
-        IStructure GetCore();
     }
 }
