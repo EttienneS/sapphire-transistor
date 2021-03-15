@@ -37,5 +37,10 @@ namespace Assets.Helpers
                 }
             }
         }
+
+        internal static float Range(float min, float max)
+        {
+            return (float)(_rand.NextDouble() * (max - min) + min);
+        }
     }
 }

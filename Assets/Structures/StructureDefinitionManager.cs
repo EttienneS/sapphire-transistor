@@ -42,7 +42,7 @@ namespace Assets.Structures
                 new StructureDefinition("Empty", "Empty", 5, StructureDefinition.StructureType.Empty, "NoBehavior", false, (coord) => _validator.Value.CellEmpty(coord) ),
                 new StructureDefinition("Tree", "Tree", 1000, StructureDefinition.StructureType.Tree, "NoBehavior", false, (coord) => _validator.Value.CellEmpty(coord) ),
                 new StructureDefinition("Rock", "Rock", 1000, StructureDefinition.StructureType.Rock, "NoBehavior", false, (coord) => _validator.Value.CellEmpty(coord) ),
-                new StructureDefinition("Core", "BellTower", 10, StructureDefinition.StructureType.Core, "SettlementCore", false, (coord) => _validator.Value.CellEmpty(coord) ),
+                new StructureDefinition("Core", "BellTower", 100, StructureDefinition.StructureType.Core, "SettlementCore", false, (coord) => _validator.Value.CellEmpty(coord) ),
                 new StructureDefinition("Road", "Road", 1000, StructureDefinition.StructureType.Road, "NoBehavior", true, (coord) => _validator.Value.CellEmptyOrSame(coord, StructureDefinition.StructureType.Road) ),
                 new StructureDefinition("House", "House", 500, StructureDefinition.StructureType.House, "HouseBehavior", true, (coord) => _validator.Value.CellEmptyOrSame(coord,StructureDefinition.StructureType.House) ),
                 new StructureDefinition("Barn", "Barn", 500, StructureDefinition.StructureType.Barn, "FarmBehaviour", true, (coord) => _validator.Value.CellEmptyOrSame(coord,StructureDefinition.StructureType.Barn) ),

@@ -1,0 +1,14 @@
+Name=Make Desert
+Cost=
+Color=Yellow
+-
+D=Terraform Sand
+========
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD
+DDDDDDDD

@@ -1,0 +1,10 @@
+Name=Core
+Cost=
+Color=Green
+-
+R=Build Road
+C=Build Core
+===
+RRR
+RCR
+RRR

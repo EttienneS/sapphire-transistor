@@ -54,11 +54,6 @@ namespace Assets.Structures
             }
         }
 
-        public IStructure GetCore()
-        {
-            return _structures.First(s => s.Type == StructureDefinition.StructureType.Core);
-        }
-
         public List<IStructure> GetStructures()
         {
             return _structures;

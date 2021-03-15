@@ -15,7 +15,7 @@ namespace Assets.Map
         }
 
         public int X { get; }
-        public float Y { get; }
+        public float Y { get; internal set; }
         public int Z { get; }
 
         public static bool operator !=(Coord obj1, Coord obj2)
@@ -63,6 +63,11 @@ namespace Assets.Map
             }
 
             return this == other;
+        }
+
+        internal void SetY(float newY)
+        {
+            Y = newY;
         }
 
         public override int GetHashCode()

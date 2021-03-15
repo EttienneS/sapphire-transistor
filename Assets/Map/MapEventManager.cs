@@ -8,6 +8,13 @@
 
         public static event MapDelegates.OnChunkRenderStatusChangedDelegate OnChunkRenderCreated;
 
+        public static event MapDelegates.OnCellTerrainChangedDelegate OnCellTerrainChangedDelegate;
+
+        public static void CellTerrainChanged(Cell cell, ITerrain terrain)
+        {
+            OnCellTerrainChangedDelegate?.Invoke(cell, terrain);
+        }
+
         public static void ChunkRenderCreated(ChunkRenderer renderer)
         {
             OnChunkRenderCreated?.Invoke(renderer);

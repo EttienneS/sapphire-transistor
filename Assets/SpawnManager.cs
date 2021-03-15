@@ -2,6 +2,7 @@
 using Assets.Map;
 using Assets.ServiceLocator;
 using Assets.Structures;
+using Assets.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +70,7 @@ namespace Assets
 
             var pools = new List<(string pool, int size)>
             {
+                (UIManager.HighlightAsset, 500),
                 ("RemoveMarker", 50),
             };
 

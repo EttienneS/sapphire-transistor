@@ -31,6 +31,14 @@ namespace Assets.Factions
             PopulateDecks();
 
             CardEventManager.OnCardReceived += CardEventManager_OnCardReceived;
+
+            ModifyResource(new Dictionary<ResourceType, int>
+            {
+                { ResourceType.Gold, 50 },
+                { ResourceType.Wood, 50 },
+                { ResourceType.Stone, 50 },
+                { ResourceType.Food, 50 },
+            });
         }
 
         private void CardEventManager_OnCardReceived(ICard card, IFaction player)
@@ -91,7 +99,7 @@ namespace Assets.Factions
 
         public override void TakeTurn()
         {
-            var connected = StructureManager.GetStructuresLinkedTo(StructureManager.GetCore());
+            var connected = GetConnectedStructures();
 
             ReadyDecks();
 
@@ -99,6 +107,18 @@ namespace Assets.Factions
 
             HighlightConnected(connected);
             GetYieldForConnected(connected);
+        }
+
+        private List<IStructure> GetConnectedStructures()
+        {
+            var connected = new List<IStructure>();
+
+            foreach (var core in StructureManager.GetStructures().Where(s => s.Type == StructureDefinition.StructureType.Core))
+            {
+                connected.AddRange(StructureManager.GetStructuresLinkedTo(core));
+            }
+
+            return connected;
         }
 
         private void ReadyDecks()

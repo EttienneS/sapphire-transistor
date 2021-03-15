@@ -8,6 +8,7 @@ namespace Assets.UI
 {
     public class UIManager : LocatableMonoBehaviorBase, IUIManager
     {
+        public const string HighlightAsset = "Highlight";
         private List<GameObject> _activeHighlights = new List<GameObject>();
         private IFaction _activePlayer;
         private CurrentPlayerLabel _currentPlayerLabel;
@@ -17,7 +18,7 @@ namespace Assets.UI
         private IFactionManager _factionManager;
         private IFaction _playerFaction;
         private bool _ready;
-        private bool? _showDrawView ;
+        private bool? _showDrawView;
         private ISpawnManager _spawnManager;
         public MessageManager MessageManager { get; set; }
         public RadialMenuManager RadialMenuManager { get; set; }
@@ -37,12 +38,11 @@ namespace Assets.UI
             {
                 foreach (var highlight in _activeHighlights)
                 {
-                    _spawnManager.AddItemToDestroy(highlight);
+                    _spawnManager.RecyleItem(HighlightAsset, highlight);
                 }
                 _activeHighlights.Clear();
             }
         }
-
         public void HideDrawView()
         {
             _showDrawView = false;
@@ -53,7 +53,7 @@ namespace Assets.UI
             DisableHighlights();
             foreach (var coord in coords)
             {
-                _spawnManager.SpawnModel("Highlight", coord.ToAdjustedVector3(), (obj) =>
+                _spawnManager.SpawnModel(HighlightAsset, coord.ToAdjustedVector3(), (obj) =>
                 {
                     _activeHighlights.Add(obj);
                     obj.GetComponent<MeshRenderer>().material.color = color;

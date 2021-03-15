@@ -1,5 +1,7 @@
 ﻿using Assets.Factions;
 using Assets.Map;
+using Assets.ServiceLocator;
+using Assets.UI;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,10 +12,12 @@ namespace Assets.Cards
         private ICard _activeCard;
         private (ICard card, Coord coord)? _activePreview;
         private IFaction _owner;
+        private IUIManager _uimanager;
 
         public HandManager(IFaction owner)
         {
             _owner = owner;
+            _uimanager = Locator.Instance.Find<IUIManager>();
 
             Hand = new List<ICard>();
 
@@ -41,6 +45,7 @@ namespace Assets.Cards
             if (TryGetActiveCard(out ICard activeCard) && PreviewValid(cell, activeCard))
             {
                 ConfirmCard();
+                
             }
         }
 
@@ -62,6 +67,7 @@ namespace Assets.Cards
                 _activePreview.Value.card.ClearPreview();
                 _activePreview = null;
             }
+
         }
 
         public void ConfirmCard()
@@ -77,6 +83,8 @@ namespace Assets.Cards
 
                 DiscardCard(_activeCard);
                 _activeCard = null;
+
+                _uimanager.DisableHighlights();
             }
             ClearPreview();
         }
@@ -133,9 +141,24 @@ namespace Assets.Cards
 
         public void PreviewCard(ICard card, Coord coord)
         {
+            HighlightCellCoords(card, coord);
+
             ClearPreview();
             _activePreview = (card, coord);
             _activePreview.Value.card.Preview(_activePreview.Value.coord);
+        }
+
+        private void HighlightCellCoords(ICard card, Coord coord)
+        {
+                        var coords = new List<Coord>();
+            for (var x = 0; x < card.GetActions().GetLength(0); ++x)
+            {
+                for (var z = 0; z < card.GetActions().GetLength(1); ++z)
+                {
+                    coords.Add(new Coord(coord.X + x, coord.Y, coord.Z + z));
+                }
+            }
+            _uimanager.HighlightCells(coords.ToArray(), card.Color.GetActualColor());
         }
 
         public bool TryGetActiveCard(out ICard card)
